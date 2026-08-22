@@ -1579,12 +1579,10 @@ addMenu.innerHTML = `
         Add
     </div>
 
-
     <div class="blender-menu-item blender-has-submenu">
 
         <span>Mesh</span>
         <span class="menu-arrow">›</span>
-
 
         <div class="blender-submenu">
 
@@ -1634,77 +1632,7 @@ addMenu.innerHTML = `
 
     </div>
 
-
-    <div class="blender-menu-item disabled">
-        <span>Curve</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Surface</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Metaball</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Text</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Volume</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Grease Pencil</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-
-    <div class="menu-separator"></div>
-
-
-    <div class="blender-menu-item disabled">
-        <span>Armature</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Lattice</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Empty</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Image</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-
-    <div class="menu-separator"></div>
-
-
-    <div class="blender-menu-item disabled">
-        <span>Light</span>
-        <span class="menu-arrow">›</span>
-    </div>
-
-    <div class="blender-menu-item disabled">
-        <span>Camera</span>
-    </div>
-
 `;
-
-
-document.body.appendChild(
-    addMenu
-);
 
 
 // --------------------------------------------------
@@ -2281,7 +2209,21 @@ controls.target.set(
 // Mouse wheel no longer zooms.
 // It scrolls the website normally.
 
-controls.enableZoom = false;
+controls.enableZoom = false
+
+// Never let OrbitControls capture the mouse wheel.
+// The wheel should scroll the webpage instead.
+
+canvas.addEventListener(
+    "wheel",
+    (event) => {
+        event.stopImmediatePropagation();
+    },
+    {
+        capture: true,
+        passive: true
+    }
+);
 
 
 controls.minDistance = 5;
