@@ -1,25 +1,36 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import * as CANNON from "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { ConvexGeometry } from "three/addons/geometries/ConvexGeometry.js";
 
-const canvas = document.querySelector("#three-canvas");
+import * as CANNON from
+    "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js";
+
 
 // --------------------------------------------------
 // SETTINGS
 // --------------------------------------------------
 
 const MAX_USER_OBJECTS = 20;
+const GRID_SIZE = 40;
 
 let userObjectCount = 0;
 let selectedObject = null;
 
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+
 // --------------------------------------------------
-// THREE.JS SCENE
+// THREE.JS
 // --------------------------------------------------
+
+const canvas = document.querySelector("#three-canvas");
 
 const scene = new THREE.Scene();
 
 scene.background = new THREE.Color(0x0b0b0c);
+
 
 const camera = new THREE.PerspectiveCamera(
     45,
@@ -28,7 +39,12 @@ const camera = new THREE.PerspectiveCamera(
     100
 );
 
-camera.position.set(8, 5, 10);
+camera.position.set(
+    8,
+    5,
+    10
+);
+
 
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -41,22 +57,30 @@ renderer.setSize(
 );
 
 renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
 );
 
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+renderer.shadowMap.type =
+    THREE.PCFSoftShadowMap;
+
 
 // --------------------------------------------------
-// LIGHTS
+// LIGHTING
 // --------------------------------------------------
 
-const ambientLight = new THREE.AmbientLight(
-    0xffffff,
-    1.4
-);
+const ambientLight =
+    new THREE.AmbientLight(
+        0xffffff,
+        1.4
+    );
 
 scene.add(ambientLight);
+
 
 const directionalLight =
     new THREE.DirectionalLight(
@@ -74,21 +98,23 @@ directionalLight.castShadow = true;
 
 scene.add(directionalLight);
 
+
 // --------------------------------------------------
-// GRID
+// BLENDER GRID
 // --------------------------------------------------
 
 const grid = new THREE.GridHelper(
-    40,
-    40,
+    GRID_SIZE,
+    GRID_SIZE,
     0x555555,
     0x222222
 );
 
 scene.add(grid);
 
+
 // --------------------------------------------------
-// PHYSICS
+// PHYSICS WORLD
 // --------------------------------------------------
 
 const world = new CANNON.World({
@@ -104,12 +130,41 @@ world.broadphase =
 
 world.allowSleep = true;
 
-// Ground
 
-const groundBody = new CANNON.Body({
-    type: CANNON.Body.STATIC,
-    shape: new CANNON.Plane()
-});
+const physicsMaterial =
+    new CANNON.Material(
+        "objects"
+    );
+
+
+const contactMaterial =
+    new CANNON.ContactMaterial(
+        physicsMaterial,
+        physicsMaterial,
+        {
+            friction: 0.45,
+            restitution: 0.25
+        }
+    );
+
+world.addContactMaterial(
+    contactMaterial
+);
+
+
+// --------------------------------------------------
+// GROUND
+// --------------------------------------------------
+
+const groundBody =
+    new CANNON.Body({
+        type: CANNON.Body.STATIC,
+        material: physicsMaterial
+    });
+
+groundBody.addShape(
+    new CANNON.Plane()
+);
 
 groundBody.quaternion.setFromEuler(
     -Math.PI / 2,
@@ -117,28 +172,143 @@ groundBody.quaternion.setFromEuler(
     0
 );
 
-world.addBody(groundBody);
+world.addBody(
+    groundBody
+);
+
+
+// --------------------------------------------------
+// INVISIBLE EDGE WALLS
+// --------------------------------------------------
+
+function createInvisibleWall(
+    halfExtents,
+    position
+) {
+
+    const shape =
+        new CANNON.Box(
+            halfExtents
+        );
+
+    const body =
+        new CANNON.Body({
+            type: CANNON.Body.STATIC,
+            material: physicsMaterial,
+            position: position
+        });
+
+    body.addShape(shape);
+
+    world.addBody(body);
+}
+
+
+const edge =
+    GRID_SIZE / 2;
+
+const wallThickness = 0.35;
+const wallHeight = 12;
+
+
+// Left
+createInvisibleWall(
+
+    new CANNON.Vec3(
+        wallThickness,
+        wallHeight / 2,
+        edge
+    ),
+
+    new CANNON.Vec3(
+        -edge,
+        wallHeight / 2,
+        0
+    )
+);
+
+
+// Right
+createInvisibleWall(
+
+    new CANNON.Vec3(
+        wallThickness,
+        wallHeight / 2,
+        edge
+    ),
+
+    new CANNON.Vec3(
+        edge,
+        wallHeight / 2,
+        0
+    )
+);
+
+
+// Back
+createInvisibleWall(
+
+    new CANNON.Vec3(
+        edge,
+        wallHeight / 2,
+        wallThickness
+    ),
+
+    new CANNON.Vec3(
+        0,
+        wallHeight / 2,
+        -edge
+    )
+);
+
+
+// Front
+createInvisibleWall(
+
+    new CANNON.Vec3(
+        edge,
+        wallHeight / 2,
+        wallThickness
+    ),
+
+    new CANNON.Vec3(
+        0,
+        wallHeight / 2,
+        edge
+    )
+);
+
 
 // --------------------------------------------------
 // MATERIALS
 // --------------------------------------------------
 
 function createMaterial(color) {
+
     return new THREE.MeshStandardMaterial({
         color: color,
         roughness: 0.45,
-        metalness: 0.05
+        metalness: 0.05,
+        side: THREE.DoubleSide
     });
 }
 
-const orangeMaterial =
-    createMaterial(0xf57c00);
 
-const darkMaterial =
-    createMaterial(0x303236);
+const orangeMaterial =
+    createMaterial(
+        0xf57c00
+    );
 
 const lightMaterial =
-    createMaterial(0xd8d8d2);
+    createMaterial(
+        0xd8d8d2
+    );
+
+const darkMaterial =
+    createMaterial(
+        0x303236
+    );
+
 
 // --------------------------------------------------
 // OBJECT STORAGE
@@ -146,52 +316,81 @@ const lightMaterial =
 
 const objects = [];
 
+
 // --------------------------------------------------
-// RANDOM SPAWN POSITION
+// RANDOM SPAWN LOCATION
 // --------------------------------------------------
 
 function getSpawnPosition() {
 
     return new THREE.Vector3(
+
         2 + Math.random() * 3,
+
         8 + Math.random() * 5,
+
         -2 + Math.random() * 4
     );
 }
 
+
 // --------------------------------------------------
-// ADD OBJECT
+// REGISTER PHYSICS OBJECT
 // --------------------------------------------------
 
-function addPhysicsObject(
+function registerObject(
     mesh,
     body,
-    userAdded = true
+    type,
+    userAdded = true,
+    colliderVisual = null
 ) {
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.traverse((child) => {
+
+        if (child.isMesh) {
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
 
     scene.add(mesh);
+
     world.addBody(body);
+
 
     const object = {
         mesh: mesh,
         body: body,
-        userAdded: userAdded
+        type: type,
+        userAdded: userAdded,
+        colliderVisual: colliderVisual
     };
 
-    mesh.userData.physicsObject = object;
+
+    mesh.traverse((child) => {
+
+        child.userData.physicsObject =
+            object;
+    });
+
 
     objects.push(object);
 
+
     if (userAdded) {
+
         userObjectCount++;
+
         updateObjectCounter();
     }
 
+
     return object;
 }
+
 
 // --------------------------------------------------
 // CUBE
@@ -204,34 +403,27 @@ function createCube(
 
     const size = 1.4;
 
-    const geometry =
-        new THREE.BoxGeometry(
-            size,
-            size,
-            size
-        );
 
     const mesh =
         new THREE.Mesh(
-            geometry,
+
+            new THREE.BoxGeometry(
+                size,
+                size,
+                size
+            ),
+
             orangeMaterial.clone()
         );
 
+
     mesh.position.copy(position);
 
-    const shape =
-        new CANNON.Box(
-            new CANNON.Vec3(
-                size / 2,
-                size / 2,
-                size / 2
-            )
-        );
 
     const body =
         new CANNON.Body({
             mass: 1,
-            shape: shape,
+            material: physicsMaterial,
             position: new CANNON.Vec3(
                 position.x,
                 position.y,
@@ -239,15 +431,149 @@ function createCube(
             )
         });
 
-    return addPhysicsObject(
+
+    body.addShape(
+
+        new CANNON.Box(
+            new CANNON.Vec3(
+                size / 2,
+                size / 2,
+                size / 2
+            )
+        )
+    );
+
+
+    return registerObject(
         mesh,
         body,
+        "cube",
         userAdded
     );
 }
 
+
 // --------------------------------------------------
-// SPHERE
+// PLANE
+// --------------------------------------------------
+
+function createPlane(
+    position = getSpawnPosition(),
+    userAdded = true
+) {
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.PlaneGeometry(
+                2,
+                2
+            ),
+
+            lightMaterial.clone()
+        );
+
+
+    mesh.rotation.x =
+        -Math.PI / 2;
+
+    mesh.position.copy(position);
+
+
+    const body =
+        new CANNON.Body({
+            mass: 0.4,
+            material: physicsMaterial,
+            position: new CANNON.Vec3(
+                position.x,
+                position.y,
+                position.z
+            )
+        });
+
+
+    body.addShape(
+
+        new CANNON.Box(
+            new CANNON.Vec3(
+                1,
+                0.04,
+                1
+            )
+        )
+    );
+
+
+    return registerObject(
+        mesh,
+        body,
+        "plane",
+        userAdded
+    );
+}
+
+
+// --------------------------------------------------
+// CIRCLE
+// --------------------------------------------------
+
+function createCircle(
+    position = getSpawnPosition(),
+    userAdded = true
+) {
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.CircleGeometry(
+                1,
+                32
+            ),
+
+            orangeMaterial.clone()
+        );
+
+
+    mesh.rotation.x =
+        -Math.PI / 2;
+
+    mesh.position.copy(position);
+
+
+    const body =
+        new CANNON.Body({
+            mass: 0.5,
+            material: physicsMaterial,
+            position: new CANNON.Vec3(
+                position.x,
+                position.y,
+                position.z
+            )
+        });
+
+
+    body.addShape(
+
+        new CANNON.Cylinder(
+            1,
+            1,
+            0.08,
+            24
+        )
+    );
+
+
+    return registerObject(
+        mesh,
+        body,
+        "circle",
+        userAdded
+    );
+}
+
+
+// --------------------------------------------------
+// UV SPHERE
 // --------------------------------------------------
 
 function createSphere(
@@ -257,28 +583,27 @@ function createSphere(
 
     const radius = 0.8;
 
-    const geometry =
-        new THREE.SphereGeometry(
-            radius,
-            32,
-            32
-        );
 
     const mesh =
         new THREE.Mesh(
-            geometry,
+
+            new THREE.SphereGeometry(
+                radius,
+                32,
+                32
+            ),
+
             lightMaterial.clone()
         );
 
+
     mesh.position.copy(position);
 
-    const shape =
-        new CANNON.Sphere(radius);
 
     const body =
         new CANNON.Body({
             mass: 1,
-            shape: shape,
+            material: physicsMaterial,
             position: new CANNON.Vec3(
                 position.x,
                 position.y,
@@ -286,12 +611,79 @@ function createSphere(
             )
         });
 
-    return addPhysicsObject(
+
+    body.addShape(
+
+        new CANNON.Sphere(
+            radius
+        )
+    );
+
+
+    return registerObject(
         mesh,
         body,
+        "sphere",
         userAdded
     );
 }
+
+
+// --------------------------------------------------
+// ICOSPHERE
+// --------------------------------------------------
+
+function createIcosphere(
+    position = getSpawnPosition(),
+    userAdded = true
+) {
+
+    const radius = 0.8;
+
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.IcosahedronGeometry(
+                radius,
+                2
+            ),
+
+            orangeMaterial.clone()
+        );
+
+
+    mesh.position.copy(position);
+
+
+    const body =
+        new CANNON.Body({
+            mass: 1,
+            material: physicsMaterial,
+            position: new CANNON.Vec3(
+                position.x,
+                position.y,
+                position.z
+            )
+        });
+
+
+    body.addShape(
+
+        new CANNON.Sphere(
+            radius
+        )
+    );
+
+
+    return registerObject(
+        mesh,
+        body,
+        "icosphere",
+        userAdded
+    );
+}
+
 
 // --------------------------------------------------
 // CYLINDER
@@ -305,34 +697,28 @@ function createCylinder(
     const radius = 0.7;
     const height = 1.8;
 
-    const geometry =
-        new THREE.CylinderGeometry(
-            radius,
-            radius,
-            height,
-            32
-        );
 
     const mesh =
         new THREE.Mesh(
-            geometry,
+
+            new THREE.CylinderGeometry(
+                radius,
+                radius,
+                height,
+                32
+            ),
+
             darkMaterial.clone()
         );
 
+
     mesh.position.copy(position);
 
-    const shape =
-        new CANNON.Cylinder(
-            radius,
-            radius,
-            height,
-            16
-        );
 
     const body =
         new CANNON.Body({
             mass: 1,
-            shape: shape,
+            material: physicsMaterial,
             position: new CANNON.Vec3(
                 position.x,
                 position.y,
@@ -340,12 +726,26 @@ function createCylinder(
             )
         });
 
-    return addPhysicsObject(
+
+    body.addShape(
+
+        new CANNON.Cylinder(
+            radius,
+            radius,
+            height,
+            20
+        )
+    );
+
+
+    return registerObject(
         mesh,
         body,
+        "cylinder",
         userAdded
     );
 }
+
 
 // --------------------------------------------------
 // CONE
@@ -356,34 +756,26 @@ function createCone(
     userAdded = true
 ) {
 
-    const geometry =
-        new THREE.ConeGeometry(
-            0.8,
-            1.8,
-            32
-        );
-
     const mesh =
         new THREE.Mesh(
-            geometry,
+
+            new THREE.ConeGeometry(
+                0.8,
+                1.8,
+                32
+            ),
+
             orangeMaterial.clone()
         );
 
+
     mesh.position.copy(position);
 
-    // Physics approximation
-    const shape =
-        new CANNON.Cylinder(
-            0.15,
-            0.8,
-            1.8,
-            16
-        );
 
     const body =
         new CANNON.Body({
             mass: 1,
-            shape: shape,
+            material: physicsMaterial,
             position: new CANNON.Vec3(
                 position.x,
                 position.y,
@@ -391,12 +783,26 @@ function createCone(
             )
         });
 
-    return addPhysicsObject(
+
+    body.addShape(
+
+        new CANNON.Cylinder(
+            0.15,
+            0.8,
+            1.8,
+            20
+        )
+    );
+
+
+    return registerObject(
         mesh,
         body,
+        "cone",
         userAdded
     );
 }
+
 
 // --------------------------------------------------
 // TORUS
@@ -407,30 +813,31 @@ function createTorus(
     userAdded = true
 ) {
 
-    const geometry =
-        new THREE.TorusGeometry(
-            0.8,
-            0.25,
-            20,
-            40
-        );
+    const majorRadius = 0.8;
+    const tubeRadius = 0.24;
+
 
     const mesh =
         new THREE.Mesh(
-            geometry,
+
+            new THREE.TorusGeometry(
+                majorRadius,
+                tubeRadius,
+                20,
+                40
+            ),
+
             lightMaterial.clone()
         );
 
+
     mesh.position.copy(position);
 
-    // Simple physics approximation
-    const shape =
-        new CANNON.Sphere(0.9);
 
     const body =
         new CANNON.Body({
             mass: 1,
-            shape: shape,
+            material: physicsMaterial,
             position: new CANNON.Vec3(
                 position.x,
                 position.y,
@@ -438,15 +845,403 @@ function createTorus(
             )
         });
 
-    return addPhysicsObject(
+
+    // Compound collider around the ring
+
+    const segments = 12;
+
+    for (
+        let i = 0;
+        i < segments;
+        i++
+    ) {
+
+        const angle =
+            (i / segments) *
+            Math.PI *
+            2;
+
+
+        body.addShape(
+
+            new CANNON.Sphere(
+                tubeRadius
+            ),
+
+            new CANNON.Vec3(
+
+                Math.cos(angle) *
+                majorRadius,
+
+                Math.sin(angle) *
+                majorRadius,
+
+                0
+            )
+        );
+    }
+
+
+    return registerObject(
         mesh,
         body,
+        "torus",
         userAdded
     );
 }
 
+
 // --------------------------------------------------
-// TEMPORARY MONKEY
+// GRID OBJECT
+// --------------------------------------------------
+
+function createGridObject(
+    position = getSpawnPosition(),
+    userAdded = true
+) {
+
+    const geometry =
+        new THREE.PlaneGeometry(
+            2,
+            2,
+            5,
+            5
+        );
+
+
+    const material =
+        new THREE.MeshBasicMaterial({
+            color: 0xd8d8d2,
+            wireframe: true,
+            side: THREE.DoubleSide
+        });
+
+
+    const mesh =
+        new THREE.Mesh(
+            geometry,
+            material
+        );
+
+
+    mesh.rotation.x =
+        -Math.PI / 2;
+
+    mesh.position.copy(position);
+
+
+    const body =
+        new CANNON.Body({
+            mass: 0.4,
+            material: physicsMaterial,
+            position: new CANNON.Vec3(
+                position.x,
+                position.y,
+                position.z
+            )
+        });
+
+
+    body.addShape(
+
+        new CANNON.Box(
+            new CANNON.Vec3(
+                1,
+                0.04,
+                1
+            )
+        )
+    );
+
+
+    return registerObject(
+        mesh,
+        body,
+        "grid",
+        userAdded
+    );
+}
+
+
+// --------------------------------------------------
+// SUZANNE
+// --------------------------------------------------
+
+let suzanneGeometry = null;
+let suzanneHullGeometry = null;
+let suzanneCollisionShape = null;
+
+const gltfLoader =
+    new GLTFLoader();
+
+
+const SUZANNE_URL =
+    "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Suzanne/glTF/Suzanne.gltf";
+
+
+function geometryToConvexShape(
+    geometry
+) {
+
+    const position =
+        geometry.attributes.position;
+
+
+    const vertexMap =
+        new Map();
+
+    const vertices = [];
+
+    const faces = [];
+
+
+    function getVertexIndex(
+        x,
+        y,
+        z
+    ) {
+
+        const key =
+            `${x.toFixed(5)},${y.toFixed(5)},${z.toFixed(5)}`;
+
+
+        if (
+            vertexMap.has(key)
+        ) {
+
+            return vertexMap.get(key);
+        }
+
+
+        const index =
+            vertices.length;
+
+
+        vertices.push(
+
+            new CANNON.Vec3(
+                x,
+                y,
+                z
+            )
+        );
+
+
+        vertexMap.set(
+            key,
+            index
+        );
+
+
+        return index;
+    }
+
+
+    for (
+        let i = 0;
+        i < position.count;
+        i += 3
+    ) {
+
+        const face = [];
+
+
+        for (
+            let j = 0;
+            j < 3;
+            j++
+        ) {
+
+            face.push(
+
+                getVertexIndex(
+
+                    position.getX(
+                        i + j
+                    ),
+
+                    position.getY(
+                        i + j
+                    ),
+
+                    position.getZ(
+                        i + j
+                    )
+                )
+            );
+        }
+
+
+        faces.push(face);
+    }
+
+
+    return new CANNON.ConvexPolyhedron({
+        vertices: vertices,
+        faces: faces
+    });
+}
+
+
+gltfLoader.load(
+
+    SUZANNE_URL,
+
+    (gltf) => {
+
+        let sourceMesh = null;
+
+
+        gltf.scene.traverse(
+            (child) => {
+
+                if (
+                    child.isMesh &&
+                    !sourceMesh
+                ) {
+
+                    sourceMesh =
+                        child;
+                }
+            }
+        );
+
+
+        if (!sourceMesh) {
+
+            console.error(
+                "Suzanne mesh not found."
+            );
+
+            return;
+        }
+
+
+        let geometry =
+            sourceMesh.geometry.clone();
+
+
+        geometry.scale(
+            0.75,
+            0.75,
+            0.75
+        );
+
+
+        geometry.center();
+
+        geometry.computeVertexNormals();
+
+
+        suzanneGeometry =
+            geometry;
+
+
+        // Remove duplicate exported vertices
+        // before calculating the convex hull.
+
+        const position =
+            geometry.attributes.position;
+
+        const unique = new Map();
+
+
+        for (
+            let i = 0;
+            i < position.count;
+            i++
+        ) {
+
+            const x =
+                position.getX(i);
+
+            const y =
+                position.getY(i);
+
+            const z =
+                position.getZ(i);
+
+
+            const key =
+                `${x.toFixed(4)},${y.toFixed(4)},${z.toFixed(4)}`;
+
+
+            if (
+                !unique.has(key)
+            ) {
+
+                unique.set(
+
+                    key,
+
+                    new THREE.Vector3(
+                        x,
+                        y,
+                        z
+                    )
+                );
+            }
+        }
+
+
+        let points =
+            Array.from(
+                unique.values()
+            );
+
+
+        // Keeps browser performance reasonable.
+
+        if (
+            points.length > 1500
+        ) {
+
+            const step =
+                Math.ceil(
+                    points.length /
+                    1500
+                );
+
+
+            points =
+                points.filter(
+                    (_, index) =>
+                        index % step === 0
+                );
+        }
+
+
+        suzanneHullGeometry =
+            new ConvexGeometry(
+                points
+            );
+
+
+        suzanneCollisionShape =
+            geometryToConvexShape(
+                suzanneHullGeometry
+            );
+
+
+        console.log(
+            "Suzanne ready."
+        );
+    },
+
+    undefined,
+
+    (error) => {
+
+        console.error(
+            "Suzanne failed to load:",
+            error
+        );
+    }
+);
+
+
+// --------------------------------------------------
+// CREATE SUZANNE
 // --------------------------------------------------
 
 function createMonkey(
@@ -454,101 +1249,64 @@ function createMonkey(
     userAdded = true
 ) {
 
+    if (
+        !suzanneGeometry ||
+        !suzanneCollisionShape
+    ) {
+
+        showStatus(
+            "Suzanne is still loading..."
+        );
+
+        return null;
+    }
+
+
     const group =
         new THREE.Group();
 
-    const material =
-        orangeMaterial.clone();
 
-    // Head
-    const head =
+    const monkey =
         new THREE.Mesh(
-            new THREE.SphereGeometry(
-                0.75,
-                24,
-                24
-            ),
-            material
+
+            suzanneGeometry.clone(),
+
+            orangeMaterial.clone()
         );
 
-    head.scale.set(
-        1,
-        0.85,
-        0.9
-    );
 
-    group.add(head);
+    group.add(monkey);
 
-    // Left ear
-    const leftEar =
-        new THREE.Mesh(
-            new THREE.SphereGeometry(
-                0.35,
-                20,
-                20
+
+    // Visible collision mesh outline
+
+    const wireframe =
+        new THREE.LineSegments(
+
+            new THREE.WireframeGeometry(
+                suzanneHullGeometry
             ),
-            material
+
+            new THREE.LineBasicMaterial({
+                color: 0xffa033,
+                transparent: true,
+                opacity: 0.28
+            })
         );
 
-    leftEar.position.set(
-        -0.72,
-        0,
-        0
+
+    group.add(wireframe);
+
+
+    group.position.copy(
+        position
     );
 
-    group.add(leftEar);
-
-    // Right ear
-    const rightEar =
-        leftEar.clone();
-
-    rightEar.position.x = 0.72;
-
-    group.add(rightEar);
-
-    // Muzzle
-    const muzzle =
-        new THREE.Mesh(
-            new THREE.SphereGeometry(
-                0.42,
-                20,
-                20
-            ),
-            material
-        );
-
-    muzzle.position.set(
-        0,
-        -0.22,
-        0.58
-    );
-
-    muzzle.scale.set(
-        1.1,
-        0.7,
-        0.8
-    );
-
-    group.add(muzzle);
-
-    group.position.copy(position);
-
-    group.traverse((child) => {
-
-        if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-        }
-    });
-
-    // Physics proxy
-    const shape =
-        new CANNON.Sphere(0.9);
 
     const body =
         new CANNON.Body({
-            mass: 1,
-            shape: shape,
+            mass: 1.2,
+            material: physicsMaterial,
             position: new CANNON.Vec3(
                 position.x,
                 position.y,
@@ -556,115 +1314,241 @@ function createMonkey(
             )
         });
 
-    scene.add(group);
-    world.addBody(body);
 
-    const object = {
-        mesh: group,
-        body: body,
-        userAdded: userAdded
-    };
+    // Actual mesh-shaped convex collision hull,
+    // rather than the old sphere collider.
 
-    group.traverse((child) => {
-        child.userData.physicsObject =
-            object;
-    });
+    body.addShape(
+        suzanneCollisionShape
+    );
 
-    objects.push(object);
 
-    if (userAdded) {
-        userObjectCount++;
-        updateObjectCounter();
-    }
-
-    return object;
+    return registerObject(
+        group,
+        body,
+        "monkey",
+        userAdded,
+        wireframe
+    );
 }
 
+
 // --------------------------------------------------
-// INITIAL SCENE OBJECTS
+// CREATE BY TYPE
+// --------------------------------------------------
+
+function createByType(
+    type,
+    position = getSpawnPosition(),
+    userAdded = true
+) {
+
+    if (type === "plane") {
+
+        return createPlane(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "cube") {
+
+        return createCube(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "circle") {
+
+        return createCircle(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "sphere") {
+
+        return createSphere(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "icosphere") {
+
+        return createIcosphere(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "cylinder") {
+
+        return createCylinder(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "cone") {
+
+        return createCone(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "torus") {
+
+        return createTorus(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "grid") {
+
+        return createGridObject(
+            position,
+            userAdded
+        );
+    }
+
+
+    if (type === "monkey") {
+
+        return createMonkey(
+            position,
+            userAdded
+        );
+    }
+
+
+    return null;
+}
+
+
+// --------------------------------------------------
+// INITIAL OBJECTS
 // --------------------------------------------------
 
 createCube(
-    new THREE.Vector3(2, 8, 0),
+    new THREE.Vector3(
+        2,
+        8,
+        0
+    ),
     false
 );
+
 
 createSphere(
-    new THREE.Vector3(4, 11, 0),
+    new THREE.Vector3(
+        4,
+        11,
+        0
+    ),
     false
 );
+
 
 createCylinder(
-    new THREE.Vector3(3, 14, -1),
+    new THREE.Vector3(
+        3,
+        14,
+        -1
+    ),
     false
 );
+
 
 createCone(
-    new THREE.Vector3(5, 17, 1),
+    new THREE.Vector3(
+        5,
+        17,
+        1
+    ),
     false
 );
 
+
 // --------------------------------------------------
-// ADD MENU
+// STATUS MESSAGE
 // --------------------------------------------------
 
-const addMenu =
-    document.createElement("div");
+const statusMessage =
+    document.createElement(
+        "div"
+    );
 
-addMenu.id = "blender-add-menu";
+statusMessage.id =
+    "blender-status";
 
-addMenu.innerHTML = `
-    <div class="add-menu-title">
-        Add
-    </div>
+document.body.appendChild(
+    statusMessage
+);
 
-    <button data-add="cube">
-        <span>Mesh</span>
-        Cube
-    </button>
 
-    <button data-add="sphere">
-        <span>Mesh</span>
-        UV Sphere
-    </button>
+let statusTimeout;
 
-    <button data-add="cylinder">
-        <span>Mesh</span>
-        Cylinder
-    </button>
 
-    <button data-add="cone">
-        <span>Mesh</span>
-        Cone
-    </button>
+function showStatus(message) {
 
-    <button data-add="torus">
-        <span>Mesh</span>
-        Torus
-    </button>
+    statusMessage.textContent =
+        message;
 
-    <button data-add="monkey">
-        <span>Mesh</span>
-        Monkey
-    </button>
 
-    <div class="add-menu-footer">
-        Shift + A
-    </div>
-`;
+    statusMessage.classList.add(
+        "visible"
+    );
 
-document.body.appendChild(addMenu);
+
+    clearTimeout(
+        statusTimeout
+    );
+
+
+    statusTimeout =
+        setTimeout(
+            () => {
+
+                statusMessage
+                    .classList
+                    .remove(
+                        "visible"
+                    );
+
+            },
+            1800
+        );
+}
+
 
 // --------------------------------------------------
 // OBJECT COUNTER
 // --------------------------------------------------
 
 const counter =
-    document.createElement("div");
+    document.createElement(
+        "div"
+    );
 
-counter.id = "object-counter";
+counter.id =
+    "object-counter";
 
-document.body.appendChild(counter);
+document.body.appendChild(
+    counter
+);
+
 
 function updateObjectCounter() {
 
@@ -672,45 +1556,159 @@ function updateObjectCounter() {
         `${userObjectCount} / ${MAX_USER_OBJECTS}`;
 }
 
+
 updateObjectCounter();
 
+
 // --------------------------------------------------
-// STATUS MESSAGE
+// BLENDER ADD MENU
 // --------------------------------------------------
 
-const statusMessage =
-    document.createElement("div");
-
-statusMessage.id = "blender-status";
-
-document.body.appendChild(
-    statusMessage
-);
-
-let statusTimeout;
-
-function showStatus(message) {
-
-    statusMessage.textContent = message;
-
-    statusMessage.classList.add(
-        "visible"
+const addMenu =
+    document.createElement(
+        "div"
     );
 
-    clearTimeout(statusTimeout);
+addMenu.id =
+    "blender-add-menu";
 
-    statusTimeout =
-        setTimeout(() => {
 
-            statusMessage.classList.remove(
-                "visible"
-            );
+addMenu.innerHTML = `
 
-        }, 1800);
-}
+    <div class="blender-menu-title">
+        Add
+    </div>
+
+
+    <div class="blender-menu-item blender-has-submenu">
+
+        <span>Mesh</span>
+        <span class="menu-arrow">›</span>
+
+
+        <div class="blender-submenu">
+
+            <button data-add="plane">
+                Plane
+            </button>
+
+            <button data-add="cube">
+                Cube
+            </button>
+
+            <button data-add="circle">
+                Circle
+            </button>
+
+            <button data-add="sphere">
+                UV Sphere
+            </button>
+
+            <button data-add="icosphere">
+                Icosphere
+            </button>
+
+            <button data-add="cylinder">
+                Cylinder
+            </button>
+
+            <button data-add="cone">
+                Cone
+            </button>
+
+            <button data-add="torus">
+                Torus
+            </button>
+
+            <div class="menu-separator"></div>
+
+            <button data-add="grid">
+                Grid
+            </button>
+
+            <button data-add="monkey">
+                Monkey
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="blender-menu-item disabled">
+        <span>Curve</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Surface</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Metaball</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Text</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Volume</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Grease Pencil</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+
+    <div class="menu-separator"></div>
+
+
+    <div class="blender-menu-item disabled">
+        <span>Armature</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Lattice</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Empty</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Image</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+
+    <div class="menu-separator"></div>
+
+
+    <div class="blender-menu-item disabled">
+        <span>Light</span>
+        <span class="menu-arrow">›</span>
+    </div>
+
+    <div class="blender-menu-item disabled">
+        <span>Camera</span>
+    </div>
+
+`;
+
+
+document.body.appendChild(
+    addMenu
+);
+
 
 // --------------------------------------------------
-// ADD NEW OBJECT
+// ADD OBJECT
 // --------------------------------------------------
 
 function addNewObject(type) {
@@ -727,54 +1725,124 @@ function addNewObject(type) {
         return;
     }
 
-    let object = null;
 
-    if (type === "cube") {
-        object = createCube();
+    const object =
+        createByType(type);
+
+
+    if (!object) {
+
+        return;
     }
 
-    if (type === "sphere") {
-        object = createSphere();
-    }
-
-    if (type === "cylinder") {
-        object = createCylinder();
-    }
-
-    if (type === "cone") {
-        object = createCone();
-    }
-
-    if (type === "torus") {
-        object = createTorus();
-    }
-
-    if (type === "monkey") {
-        object = createMonkey();
-    }
 
     closeAddMenu();
 
-    if (object) {
+    selectObject(
+        object
+    );
 
-        selectObject(object);
 
-        showStatus(
-            `${type} added`
-        );
-    }
+    showStatus(
+        `${type} added`
+    );
 }
 
+
 // --------------------------------------------------
-// ADD MENU CONTROLS
+// MENU BUTTONS
+// --------------------------------------------------
+
+addMenu
+    .querySelectorAll(
+        "button[data-add]"
+    )
+    .forEach(
+        (button) => {
+
+            button.addEventListener(
+                "click",
+                (event) => {
+
+                    event.stopPropagation();
+
+
+                    addNewObject(
+                        button.dataset.add
+                    );
+                }
+            );
+        }
+    );
+
+
+// --------------------------------------------------
+// TRACK POINTER
+// --------------------------------------------------
+
+window.addEventListener(
+    "pointermove",
+    (event) => {
+
+        mouseX =
+            event.clientX;
+
+        mouseY =
+            event.clientY;
+    }
+);
+
+
+// --------------------------------------------------
+// MENU OPEN / CLOSE
 // --------------------------------------------------
 
 function openAddMenu() {
+
+    const menuWidth = 230;
+    const menuHeight = 500;
+
+
+    let x = mouseX;
+    let y = mouseY;
+
+
+    if (
+        x + menuWidth >
+        window.innerWidth
+    ) {
+
+        x =
+            window.innerWidth -
+            menuWidth -
+            10;
+    }
+
+
+    if (
+        y + menuHeight >
+        window.innerHeight
+    ) {
+
+        y =
+            window.innerHeight -
+            menuHeight -
+            10;
+    }
+
+
+    addMenu.style.left =
+        `${Math.max(10, x)}px`;
+
+    addMenu.style.top =
+        `${Math.max(10, y)}px`;
+
 
     addMenu.classList.add(
         "visible"
     );
 }
+
 
 function closeAddMenu() {
 
@@ -783,20 +1851,6 @@ function closeAddMenu() {
     );
 }
 
-addMenu
-    .querySelectorAll("button")
-    .forEach((button) => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                addNewObject(
-                    button.dataset.add
-                );
-            }
-        );
-    });
 
 // --------------------------------------------------
 // SELECTION
@@ -808,11 +1862,14 @@ const raycaster =
 const pointer =
     new THREE.Vector2();
 
+
 function clearSelection() {
 
     if (!selectedObject) {
+
         return;
     }
+
 
     selectedObject.mesh.traverse(
         (child) => {
@@ -830,14 +1887,31 @@ function clearSelection() {
         }
     );
 
+
+    if (
+        selectedObject.colliderVisual
+    ) {
+
+        selectedObject
+            .colliderVisual
+            .material
+            .opacity =
+            0.28;
+    }
+
+
     selectedObject = null;
 }
+
 
 function selectObject(object) {
 
     clearSelection();
 
-    selectedObject = object;
+
+    selectedObject =
+        object;
+
 
     object.mesh.traverse(
         (child) => {
@@ -854,42 +1928,74 @@ function selectObject(object) {
             }
         }
     );
+
+
+    if (
+        object.colliderVisual
+    ) {
+
+        object
+            .colliderVisual
+            .material
+            .opacity =
+            0.9;
+    }
 }
+
+
+// --------------------------------------------------
+// CLICK SELECTION
+// --------------------------------------------------
 
 canvas.addEventListener(
     "pointerdown",
     (event) => {
 
         pointer.x =
-            (event.clientX /
-                window.innerWidth) *
-                2 -
+            (
+                event.clientX /
+                window.innerWidth
+            ) *
+            2 -
             1;
 
+
         pointer.y =
-            -(event.clientY /
-                window.innerHeight) *
-                2 +
+            -(
+                event.clientY /
+                window.innerHeight
+            ) *
+            2 +
             1;
+
 
         raycaster.setFromCamera(
             pointer,
             camera
         );
 
+
         const meshes = [];
 
-        for (const object of objects) {
+
+        for (
+            const object
+            of objects
+        ) {
 
             object.mesh.traverse(
                 (child) => {
 
                     if (child.isMesh) {
-                        meshes.push(child);
+
+                        meshes.push(
+                            child
+                        );
                     }
                 }
             );
         }
+
 
         const hits =
             raycaster.intersectObjects(
@@ -897,10 +2003,16 @@ canvas.addEventListener(
                 false
             );
 
-        if (hits.length === 0) {
+
+        if (
+            hits.length === 0
+        ) {
+
             clearSelection();
+
             return;
         }
+
 
         const object =
             hits[0]
@@ -908,11 +2020,16 @@ canvas.addEventListener(
                 .userData
                 .physicsObject;
 
+
         if (object) {
-            selectObject(object);
+
+            selectObject(
+                object
+            );
         }
     }
 );
+
 
 // --------------------------------------------------
 // DELETE
@@ -921,25 +2038,34 @@ canvas.addEventListener(
 function deleteSelected() {
 
     if (!selectedObject) {
+
         return;
     }
+
 
     const index =
         objects.indexOf(
             selectedObject
         );
 
-    if (index === -1) {
+
+    if (
+        index === -1
+    ) {
+
         return;
     }
+
 
     scene.remove(
         selectedObject.mesh
     );
 
+
     world.removeBody(
         selectedObject.body
     );
+
 
     if (
         selectedObject.userAdded
@@ -950,17 +2076,21 @@ function deleteSelected() {
         updateObjectCounter();
     }
 
+
     objects.splice(
         index,
         1
     );
 
+
     selectedObject = null;
+
 
     showStatus(
         "Object deleted"
     );
 }
+
 
 // --------------------------------------------------
 // DUPLICATE
@@ -969,8 +2099,10 @@ function deleteSelected() {
 function duplicateSelected() {
 
     if (!selectedObject) {
+
         return;
     }
+
 
     if (
         userObjectCount >=
@@ -984,21 +2116,37 @@ function duplicateSelected() {
         return;
     }
 
+
     const position =
-        selectedObject.mesh.position
+        selectedObject
+            .mesh
+            .position
             .clone();
+
 
     position.y += 2;
 
-    createCube(
-        position,
-        true
-    );
 
-    showStatus(
-        "Object duplicated"
-    );
+    const duplicate =
+        createByType(
+            selectedObject.type,
+            position,
+            true
+        );
+
+
+    if (duplicate) {
+
+        selectObject(
+            duplicate
+        );
+
+        showStatus(
+            "Object duplicated"
+        );
+    }
 }
+
 
 // --------------------------------------------------
 // KEYBOARD SHORTCUTS
@@ -1009,6 +2157,7 @@ window.addEventListener(
     (event) => {
 
         // Shift + A
+
         if (
             event.shiftKey &&
             event.code === "KeyA"
@@ -1016,9 +2165,11 @@ window.addEventListener(
 
             event.preventDefault();
 
+
             if (
-                addMenu.classList
-                    .contains("visible")
+                addMenu.classList.contains(
+                    "visible"
+                )
             ) {
 
                 closeAddMenu();
@@ -1028,21 +2179,27 @@ window.addEventListener(
                 openAddMenu();
             }
 
+
             return;
         }
 
+
         // Escape
+
         if (
             event.code === "Escape"
         ) {
 
             closeAddMenu();
+
             clearSelection();
 
             return;
         }
 
+
         // Delete / X
+
         if (
             event.code === "Delete" ||
             event.code === "KeyX"
@@ -1055,10 +2212,13 @@ window.addEventListener(
                 deleteSelected();
             }
 
+
             return;
         }
 
+
         // Shift + D
+
         if (
             event.shiftKey &&
             event.code === "KeyD"
@@ -1073,8 +2233,29 @@ window.addEventListener(
     }
 );
 
+
 // --------------------------------------------------
-// CAMERA CONTROLS
+// CLICK ELSEWHERE CLOSES MENU
+// --------------------------------------------------
+
+document.addEventListener(
+    "pointerdown",
+    (event) => {
+
+        if (
+            !addMenu.contains(
+                event.target
+            )
+        ) {
+
+            closeAddMenu();
+        }
+    }
+);
+
+
+// --------------------------------------------------
+// ORBIT CONTROLS
 // --------------------------------------------------
 
 const controls =
@@ -1083,9 +2264,11 @@ const controls =
         renderer.domElement
     );
 
+
 controls.enableDamping = true;
 
 controls.dampingFactor = 0.05;
+
 
 controls.target.set(
     2.5,
@@ -1093,12 +2276,88 @@ controls.target.set(
     0
 );
 
-controls.minDistance = 5;
 
+// IMPORTANT:
+// Mouse wheel no longer zooms.
+// It scrolls the website normally.
+
+controls.enableZoom = false;
+
+
+controls.minDistance = 5;
 controls.maxDistance = 18;
+
 
 controls.maxPolarAngle =
     Math.PI / 2.05;
+
+
+// --------------------------------------------------
+// NEXT SECTION BUTTON
+// --------------------------------------------------
+
+const hero =
+    document.querySelector(
+        ".hero"
+    );
+
+
+const nextButton =
+    document.createElement(
+        "a"
+    );
+
+
+nextButton.id =
+    "next-section-button";
+
+nextButton.href =
+    "#about";
+
+
+nextButton.innerHTML = `
+
+    <span>
+        NEXT
+    </span>
+
+    <strong>
+        ↓
+    </strong>
+
+`;
+
+
+hero.appendChild(
+    nextButton
+);
+
+
+// --------------------------------------------------
+// VIEWPORT HINT
+// --------------------------------------------------
+
+const viewportLabel =
+    document.querySelector(
+        ".viewport-label"
+    );
+
+
+if (viewportLabel) {
+
+    viewportLabel.innerHTML = `
+
+        <span>
+            INTERACTIVE VIEWPORT
+        </span>
+
+        <span>
+            DRAG TO ORBIT · SHIFT + A TO ADD
+        </span>
+
+    `;
+}
+
 
 // --------------------------------------------------
 // ANIMATION
@@ -1107,11 +2366,13 @@ controls.maxPolarAngle =
 const clock =
     new THREE.Clock();
 
+
 function animate() {
 
     requestAnimationFrame(
         animate
     );
+
 
     const deltaTime =
         Math.min(
@@ -1119,11 +2380,13 @@ function animate() {
             0.1
         );
 
+
     world.step(
         1 / 60,
         deltaTime,
         3
     );
+
 
     for (
         const object
@@ -1134,12 +2397,15 @@ function animate() {
             object.body.position
         );
 
+
         object.mesh.quaternion.copy(
             object.body.quaternion
         );
     }
 
+
     controls.update();
+
 
     renderer.render(
         scene,
@@ -1147,7 +2413,9 @@ function animate() {
     );
 }
 
+
 animate();
+
 
 // --------------------------------------------------
 // RESIZE
@@ -1161,7 +2429,9 @@ window.addEventListener(
             window.innerWidth /
             window.innerHeight;
 
+
         camera.updateProjectionMatrix();
+
 
         renderer.setSize(
             window.innerWidth,
