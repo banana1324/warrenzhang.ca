@@ -6,14 +6,299 @@
 
     <title>Warren Zhang</title>
 
+    <meta
+        name="description"
+        content="Warren Zhang — Computer Science, software, robotics, embedded systems, and 3D."
+    >
+
     <link rel="stylesheet" href="style.css">
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+        }
+    }
+    </script>
 </head>
 
 <body>
+
+    <section class="hero" id="home">
+
+        <canvas id="three-canvas"></canvas>
+
+        <header class="site-header">
+            <a class="logo" href="#home">
+                WZ
+            </a>
+
+            <nav class="nav">
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#blender">Blender</a>
+                <a href="#experience">Experience</a>
+            </nav>
+        </header>
+
+
+        <div class="hero-text">
+
+            <p class="hero-label">
+                WARREN ZHANG
+            </p>
+
+            <h1>
+                I like building things
+                <span>that move.</span>
+            </h1>
+
+            <p class="hero-description">
+                Computer Science, embedded systems, robotics,
+                and experiments in Blender.
+            </p>
+
+            <div class="hero-links">
+                <a href="#projects">View projects</a>
+                <a href="#blender">Blender lab</a>
+            </div>
+
+        </div>
+
+
+        <div class="viewport-label">
+            <span>INTERACTIVE VIEWPORT</span>
+            <span>DRAG TO ORBIT</span>
+        </div>
+
+    </section>
+
+
     <main>
-        <h1>Warren Zhang</h1>
-        <p>Computer Science @ University of Waterloo</p>
+
+        <section class="section" id="about">
+
+            <div class="section-number">
+                01
+            </div>
+
+            <div class="section-content">
+
+                <p class="section-label">
+                    ABOUT
+                </p>
+
+                <h2>
+                    Software meets the physical world.
+                </h2>
+
+                <p>
+                    I'm Warren Zhang. I enjoy programming,
+                    embedded systems, robotics, computer vision,
+                    and experimenting with physics and motion in Blender.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="section" id="projects">
+
+            <div class="section-number">
+                02
+            </div>
+
+            <div class="section-content">
+
+                <p class="section-label">
+                    SELECTED PROJECTS
+                </p>
+
+                <h2>
+                    Things I've built.
+                </h2>
+
+                <div class="projects">
+
+                    <article class="project">
+
+                        <div class="project-top">
+                            <span>01</span>
+                            <span>EMBEDDED / IOT</span>
+                        </div>
+
+                        <h3>
+                            Wildfire Detection System
+                        </h3>
+
+                        <p>
+                            A wireless sensor system built around
+                            embedded hardware and LoRaWAN communication.
+                        </p>
+
+                    </article>
+
+
+                    <article class="project">
+
+                        <div class="project-top">
+                            <span>02</span>
+                            <span>ROBOTICS</span>
+                        </div>
+
+                        <h3>
+                            Computer Vision Robot
+                        </h3>
+
+                        <p>
+                            Computer vision combined with robotics
+                            hardware to detect and respond to the
+                            surrounding environment.
+                        </p>
+
+                    </article>
+
+
+                    <article class="project">
+
+                        <div class="project-top">
+                            <span>03</span>
+                            <span>SOFTWARE</span>
+                        </div>
+
+                        <h3>
+                            More coming soon
+                        </h3>
+
+                        <p>
+                            This space will hold additional software
+                            and hardware projects.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="section" id="blender">
+
+            <div class="section-number">
+                03
+            </div>
+
+            <div class="section-content">
+
+                <p class="section-label">
+                    BLENDER LAB
+                </p>
+
+                <h2>
+                    Physics, motion, and 3D experiments.
+                </h2>
+
+                <p class="section-intro">
+                    I especially enjoy rigid body simulations
+                    and working with armatures.
+                </p>
+
+
+                <div class="blender-grid">
+
+                    <div class="blender-item">
+                        <span>RIGID BODY</span>
+                        <h3>Simulation 01</h3>
+                    </div>
+
+                    <div class="blender-item">
+                        <span>ARMATURES</span>
+                        <h3>Rigging Study</h3>
+                    </div>
+
+                    <div class="blender-item">
+                        <span>PHYSICS</span>
+                        <h3>Experiment 03</h3>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="section" id="experience">
+
+            <div class="section-number">
+                04
+            </div>
+
+            <div class="section-content">
+
+                <p class="section-label">
+                    EXPERIENCE
+                </p>
+
+                <h2>
+                    Work and experience.
+                </h2>
+
+                <div class="experience-item">
+
+                    <div>
+                        <h3>EIM Technology</h3>
+                        <p>
+                            Embedded systems, software,
+                            hardware testing, and prototyping.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="experience-item">
+
+                    <div>
+                        <h3>Badminton Coach</h3>
+                        <p>
+                            Coaching and working with young athletes.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
     </main>
-    <!-- Trigger GitHub Pages deployment -->
+
+
+    <footer>
+
+        <div>
+            <strong>Warren Zhang</strong>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Resume</a>
+            <a href="#">Email</a>
+        </div>
+
+        <div class="webring">
+            CS WEBRING
+        </div>
+
+    </footer>
+
+
+    <script type="module" src="script.js"></script>
+
 </body>
 </html>
