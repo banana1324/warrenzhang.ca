@@ -1,304 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Warren Zhang</title>
-
-    <meta
-        name="description"
-        content="Warren Zhang — Computer Science, software, robotics, embedded systems, and 3D."
-    >
-
-    <link rel="stylesheet" href="style.css">
-
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
-        }
-    }
-    </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Warren Zhang — software, embedded systems, robotics, and interactive 3D work." />
+  <meta name="theme-color" content="#181818" />
+  <title>Warren Zhang</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
+  <a class="skip-link" href="#content">Skip to content</a>
 
-    <section class="hero" id="home">
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Warren Zhang home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>Warren Zhang</span>
+    </a>
 
-        <canvas id="three-canvas"></canvas>
+    <nav class="topnav" aria-label="Primary navigation">
+      <button class="nav-link is-active" data-section="home" type="button">Home</button>
+      <button class="nav-link" data-section="about" type="button">About</button>
+      <button class="nav-link" data-section="projects" type="button">Projects</button>
+      <button class="nav-link" data-section="experience" type="button">Experience</button>
+      <button class="nav-link" data-section="interests" type="button">Interests</button>
+      <button class="nav-link" data-section="contact" type="button">Contact</button>
+      <a class="nav-link nav-resume" href="assets/resume.pdf" target="_blank" rel="noreferrer">Resume ↗</a>
+    </nav>
 
-        <header class="site-header">
-            <a class="logo" href="#home">
-                WZ
-            </a>
+    <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-nav">
+      Menu
+    </button>
+  </header>
 
-            <nav class="nav">
-                <a href="#about">About</a>
-                <a href="#projects">Projects</a>
-                <a href="#blender">Blender</a>
-                <a href="#experience">Experience</a>
-            </nav>
-        </header>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden>
+    <button class="nav-link is-active" data-section="home" type="button">Home</button>
+    <button class="nav-link" data-section="about" type="button">About</button>
+    <button class="nav-link" data-section="projects" type="button">Projects</button>
+    <button class="nav-link" data-section="experience" type="button">Experience</button>
+    <button class="nav-link" data-section="interests" type="button">Interests</button>
+    <button class="nav-link" data-section="contact" type="button">Contact</button>
+    <a class="nav-link nav-resume" href="assets/resume.pdf" target="_blank" rel="noreferrer">Resume ↗</a>
+  </nav>
 
+  <main id="content" class="site-shell">
+    <section class="viewport-panel" aria-label="Interactive 3D workbench">
+      <div id="viewport" class="viewport" tabindex="0" aria-describedby="viewport-help">
+        <canvas id="scene-canvas" aria-hidden="true"></canvas>
 
-        <div class="hero-text">
-
-            <p class="hero-label">
-                WARREN ZHANG
-            </p>
-
-            <h1>
-                I like building things
-                <span>that move.</span>
-            </h1>
-
-            <p class="hero-description">
-                Computer Science, embedded systems, robotics,
-                and experiments in Blender.
-            </p>
-
-            <div class="hero-links">
-                <a href="#projects">View projects</a>
-                <a href="#blender">Blender lab</a>
-            </div>
-
+        <div class="viewport-hud hud-top-left" aria-hidden="true">
+          <span class="hud-dot"></span>
+          <span>Perspective</span>
         </div>
 
-
-        <div class="viewport-label">
-            <span>INTERACTIVE VIEWPORT</span>
-            <span>DRAG TO ORBIT</span>
+        <div class="viewport-hud hud-top-right" aria-hidden="true">
+          <span id="scene-label">Warren / Workbench</span>
         </div>
 
+        <div class="hero-copy" id="hero-copy">
+          <p class="eyebrow">Software · Embedded · Robotics</p>
+          <h1>Building things that move, sense, and think.</h1>
+          <p class="hero-lede">A compact portfolio you can inspect instead of scroll through.</p>
+
+          <div class="hero-actions">
+            <button class="primary-button" type="button" data-section="projects">Explore work</button>
+            <button class="secondary-button" type="button" data-section="about">About me</button>
+          </div>
+        </div>
+
+        <div class="viewport-controls" aria-label="3D controls">
+          <button id="reset-view" type="button">Reset view</button>
+          <button id="add-object" type="button" aria-haspopup="menu" aria-expanded="false">Add object</button>
+        </div>
+
+        <p id="viewport-help" class="viewport-help">
+          Drag to orbit · Shift+A to add · G to toss selected · R to rotate selected
+        </p>
+
+        <div id="add-menu" class="add-menu" role="menu" hidden>
+          <div class="add-menu-header">
+            <span>Add</span>
+            <span>›</span>
+            <span>Mesh</span>
+          </div>
+
+          <button role="menuitem" data-add="plane" type="button">Plane <kbd>1</kbd></button>
+          <button role="menuitem" data-add="cube" type="button">Cube <kbd>2</kbd></button>
+          <button role="menuitem" data-add="circle" type="button">Circle <kbd>3</kbd></button>
+          <button role="menuitem" data-add="uvsphere" type="button">UV Sphere <kbd>4</kbd></button>
+          <button role="menuitem" data-add="icosphere" type="button">Icosphere <kbd>5</kbd></button>
+          <button role="menuitem" data-add="cylinder" type="button">Cylinder <kbd>6</kbd></button>
+          <button role="menuitem" data-add="cone" type="button">Cone <kbd>7</kbd></button>
+          <button role="menuitem" data-add="torus" type="button">Torus <kbd>8</kbd></button>
+          <button role="menuitem" data-add="monkey" type="button">Monkey <kbd>9</kbd></button>
+        </div>
+      </div>
+
+      <div class="selector-bar" aria-label="Current items">
+        <button class="selector-arrow" id="previous-item" type="button" aria-label="Previous item">←</button>
+        <div id="selector-items" class="selector-items"></div>
+        <button class="selector-arrow" id="next-item" type="button" aria-label="Next item">→</button>
+      </div>
     </section>
 
-
-    <main>
-
-        <section class="section" id="about">
-
-            <div class="section-number">
-                01
-            </div>
-
-            <div class="section-content">
-
-                <p class="section-label">
-                    ABOUT
-                </p>
-
-                <h2>
-                    Software meets the physical world.
-                </h2>
-
-                <p>
-                    I'm Warren Zhang. I enjoy programming,
-                    embedded systems, robotics, computer vision,
-                    and experimenting with physics and motion in Blender.
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <section class="section" id="projects">
-
-            <div class="section-number">
-                02
-            </div>
-
-            <div class="section-content">
-
-                <p class="section-label">
-                    SELECTED PROJECTS
-                </p>
-
-                <h2>
-                    Things I've built.
-                </h2>
-
-                <div class="projects">
-
-                    <article class="project">
-
-                        <div class="project-top">
-                            <span>01</span>
-                            <span>EMBEDDED / IOT</span>
-                        </div>
-
-                        <h3>
-                            Wildfire Detection System
-                        </h3>
-
-                        <p>
-                            A wireless sensor system built around
-                            embedded hardware and LoRaWAN communication.
-                        </p>
-
-                    </article>
-
-
-                    <article class="project">
-
-                        <div class="project-top">
-                            <span>02</span>
-                            <span>ROBOTICS</span>
-                        </div>
-
-                        <h3>
-                            Computer Vision Robot
-                        </h3>
-
-                        <p>
-                            Computer vision combined with robotics
-                            hardware to detect and respond to the
-                            surrounding environment.
-                        </p>
-
-                    </article>
-
-
-                    <article class="project">
-
-                        <div class="project-top">
-                            <span>03</span>
-                            <span>SOFTWARE</span>
-                        </div>
-
-                        <h3>
-                            More coming soon
-                        </h3>
-
-                        <p>
-                            This space will hold additional software
-                            and hardware projects.
-                        </p>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <section class="section" id="blender">
-
-            <div class="section-number">
-                03
-            </div>
-
-            <div class="section-content">
-
-                <p class="section-label">
-                    BLENDER LAB
-                </p>
-
-                <h2>
-                    Physics, motion, and 3D experiments.
-                </h2>
-
-                <p class="section-intro">
-                    I especially enjoy rigid body simulations
-                    and working with armatures.
-                </p>
-
-
-                <div class="blender-grid">
-
-                    <div class="blender-item">
-                        <span>RIGID BODY</span>
-                        <h3>Simulation 01</h3>
-                    </div>
-
-                    <div class="blender-item">
-                        <span>ARMATURES</span>
-                        <h3>Rigging Study</h3>
-                    </div>
-
-                    <div class="blender-item">
-                        <span>PHYSICS</span>
-                        <h3>Experiment 03</h3>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <section class="section" id="experience">
-
-            <div class="section-number">
-                04
-            </div>
-
-            <div class="section-content">
-
-                <p class="section-label">
-                    EXPERIENCE
-                </p>
-
-                <h2>
-                    Work and experience.
-                </h2>
-
-                <div class="experience-item">
-
-                    <div>
-                        <h3>EIM Technology</h3>
-                        <p>
-                            Embedded systems, software,
-                            hardware testing, and prototyping.
-                        </p>
-                    </div>
-
-                </div>
-
-                <div class="experience-item">
-
-                    <div>
-                        <h3>Badminton Coach</h3>
-                        <p>
-                            Coaching and working with young athletes.
-                        </p>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <footer>
-
-        <div>
-            <strong>Warren Zhang</strong>
-        </div>
-
-        <div class="footer-links">
-            <a href="#">GitHub</a>
-            <a href="#">LinkedIn</a>
-            <a href="#">Resume</a>
-            <a href="#">Email</a>
-        </div>
-
-        <div class="webring">
-            CS WEBRING
-        </div>
-
-    </footer>
-
-
-    <script type="module" src="script.js"></script>
-
+    <aside class="info-panel" aria-live="polite" aria-atomic="true">
+      <div class="info-topline">
+        <span id="info-index">01 / 04</span>
+        <span id="info-type">Selected work</span>
+      </div>
+
+      <div class="info-body">
+        <p id="info-kicker" class="info-kicker">PROJECT</p>
+        <h2 id="info-title">Wildfire Detection</h2>
+        <p id="info-meta" class="info-meta">ESP32 · LoRaWAN · MQTT · Python</p>
+        <p id="info-description" class="info-description">
+          A remote sensing system built around low-power wireless nodes and a software pipeline for monitoring wildfire-related conditions.
+        </p>
+        <ul id="info-details" class="info-details"></ul>
+      </div>
+
+      <div class="info-actions">
+        <a id="info-primary-link" class="primary-button" href="#" target="_blank" rel="noreferrer">View project ↗</a>
+        <a id="info-secondary-link" class="secondary-button" href="#" target="_blank" rel="noreferrer">GitHub ↗</a>
+        <a id="info-tertiary-link" class="secondary-button" href="#" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+      </div>
+
+      <div class="info-footer">
+        <span>Fast navigation</span>
+        <span>Text updates before the 3D transition finishes.</span>
+      </div>
+    </aside>
+  </main>
+
+  <noscript>
+    <section class="noscript-card">
+      <h1>Warren Zhang</h1>
+      <p>This portfolio uses JavaScript for its interactive 3D workbench. Please enable JavaScript to view it.</p>
+    </section>
+  </noscript>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
