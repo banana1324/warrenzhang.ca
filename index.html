@@ -3,9 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Warren Zhang — software, embedded systems, robotics, and interactive 3D work." />
-  <meta name="theme-color" content="#181818" />
+  <meta
+    name="description"
+    content="Warren Zhang — software, embedded systems, robotics, and interactive 3D work."
+  />
+  <meta name="theme-color" content="#121212" />
   <title>Warren Zhang</title>
+
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -13,10 +17,13 @@
   <a class="skip-link" href="#content">Skip to content</a>
 
   <header class="topbar">
-    <a class="brand" href="#home" aria-label="Warren Zhang home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span>Warren Zhang</span>
-    </a>
+    <div class="topbar-left">
+      <a class="brand" href="#home" aria-label="Warren Zhang home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Warren Zhang</span>
+      </a>
+      <p class="brand-subtitle">Software · Embedded · Robotics</p>
+    </div>
 
     <nav class="topnav" aria-label="Primary navigation">
       <button class="nav-link is-active" data-section="home" type="button">Home</button>
@@ -28,7 +35,12 @@
       <a class="nav-link nav-resume" href="assets/resume.pdf" target="_blank" rel="noreferrer">Resume ↗</a>
     </nav>
 
-    <button class="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-nav">
+    <button
+      class="mobile-menu-button"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
       Menu
     </button>
   </header>
@@ -48,6 +60,8 @@
       <div id="viewport" class="viewport" tabindex="0" aria-describedby="viewport-help">
         <canvas id="scene-canvas" aria-hidden="true"></canvas>
 
+        <div class="viewport-overlay"></div>
+
         <div class="viewport-hud hud-top-left" aria-hidden="true">
           <span class="hud-dot"></span>
           <span>Perspective</span>
@@ -58,9 +72,19 @@
         </div>
 
         <div class="hero-copy" id="hero-copy">
-          <p class="eyebrow">Software · Embedded · Robotics</p>
+          <p class="eyebrow">Compact portfolio</p>
           <h1>Building things that move, sense, and think.</h1>
-          <p class="hero-lede">A compact portfolio you can inspect instead of scroll through.</p>
+          <p class="hero-lede">
+            Software, robotics, and embedded systems — explored through a
+            Blender-inspired 3D workbench instead of a long scrolling page.
+          </p>
+
+          <div class="hero-tags" aria-label="Core topics">
+            <span class="hero-tag">Three.js</span>
+            <span class="hero-tag">Embedded</span>
+            <span class="hero-tag">Robotics</span>
+            <span class="hero-tag">Interactive UI</span>
+          </div>
 
           <div class="hero-actions">
             <button class="primary-button" type="button" data-section="projects">Explore work</button>
@@ -127,7 +151,7 @@
 
       <div class="info-footer">
         <span>Fast navigation</span>
-        <span>Text updates before the 3D transition finishes.</span>
+        <span>Text updates immediately while the 3D scene reacts in parallel.</span>
       </div>
     </aside>
   </main>
