@@ -1,3983 +1,1813 @@
-import * as THREE from "three";
-
-import {
-  OrbitControls
-} from "three/addons/controls/OrbitControls.js";
-
-import {
-  RoundedBoxGeometry
-} from "three/addons/geometries/RoundedBoxGeometry.js";
-
-
-/* =========================================================
-   LINKS
-========================================================= */
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 const LINKS = {
-  github: "https://github.com/banana1324",
-  linkedin: "https://www.linkedin.com/in/fuyuanzhang",
-  email: "mailto:warrenz7980@gmail.com",
-  resume: "./assets/resume.pdf"
+  github: 'https://github.com/banana1324',
+  linkedin: 'https://www.linkedin.com/in/fuyuanzhang',
+  youtube: 'https://www.youtube.com/@goosehjonk918',
+  email: 'mailto:warrenz7980@gmail.com',
+  resume: './assets/resume.pdf'
 };
-
-
-/* =========================================================
-   WEBSITE CONTENT
-========================================================= */
 
 const CONTENT = {
-
-  home: [
-    {
-      id: "home",
-
-      label: "Home",
-
-      kicker: "HELLO",
-
-      title:
-        "Building things that move, sense, and think.",
-
-      meta:
-        "Waterloo CS · Software · Embedded · Robotics",
-
-      description:
-        "I like projects where software eventually has to interact with something real: a robot, a sensor, a radio, a physical interface, or a person using it. This portfolio is built the same way. Pick something to inspect and the lab brings it to you.",
-
-      facts: [
-        {
-          value: "Software",
-          label: "Python · C++ · JavaScript"
-        },
-        {
-          value: "Embedded",
-          label: "ESP32 · RP2040 · Raspberry Pi"
-        },
-        {
-          value: "Robotics",
-          label: "Vision · PID · Odometry"
-        }
-      ],
-
-      details: [
-        "The information panel is intentionally the main part of the website.",
-        "The lab bench changes depending on the section you are reading.",
-        "The robotic arm acts as a curator and presents the object connected to the current topic."
-      ],
-
-      model: "robot",
-
-      armPose: "welcome",
-
-      links: {
-        primary: {
-          label: "Explore projects",
-          action: "projects"
-        },
-
-        secondary: {
-          label: "GitHub ↗",
-          href: LINKS.github
-        }
-      }
+  home: [{
+    id: 'home', label: 'Home', kicker: 'INTRO',
+    title: 'Software that reaches the physical world.',
+    meta: 'Waterloo Computer Science · Richmond, BC',
+    description: 'I build software, embedded systems, and robotics projects where code eventually has to interact with something real. My work ranges from computer vision and LoRaWAN sensor networks to microcontroller software, VEX robotics, and interactive web interfaces.',
+    metrics: [
+      ['$195K+', 'raised across 3 Kickstarter campaigns'],
+      ['15', 'apps and games built for an RP2040 platform'],
+      ['200+', 'hours coaching badminton']
+    ],
+    details: [
+      'Developed software for ESP32, RP2040, Arduino Uno, and Raspberry Pi platforms.',
+      'Built computer-vision interactions, sensor networks, wireless systems, and educational software.',
+      'Interested in software engineering, robotics, embedded systems, applied AI, and interactive 3D.'
+    ],
+    prop: 'robot', pose: 'present',
+    links: {
+      primary: ['Resume', LINKS.resume],
+      secondary: ['GitHub', LINKS.github],
+      tertiary: ['LinkedIn', LINKS.linkedin]
     }
-  ],
+  }],
 
-
-  about: [
-    {
-      id: "about",
-
-      label: "About",
-
-      kicker: "ABOUT",
-
-      title:
-        "I like working where software meets hardware.",
-
-      meta:
-        "Computer Science · University of Waterloo",
-
-      description:
-        "My interests sit between software engineering, embedded systems, robotics, and applied AI. I enjoy building the code, connecting it to physical hardware, testing the whole system, and figuring out why it does not behave the way I expected.",
-
-      facts: [
-        {
-          value: "Waterloo",
-          label: "Computer Science"
-        },
-        {
-          value: "Systems",
-          label: "Hardware + software"
-        },
-        {
-          value: "Builder",
-          label: "Projects over demos"
-        }
-      ],
-
-      details: [
-        "I enjoy embedded systems because the software has to deal with real sensors, timing, communication, and hardware limitations.",
-        "Robotics combines several things I like at once: software, mechanical systems, electronics, perception, and control.",
-        "I also enjoy interactive web development and 3D because an interface can itself become something the visitor experiments with."
-      ],
-
-      model: "portrait",
-
-      armPose: "present",
-
-      links: {
-        primary: {
-          label: "Resume ↗",
-          href: LINKS.resume
-        },
-
-        secondary: {
-          label: "LinkedIn ↗",
-          href: LINKS.linkedin
-        }
-      }
+  about: [{
+    id: 'about', label: 'About', kicker: 'ABOUT',
+    title: 'I like understanding the whole system.',
+    meta: 'Computer Science · Hardware + software · Builder',
+    description: 'I am most interested in projects that cross boundaries: software connected to sensors, computer vision controlling a robot, electronics paired with a useful interface, or a physical system that forces the code to deal with timing, noise, and failure. I also enjoy Blender because it lets me think about motion and mechanics visually.',
+    metrics: [
+      ['Waterloo', 'Computer Science'],
+      ['Python / C++', 'core technical languages'],
+      ['Git + HW', 'software and physical debugging']
+    ],
+    details: [
+      'Technical toolkit includes Python, MicroPython, Java, C/C++, JavaScript, HTML/CSS, ESP32, RP2040, Raspberry Pi, LoRaWAN, MQTT, Node-RED, PID, odometry, oscilloscopes, and logic analyzers.',
+      'LinkedIn projects include embedded learning software and analog-circuit verification work involving operational amplifiers, MOSFETs, BJTs, diodes, Laplace transforms, Fourier transforms, and elements of complex analysis.',
+      'Outside technical work, I have coached badminton and performed trombone in ensemble settings.'
+    ],
+    prop: 'portrait', pose: 'present',
+    links: {
+      primary: ['Resume', LINKS.resume],
+      secondary: ['LinkedIn', LINKS.linkedin],
+      tertiary: ['YouTube', LINKS.youtube]
     }
-  ],
-
-
-  projects: [
-
-    {
-      id: "wildfire",
-
-      label: "Wildfire",
-
-      kicker: "PROJECT",
-
-      title:
-        "Wildfire Detection System",
-
-      meta:
-        "C++ · LoRaWAN · Raspberry Pi · BME680 · MQTT",
-
-      description:
-        "I built an IoT wildfire monitoring system that connects an environmental sensor node to a Raspberry Pi gateway over LoRaWAN, then sends the data into an MQTT and Node-RED software pipeline for processing and visualization.",
-
-      facts: [
-        {
-          value: "BME680",
-          label: "Environmental sensing"
-        },
-        {
-          value: "LoRaWAN",
-          label: "Long-range communication"
-        },
-        {
-          value: "Node-RED",
-          label: "Dashboard + processing"
-        }
-      ],
-
-      details: [
-        "Developed the environmental sensing node and configured long-range wireless communication.",
-        "Connected the sensor side to a Raspberry Pi gateway and MQTT data flow.",
-        "Built a dashboard and tested the end-to-end sensor, radio, gateway, and visualization pipeline."
-      ],
-
-      model: "wildfire",
-
-      armPose: "inspect",
-
-      links: {
-        primary: {
-          label: "GitHub ↗",
-          href: LINKS.github
-        }
-      }
-    },
-
-
-    {
-      id: "robotics",
-
-      label: "Robotics",
-
-      kicker: "PROJECT",
-
-      title:
-        "Embedded Robotics",
-
-      meta:
-        "Python · MicroPython · Computer Vision · PID",
-
-      description:
-        "My robotics projects combine embedded programming with perception and physical control. I have built computer-vision applications that recognize faces and fingers and use those inputs to control robotic systems.",
-
-      facts: [
-        {
-          value: "Vision",
-          label: "Face + finger recognition"
-        },
-        {
-          value: "Control",
-          label: "PID + odometry"
-        },
-        {
-          value: "Embedded",
-          label: "MicroPython + C++"
-        }
-      ],
-
-      details: [
-        "Built computer-vision interactions that convert visual recognition into physical robot commands.",
-        "Worked with PID control and odometry in competition robotics.",
-        "Debugged systems across software, electronics, mechanical components, and sensors."
-      ],
-
-      model: "robot",
-
-      armPose: "point",
-
-      links: {
-        primary: {
-          label: "GitHub ↗",
-          href: LINKS.github
-        }
-      }
-    },
-
-
-    {
-      id: "embedded",
-
-      label: "Embedded",
-
-      kicker: "PROJECT",
-
-      title:
-        "Embedded Systems",
-
-      meta:
-        "ESP32 · RP2040 · Arduino · Raspberry Pi",
-
-      description:
-        "I have developed and debugged software for several embedded platforms, connected sensors and wireless systems, and used physical debugging tools when the problem could not be solved by reading code alone.",
-
-      facts: [
-        {
-          value: "ESP32",
-          label: "Wireless embedded systems"
-        },
-        {
-          value: "RP2040",
-          label: "MicroPython + C++"
-        },
-        {
-          value: "Debugging",
-          label: "Scope + logic analyzer"
-        }
-      ],
-
-      details: [
-        "Worked with ESP32, Raspberry Pi Pico, Arduino Uno, and Raspberry Pi.",
-        "Integrated sensors and LoRaWAN communication.",
-        "Used oscilloscopes and logic analyzers to diagnose hardware and communication problems."
-      ],
-
-      model: "pcb",
-
-      armPose: "inspect",
-
-      links: {
-        primary: {
-          label: "GitHub ↗",
-          href: LINKS.github
-        }
-      }
-    },
-
-
-    {
-      id: "web",
-
-      label: "Web",
-
-      kicker: "PROJECT",
-
-      title:
-        "Interactive Web Projects",
-
-      meta:
-        "JavaScript · HTML/CSS · Three.js",
-
-      description:
-        "I enjoy websites most when the interface itself is part of the project. Instead of treating motion and 3D as decoration, I like using interaction to explain what the user is looking at.",
-
-      facts: [
-        {
-          value: "Three.js",
-          label: "Interactive 3D"
-        },
-        {
-          value: "Responsive",
-          label: "Desktop + mobile"
-        },
-        {
-          value: "GitHub",
-          label: "Version + deployment"
-        }
-      ],
-
-      details: [
-        "Built responsive interfaces using JavaScript and HTML/CSS.",
-        "Experimented with 3D interaction, rigid bodies, and motion.",
-        "Designed this portfolio so the information remains fast while the 3D scene reacts in parallel."
-      ],
-
-      model: "monitor",
-
-      armPose: "present",
-
-      links: {
-        primary: {
-          label: "GitHub ↗",
-          href: LINKS.github
-        }
-      }
-    }
-
-  ],
-
-
-  experience: [
-
-    {
-      id: "eim",
-
-      label: "EIM",
-
-      kicker: "EXPERIENCE",
-
-      title:
-        "EIM Technology",
-
-      meta:
-        "Technical Support Intern · Nov 2024 – Jun 2026",
-
-      description:
-        "At EIM Technology I worked across embedded software, hardware integration, testing, and technical learning materials. The work gave me repeated practice taking a hardware/software system from an idea to something another person could actually use.",
-
-      facts: [
-        {
-          value: "15",
-          label: "Apps + games"
-        },
-        {
-          value: "446",
-          label: "Kickstarter backers"
-        },
-        {
-          value: "$195k+",
-          label: "Campaign funding"
-        }
-      ],
-
-      details: [
-        "Developed embedded software for ESP32, RP2040, Arduino Uno, and Raspberry Pi.",
-        "Built and debugged 15 apps and games for the KC15 EIM learning kit.",
-        "Integrated sensors and LoRaWAN systems and used oscilloscopes and logic analyzers for debugging.",
-        "Contributed software development and promotional photography to three Kickstarter campaigns."
-      ],
-
-      model: "pcb",
-
-      armPose: "inspect",
-
-      links: {
-        primary: {
-          label: "Resume ↗",
-          href: LINKS.resume
-        }
-      }
-    },
-
-
-    {
-      id: "robotics-team",
-
-      label: "4471A",
-
-      kicker: "EXPERIENCE",
-
-      title:
-        "Competition Robotics",
-
-      meta:
-        "CAD · PID · Odometry · Robot Systems",
-
-      description:
-        "Competition robotics taught me to treat software, mechanics, and electronics as one system. A control algorithm only matters if the physical robot can actually repeat the motion under competition conditions.",
-
-      facts: [
-        {
-          value: "4471A",
-          label: "Competition team"
-        },
-        {
-          value: "PID",
-          label: "Motion control"
-        },
-        {
-          value: "CAD",
-          label: "Mechanical design"
-        }
-      ],
-
-      details: [
-        "Worked with CAD and mechanical robot systems.",
-        "Applied PID control and odometry to robot movement.",
-        "Iterated through testing, mechanical changes, and software tuning."
-      ],
-
-      model: "robot",
-
-      armPose: "point",
-
-      links: {
-        primary: {
-          label: "Resume ↗",
-          href: LINKS.resume
-        }
-      }
-    },
-
-
-    {
-      id: "coaching",
-
-      label: "Coaching",
-
-      kicker: "EXPERIENCE",
-
-      title:
-        "Badminton Coach",
-
-      meta:
-        "Stage18 Badminton Center · May 2024 – May 2026",
-
-      description:
-        "Coaching taught me how to notice small errors, explain them clearly, and adjust the explanation when a student does not understand it the first time. It was also very different from technical work because the system I was working with was a group of people.",
-
-      facts: [
-        {
-          value: "200+",
-          label: "Coaching hours"
-        },
-        {
-          value: "40+",
-          label: "Students"
-        },
-        {
-          value: "7–15",
-          label: "Student ages"
-        }
-      ],
-
-      details: [
-        "Coached more than 40 students across over 200 hours.",
-        "Helped students improve badminton technique and confidence.",
-        "Maintained clear expectations and kept group lessons focused and organized."
-      ],
-
-      model: "racket",
-
-      armPose: "reach",
-
-      links: {
-        primary: {
-          label: "Resume ↗",
-          href: LINKS.resume
-        }
-      }
-    }
-
-  ],
-
-
-  interests: [
-
-    {
-      id: "blender",
-
-      label: "Blender",
-
-      kicker: "INTEREST",
-
-      title:
-        "Blender & 3D",
-
-      meta:
-        "Rigid Bodies · Armatures · Mechanical Motion",
-
-      description:
-        "The part of Blender I enjoy most is making a scene behave. Rigid-body simulations, collisions, armatures, and mechanisms are more interesting to me than simply producing a static render.",
-
-      facts: [
-        {
-          value: "Physics",
-          label: "Rigid bodies"
-        },
-        {
-          value: "Rigging",
-          label: "Armatures"
-        },
-        {
-          value: "3D",
-          label: "Interactive systems"
-        }
-      ],
-
-      details: [
-        "I like building rigid-body simulations and seeing how objects interact.",
-        "Armatures are interesting because they turn a static mesh into a mechanical system.",
-        "The robotic curator on this website is directly inspired by that interest."
-      ],
-
-      model: "monkey",
-
-      armPose: "play",
-
-      links: {}
-    },
-
-
-    {
-      id: "hardware",
-
-      label: "Hardware",
-
-      kicker: "INTEREST",
-
-      title:
-        "Hardware & Electronics",
-
-      meta:
-        "Sensors · Microcontrollers · Debugging",
-
-      description:
-        "I like the point where a program stops being entirely abstract and has to interact with a sensor, a motor, a radio, or a circuit. Hardware makes bugs more interesting because the answer is not always somewhere in the source code.",
-
-      facts: [
-        {
-          value: "Sensors",
-          label: "Physical inputs"
-        },
-        {
-          value: "Boards",
-          label: "Embedded computing"
-        },
-        {
-          value: "Tools",
-          label: "Physical debugging"
-        }
-      ],
-
-      details: [
-        "Microcontrollers and embedded development.",
-        "Sensor and wireless communication integration.",
-        "Debugging with oscilloscopes and logic analyzers."
-      ],
-
-      model: "pcb",
-
-      armPose: "inspect",
-
-      links: {}
-    },
-
-
-    {
-      id: "music",
-
-      label: "Music",
-
-      kicker: "INTEREST",
-
-      title:
-        "Music & Audio",
-
-      meta:
-        "Trombone · Live Audio",
-
-      description:
-        "Music is another place where timing, coordination, and systems matter. I have played trombone and also worked with live audio setup and equipment.",
-
-      facts: [
-        {
-          value: "Trombone",
-          label: "Performance"
-        },
-        {
-          value: "Audio",
-          label: "Live sound"
-        },
-        {
-          value: "Team",
-          label: "Performance systems"
-        }
-      ],
-
-      details: [
-        "Played trombone in school ensembles.",
-        "Helped set up and take down live audio systems.",
-        "Learned to diagnose problems by listening and adjusting in real time."
-      ],
-
-      model: "trombone",
-
-      armPose: "present",
-
-      links: {}
-    }
-
-  ],
-
-
-  contact: [
-    {
-      id: "contact",
-
-      label: "Contact",
-
-      kicker: "CONTACT",
-
-      title:
-        "Get in touch.",
-
-      meta:
-        "Email · GitHub · LinkedIn",
-
-      description:
-        "For software, embedded, robotics, or AI-related opportunities, email is the easiest way to reach me. My GitHub and LinkedIn are also linked below.",
-
-      facts: [
-        {
-          value: "Email",
-          label: "Direct contact"
-        },
-        {
-          value: "GitHub",
-          label: "Projects + code"
-        },
-        {
-          value: "LinkedIn",
-          label: "Experience"
-        }
-      ],
-
-      details: [
-        "Email: warrenz7980@gmail.com",
-        "GitHub: banana1324",
-        "LinkedIn: fuyuanzhang"
-      ],
-
-      model: "envelope",
-
-      armPose: "present",
-
-      links: {
-        primary: {
-          label: "Email ↗",
-          href: LINKS.email
-        },
-
-        secondary: {
-          label: "GitHub ↗",
-          href: LINKS.github
-        },
-
-        tertiary: {
-          label: "LinkedIn ↗",
-          href: LINKS.linkedin
-        }
-      }
-    }
-  ]
-
-};
-
-
-/* =========================================================
-   SCENE KITS
-
-   These are the objects sitting around the robotic arm.
-========================================================= */
-
-const SCENE_KITS = {
-
-  home: [
-    {
-      model: "wildfire",
-      position: [-3.9, 0, -1.8],
-      rotation: [0, 0.4, 0],
-      scale: 0.63,
-      target: ["projects", "wildfire"]
-    },
-
-    {
-      model: "robot",
-      position: [-4.2, 0, 1.7],
-      rotation: [0, 0.7, 0],
-      scale: 0.56,
-      target: ["projects", "robotics"]
-    },
-
-    {
-      model: "pcb",
-      position: [-1.2, 0, -2.8],
-      rotation: [0, -0.2, 0],
-      scale: 0.62,
-      target: ["projects", "embedded"]
-    },
-
-    {
-      model: "monitor",
-      position: [4.3, 0, -2.1],
-      rotation: [0, -0.55, 0],
-      scale: 0.52,
-      target: ["projects", "web"]
-    },
-
-    {
-      model: "racket",
-      position: [4.9, 0, 1.8],
-      rotation: [0, -0.5, -0.1],
-      scale: 0.5,
-      target: ["experience", "coaching"]
-    },
-
-    {
-      model: "monkey",
-      position: [1.6, 0, -3.3],
-      rotation: [0, -0.5, 0],
-      scale: 0.48,
-      target: ["interests", "blender"]
-    },
-
-    {
-      model: "trombone",
-      position: [0.1, 0, 3.2],
-      rotation: [0, 0.4, 0],
-      scale: 0.45,
-      target: ["interests", "music"]
-    }
-  ],
-
-
-  about: [
-    {
-      model: "portrait",
-      position: [-3.8, 0, 0.8],
-      rotation: [0, 0.5, 0],
-      scale: 0.58,
-      target: ["about", "about"]
-    },
-
-    {
-      model: "laptop",
-      position: [-3.5, 0, -2.1],
-      rotation: [0, 0.3, 0],
-      scale: 0.62
-    },
-
-    {
-      model: "resume",
-      position: [4, 0.03, -1.8],
-      rotation: [-0.04, -0.5, 0],
-      scale: 0.62
-    },
-
-    {
-      model: "books",
-      position: [4.1, 0, 1.8],
-      rotation: [0, -0.5, 0],
-      scale: 0.64
-    }
-  ],
-
+  }],
 
   projects: [
     {
-      model: "wildfire",
-      position: [-4.1, 0, -1.7],
-      rotation: [0, 0.5, 0],
-      scale: 0.67,
-      target: ["projects", "wildfire"]
+      id: 'wildfire',
+      label: 'Wildfire',
+      kicker: 'PROJECT',
+      title: 'Wildfire Detection System',
+      meta: 'C++ · LoRaWAN · Raspberry Pi · BME680 · MQTT · Node-RED',
+      description: 'An end-to-end IoT monitoring system built around a BME680 environmental sensor, a LoRaWAN node, and a Raspberry Pi gateway. Sensor data travels over long-range radio into an MQTT and Node-RED pipeline for processing and visualization.',
+      metrics: [
+        ['BME680', 'environmental sensing'],
+        ['LoRaWAN', 'long-range transport'],
+        ['Node-RED', 'data visualization']
+      ],
+      details: [
+        'Configured the sensor node and Raspberry Pi gateway for long-range LoRaWAN communication.',
+        'Integrated MQTT and Node-RED to process and visualize incoming environmental data.',
+        'Tested the complete sensor-to-network-to-dashboard path rather than treating each subsystem separately.'
+      ],
+      prop: 'wildfire',
+      pose: 'inspect',
+      links: {
+        primary: ['GitHub', LINKS.github]
+      }
     },
 
     {
-      model: "robot",
-      position: [-4.2, 0, 1.7],
-      rotation: [0, 0.6, 0],
-      scale: 0.58,
-      target: ["projects", "robotics"]
+      id: 'kc15',
+      label: 'KC15',
+      kicker: 'PROJECT',
+      title: 'RP2040 Learning Platform',
+      meta: 'Python · MicroPython · RP2040 · Technical Education',
+      description: 'For EIM Technology’s KC15 microcontroller learning kit, I wrote and debugged all 15 software applications and games, produced tutorials for each, and made sure they ran reliably on the Raspberry Pi Pico platform.',
+      metrics: [
+        ['15', 'apps and games'],
+        ['RP2040', 'target platform'],
+        ['15', 'tutorials produced']
+      ],
+      details: [
+        'Wrote and debugged all 15 applications and games for the platform.',
+        'Created written and video tutorials so students could reproduce and understand the projects.',
+        'Verified compatibility and reliable execution on the Raspberry Pi Pico (RP2040).'
+      ],
+      prop: 'pcb',
+      pose: 'inspect',
+      links: {
+        primary: ['GitHub', LINKS.github],
+        secondary: ['LinkedIn', LINKS.linkedin]
+      }
     },
 
     {
-      model: "pcb",
-      position: [4.2, 0, -1.8],
-      rotation: [0, -0.5, 0],
-      scale: 0.68,
-      target: ["projects", "embedded"]
+      id: 'vision',
+      label: 'Vision Robotics',
+      kicker: 'PROJECT',
+      title: 'Computer Vision Robotics',
+      meta: 'Python · Face Recognition · Finger Recognition · Robotic Control',
+      description: 'Computer-vision projects that turn human input into physical robot actions. I built applications using face and finger recognition and connected the recognition results to robotic systems.',
+      metrics: [
+        ['Vision', 'human input'],
+        ['Robotics', 'physical output'],
+        ['Python', 'software layer']
+      ],
+      details: [
+        'Built face-recognition and finger-recognition interactions.',
+        'Converted visual classifications into control commands for robotic systems.',
+        'Combined perception software with embedded and physical hardware rather than keeping computer vision as a desktop-only demo.'
+      ],
+      prop: 'robot',
+      pose: 'point',
+      links: {
+        primary: ['GitHub', LINKS.github]
+      }
     },
 
     {
-      model: "monitor",
-      position: [4.2, 0, 1.8],
-      rotation: [0, -0.6, 0],
-      scale: 0.55,
-      target: ["projects", "web"]
+      id: 'analog',
+      label: 'Analog Circuits',
+      kicker: 'PROJECT',
+      title: 'Analog Circuit II',
+      meta: 'Op-Amps · MOSFETs · BJTs · Diodes · Laplace · Fourier',
+      description: 'Contributed technical verification to EIM Technology’s Analog Circuit II project. I checked diagrams, explanations, and teaching material while working with semiconductor devices and the mathematical tools used to analyze circuit behavior.',
+      metrics: [
+        ['Op-Amps', 'active circuits'],
+        ['MOSFET / BJT', 'semiconductor devices'],
+        ['Laplace / Fourier', 'circuit analysis']
+      ],
+      details: [
+        'Verified diagrams, teaching points, and technical text for correctness.',
+        'Worked with operational amplifiers, MOSFETs, BJTs, and multiple diode types.',
+        'Applied Laplace and Fourier transforms and elements of complex analysis to analyze and verify circuit behavior.'
+      ],
+      prop: 'circuit',
+      pose: 'inspect',
+      links: {
+        primary: ['LinkedIn', LINKS.linkedin]
+      }
     }
   ],
-
 
   experience: [
     {
-      model: "pcb",
-      position: [-4.1, 0, -1.6],
-      rotation: [0, 0.5, 0],
-      scale: 0.68,
-      target: ["experience", "eim"]
+      id: 'eim',
+      label: 'EIM Technology',
+      kicker: 'EXPERIENCE',
+      title: 'Technical Support Intern · EIM Technology',
+      meta: 'Nov 2024 – Jun 2026 · Richmond, BC',
+      description: 'Worked across embedded software, hardware integration, technical verification, educational content, and product testing. The role let me move between code, electronics, debugging tools, and material intended for real learners.',
+      metrics: [
+        ['$195K+', 'Kickstarter funding'],
+        ['446', 'campaign backers'],
+        ['15', 'apps and games']
+      ],
+      details: [
+        'Contributed software development and promotional photography to three Kickstarter campaigns with 446 backers and more than $195,000 raised.',
+        'Developed embedded software for ESP32, Raspberry Pi Pico, Arduino Uno, and Raspberry Pi using Python, MicroPython, and Arduino C/C++.',
+        'Integrated sensors and LoRaWAN systems and used oscilloscopes and logic analyzers to diagnose hardware and communication issues.'
+      ],
+      prop: 'pcb',
+      pose: 'inspect',
+      links: {
+        primary: ['Resume', LINKS.resume],
+        secondary: ['LinkedIn', LINKS.linkedin]
+      }
     },
 
     {
-      model: "robot",
-      position: [-4.1, 0, 1.8],
-      rotation: [0, 0.65, 0],
-      scale: 0.58,
-      target: ["experience", "robotics-team"]
+      id: 'vex',
+      label: 'VEX V5 Robotics',
+      kicker: 'EXPERIENCE',
+      title: 'VEX V5 Robotics Competition',
+      meta: 'CAD · PID Control · Odometry · Competition Robotics',
+      description: 'Worked on a VEX V5 competition robot where mechanical design, autonomous control, driver reliability, and repeated testing had to work together. My work included CAD, PID control, odometry, and iteration under competition constraints.',
+      metrics: [
+        ['VEX V5', 'competition platform'],
+        ['PID', 'motion control'],
+        ['Odometry', 'robot localization']
+      ],
+      details: [
+        'Worked on CAD and mechanical robot systems alongside programming and control.',
+        'Applied PID control and odometry to improve repeatability and autonomous movement.',
+        'Iterated through testing, mechanical changes, and software tuning as part of a competition team.'
+      ],
+      prop: 'vex',
+      pose: 'point',
+      links: {
+        primary: ['Resume', LINKS.resume]
+      }
     },
 
     {
-      model: "racket",
-      position: [4.25, 0, 1.25],
-      rotation: [0, -0.55, -0.12],
-      scale: 0.54,
-      target: ["experience", "coaching"]
+      id: 'coaching',
+      label: 'Badminton Coach',
+      kicker: 'EXPERIENCE',
+      title: 'Badminton Coach · Stage18',
+      meta: 'May 2024 – May 2026 · Richmond, BC',
+      description: 'Coached young athletes in group lessons, turning technical corrections into clear instructions while keeping sessions organized and supportive. Coaching gave me a different kind of debugging problem: understanding why a person’s movement was not working and finding an explanation that clicked.',
+      metrics: [
+        ['200+', 'coaching hours'],
+        ['40+', 'students coached'],
+        ['7–15', 'student ages']
+      ],
+      details: [
+        'Coached more than 40 students across over 200 hours.',
+        'Helped students strengthen badminton technique and confidence.',
+        'Set clear expectations for conduct and sportsmanship while keeping group lessons focused and orderly.'
+      ],
+      prop: 'racket',
+      pose: 'reach',
+      links: {
+        primary: ['Resume', LINKS.resume]
+      }
     },
 
     {
-      model: "shuttlecock",
-      position: [3.1, 0, -1.6],
-      rotation: [0, 0.4, 0.35],
-      scale: 0.8,
-      target: ["experience", "coaching"]
+      id: 'orchestra',
+      label: 'Orchestra',
+      kicker: 'EXPERIENCE',
+      title: 'Second Trombone · Vancouver Chinese Philharmonic Orchestra',
+      meta: 'Orchestral performance · Trombone',
+      description: 'Played second trombone with the Vancouver Chinese Philharmonic Orchestra, including a performance for the Consulate-General of the People’s Republic of China in Vancouver. Ensemble playing taught me to listen closely, adjust quickly, and support the larger system instead of trying to dominate it.',
+      metrics: [
+        ['2nd', 'trombone chair'],
+        ['Orchestra', 'ensemble performance'],
+        ['Vancouver', 'Chinese Philharmonic Orchestra']
+      ],
+      details: [
+        'Performed as second trombone with the Vancouver Chinese Philharmonic Orchestra.',
+        'Played at an event for the Chinese Consulate-General in Vancouver.',
+        'Worked within a large ensemble where timing, balance, and reliable preparation matter as much as individual technique.'
+      ],
+      prop: 'trombone',
+      pose: 'present',
+      links: {
+        tertiary: ['YouTube', LINKS.youtube]
+      }
     }
   ],
-
 
   interests: [
     {
-      model: "monkey",
-      position: [-4.1, 0, -1.4],
-      rotation: [0, 0.5, 0],
-      scale: 0.57,
-      target: ["interests", "blender"]
+      id: 'blender',
+      label: 'Blender',
+      kicker: 'INTEREST',
+      title: 'Blender · Physics · Armatures',
+      meta: 'Rigid bodies · Mechanical motion · 3D interaction',
+      description: 'I enjoy Blender most when the scene behaves like a system rather than a static render. Rigid-body simulations, collisions, armatures, and mechanical motion are the parts I keep coming back to. The robotic curator on this site comes directly from that interest.',
+      metrics: [
+        ['Rigid Bodies', 'physics'],
+        ['Armatures', 'rigging'],
+        ['Three.js', 'web 3D']
+      ],
+      details: [
+        'Rigid-body simulations and collision behavior.',
+        'Armatures and mechanical motion.',
+        'Interactive 3D as part of interface design rather than background decoration.'
+      ],
+      prop: 'monkey',
+      pose: 'play',
+      links: {
+        tertiary: ['YouTube', LINKS.youtube]
+      }
     },
 
     {
-      model: "cubeStack",
-      position: [-3.5, 0, 1.9],
-      rotation: [0, 0.25, 0],
-      scale: 0.63,
-      target: ["interests", "blender"]
+      id: 'hardware',
+      label: 'Hardware',
+      kicker: 'INTEREST',
+      title: 'Hardware that gives software consequences.',
+      meta: 'Sensors · Microcontrollers · Debugging',
+      description: 'I like the point where a program stops being abstract and has to interact with a real sensor, motor, radio, or circuit. Hardware makes bugs more interesting because the answer may be in timing, wiring, signal integrity, or the environment rather than in one line of code.',
+      metrics: [
+        ['ESP32', 'wireless MCU'],
+        ['RP2040', 'embedded platform'],
+        ['Scope', 'physical debugging']
+      ],
+      details: [
+        'Embedded systems and microcontrollers.',
+        'Sensor and wireless communication integration.',
+        'Oscilloscopes and logic analyzers for physical debugging.'
+      ],
+      prop: 'scope',
+      pose: 'inspect',
+      links: {}
     },
 
     {
-      model: "pcb",
-      position: [4.25, 0, -1.7],
-      rotation: [0, -0.5, 0],
-      scale: 0.67,
-      target: ["interests", "hardware"]
-    },
-
-    {
-      model: "trombone",
-      position: [4.1, 0, 1.8],
-      rotation: [0, -0.45, 0],
-      scale: 0.48,
-      target: ["interests", "music"]
+      id: 'music',
+      label: 'Music',
+      kicker: 'INTEREST',
+      title: 'Trombone & live audio.',
+      meta: 'Orchestral performance · Live sound',
+      description: 'Music has been another place where systems and timing matter. I have played trombone in school and orchestral settings, mentored other trombone players, and helped with live audio setup and teardown.',
+      metrics: [
+        ['Trombone', 'performance'],
+        ['2nd Chair', 'orchestral role'],
+        ['Audio', 'live systems']
+      ],
+      details: [
+        'Second trombone with the Vancouver Chinese Philharmonic Orchestra.',
+        'Trombone mentor and school ensemble experience.',
+        'Live audio setup, teardown, and troubleshooting.'
+      ],
+      prop: 'trombone',
+      pose: 'present',
+      links: {
+        tertiary: ['YouTube', LINKS.youtube]
+      }
     }
   ],
 
+  contact: [{
+    id: 'contact',
+    label: 'Contact',
+    kicker: 'CONTACT',
+    title: 'Build something interesting with me.',
+    meta: 'Software · Embedded · Robotics · AI',
+    description: 'For software, embedded, robotics, or AI-related opportunities, email is the easiest way to reach me. My GitHub, LinkedIn, YouTube channel, and résumé are also available below.',
+    metrics: [
+      ['Email', 'direct contact'],
+      ['GitHub', 'projects + code'],
+      ['YouTube', 'videos']
+    ],
+    details: [
+      'warrenz7980@gmail.com',
+      'github.com/banana1324',
+      'linkedin.com/in/fuyuanzhang'
+    ],
+    prop: 'envelope',
+    pose: 'present',
+    links: {
+      primary: ['Email', LINKS.email],
+      secondary: ['GitHub', LINKS.github],
+      tertiary: ['YouTube', LINKS.youtube]
+    }
+  }]
+};
+
+const KIT_LAYOUTS = {
+  home: [
+    ['robot', 'home', -3.2, 0, 1.6, .52],
+    ['wildfire', null, -3.9, 0, -1.7, .55],
+    ['pcb', null, -.8, 0, -3.5, .58],
+    ['racket', null, 4.8, 0, 1.9, .42],
+    ['trombone', null, .5, 0, 3.7, .40],
+    ['monkey', null, 4.6, 0, -2.2, .48]
+  ],
+
+  about: [
+    ['portrait', 'about', -3.4, 0, 1.2, .58],
+    ['resume', null, -3.7, 0, -1.8, .58],
+    ['laptop', null, 4.4, 0, -1.8, .55],
+    ['books', null, 4.1, 0, 1.8, .63]
+  ],
+
+  projects: [
+    ['wildfire', 'wildfire', -3.7, 0, -1.8, .62],
+    ['pcb', 'kc15', -3.8, 0, 1.7, .62],
+    ['robot', 'vision', 4.35, 0, 1.6, .55],
+    ['circuit', 'analog', 4.2, 0, -1.8, .62]
+  ],
+
+  experience: [
+    ['pcb', 'eim', -3.8, 0, -1.7, .62],
+    ['vex', 'vex', -3.8, 0, 1.7, .55],
+    ['racket', 'coaching', 4.2, 0, 1.6, .45],
+    ['trombone', 'orchestra', 4.25, 0, -1.7, .42]
+  ],
+
+  interests: [
+    ['monkey', 'blender', -3.8, 0, -1.7, .57],
+    ['scope', 'hardware', -3.7, 0, 1.8, .58],
+    ['trombone', 'music', 4.1, 0, 1.5, .43],
+    ['cubeStack', null, 4.2, 0, -1.8, .56]
+  ],
 
   contact: [
-    {
-      model: "envelope",
-      position: [-3.9, 0, -1.5],
-      rotation: [0, 0.45, 0],
-      scale: 0.7
-    },
-
-    {
-      model: "phone",
-      position: [-3.6, 0, 1.6],
-      rotation: [0, 0.5, 0],
-      scale: 0.64
-    },
-
-    {
-      model: "resume",
-      position: [4, 0, -1.65],
-      rotation: [0, -0.5, 0],
-      scale: 0.62
-    },
-
-    {
-      model: "laptop",
-      position: [4, 0, 1.8],
-      rotation: [0, -0.5, 0],
-      scale: 0.57
-    }
+    ['envelope', 'contact', -3.6, 0, -1.2, .65],
+    ['phone', null, -3.2, 0, 1.8, .6],
+    ['resume', null, 4, 0, -1.6, .57],
+    ['laptop', null, 4, 0, 1.8, .52]
   ]
-
 };
-
-
-/* =========================================================
-   ROBOT ARM POSES
-========================================================= */
-
-const ARM_POSES = {
-
-  welcome: {
-    base: -0.52,
-    shoulder: -0.34,
-    elbow: 1.08,
-    forearm: -0.46,
-    wrist: 0.16,
-    wristY: 0.0,
-    grip: 0.23
-  },
-
-  present: {
-    base: -1.08,
-    shoulder: -0.63,
-    elbow: 1.42,
-    forearm: -0.73,
-    wrist: 0.34,
-    wristY: 0.12,
-    grip: 0.19
-  },
-
-  inspect: {
-    base: -1.23,
-    shoulder: -0.78,
-    elbow: 1.58,
-    forearm: -0.82,
-    wrist: 0.25,
-    wristY: 0.06,
-    grip: 0.16
-  },
-
-  point: {
-    base: -1.02,
-    shoulder: -0.53,
-    elbow: 1.27,
-    forearm: -0.45,
-    wrist: -0.2,
-    wristY: 0.18,
-    grip: 0.3
-  },
-
-  reach: {
-    base: -1.35,
-    shoulder: -0.78,
-    elbow: 1.67,
-    forearm: -0.91,
-    wrist: 0.12,
-    wristY: -0.1,
-    grip: 0.11
-  },
-
-  play: {
-    base: -0.7,
-    shoulder: -0.24,
-    elbow: 0.85,
-    forearm: -0.24,
-    wrist: 0.47,
-    wristY: 0.25,
-    grip: 0.34
-  }
-
-};
-
-
-/* =========================================================
-   DOM
-========================================================= */
 
 const dom = {
-
-  viewport:
-    document.querySelector("#viewport"),
-
-  canvas:
-    document.querySelector("#scene-canvas"),
-
-  sceneLabel:
-    document.querySelector("#scene-label"),
-
-  sceneFooterName:
-    document.querySelector("#scene-footer-name"),
-
-  contentKicker:
-    document.querySelector("#content-kicker"),
-
-  contentCount:
-    document.querySelector("#content-count"),
-
-  contentTitle:
-    document.querySelector("#content-title"),
-
-  contentMeta:
-    document.querySelector("#content-meta"),
-
-  contentDescription:
-    document.querySelector("#content-description"),
-
-  factGrid:
-    document.querySelector("#fact-grid"),
-
-  contentDetails:
-    document.querySelector("#content-details"),
-
-  itemNavigation:
-    document.querySelector("#item-navigation"),
-
-  itemList:
-    document.querySelector("#item-list"),
-
-  previousItem:
-    document.querySelector("#previous-item"),
-
-  nextItem:
-    document.querySelector("#next-item"),
-
-  primaryLink:
-    document.querySelector("#primary-link"),
-
-  secondaryLink:
-    document.querySelector("#secondary-link"),
-
-  tertiaryLink:
-    document.querySelector("#tertiary-link"),
-
-  resetView:
-    document.querySelector("#reset-view"),
-
-  addObject:
-    document.querySelector("#add-object"),
-
-  addMenu:
-    document.querySelector("#add-menu"),
-
-  mobileMenuButton:
-    document.querySelector("#mobile-menu-button"),
-
-  mobileNav:
-    document.querySelector("#mobile-nav")
-
+  canvas: document.querySelector('#scene-canvas'),
+  title: document.querySelector('#content-title'),
+  meta: document.querySelector('#content-meta'),
+  description: document.querySelector('#content-description'),
+  kicker: document.querySelector('#content-kicker'),
+  count: document.querySelector('#content-count'),
+  metrics: document.querySelector('#metrics'),
+  details: document.querySelector('#content-details'),
+  itemNav: document.querySelector('#item-nav'),
+  itemList: document.querySelector('#item-list'),
+  prev: document.querySelector('#previous-item'),
+  next: document.querySelector('#next-item'),
+  primary: document.querySelector('#primary-action'),
+  secondary: document.querySelector('#secondary-action'),
+  tertiary: document.querySelector('#tertiary-action'),
+  sceneLabel: document.querySelector('#scene-label'),
+  armStatus: document.querySelector('#arm-status'),
+  reset: document.querySelector('#reset-view'),
+  addObject: document.querySelector('#add-object'),
+  addMenu: document.querySelector('#add-menu'),
+  menuButton: document.querySelector('#menu-button'),
+  mobileMenu: document.querySelector('#mobile-menu')
 };
-
-
-/* =========================================================
-   STATE
-========================================================= */
 
 const state = {
-
-  section:
-    "home",
-
-  index:
-    0,
-
-  activeKit:
-    null,
-
-  previousKit:
-    null,
-
-  kitAnimation:
-    null,
-
-  featuredModel:
-    null,
-
-  previousFeatured:
-    null,
-
-  featuredAnimation:
-    null,
-
-  armPose:
-    {
-      ...ARM_POSES.welcome
-    },
-
-  armTarget:
-    {
-      ...ARM_POSES.welcome
-    },
-
-  spawned:
-    [],
-
-  selectedSpawn:
-    null,
-
-  addMenuOpen:
-    false
-
+  section: 'home',
+  index: 0,
+  kit: null,
+  held: null,
+  sequence: 0,
+  armMotion: null,
+  gripMotion: null,
+  restoreTweens: [],
+  spawned: [],
+  selectedSpawn: null,
+  addOpen: false
 };
 
-
-/* =========================================================
-   THREE.JS SETUP
-========================================================= */
-
-const renderer =
-  new THREE.WebGLRenderer({
-    canvas: dom.canvas,
-    antialias: true
-  });
-
+const renderer = new THREE.WebGLRenderer({
+  canvas: dom.canvas,
+  antialias: true
+});
 
 renderer.setPixelRatio(
-  Math.min(
-    window.devicePixelRatio,
-    2
-  )
+  Math.min(window.devicePixelRatio, 2)
 );
 
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
 
-renderer.shadowMap.enabled =
-  true;
+const scene = new THREE.Scene();
 
+scene.background = new THREE.Color(0x11151a);
+scene.fog = new THREE.Fog(0x11151a, 12, 27);
 
-renderer.shadowMap.type =
-  THREE.PCFSoftShadowMap;
-
-
-renderer.outputColorSpace =
-  THREE.SRGBColorSpace;
-
-
-renderer.toneMapping =
-  THREE.ACESFilmicToneMapping;
-
-
-renderer.toneMappingExposure =
-  1.1;
-
-
-const scene =
-  new THREE.Scene();
-
-
-scene.background =
-  new THREE.Color(
-    0x171b21
-  );
-
-
-scene.fog =
-  new THREE.Fog(
-    0x171b21,
-    11,
-    25
-  );
-
-
-const camera =
-  new THREE.PerspectiveCamera(
-    42,
-    1,
-    0.1,
-    100
-  );
-
+const camera = new THREE.PerspectiveCamera(
+  42,
+  1,
+  .1,
+  100
+);
 
 camera.position.set(
-  7.8,
-  5.3,
-  9.9
+  8.4,
+  5.6,
+  10.5
 );
 
-
-/* =========================================================
-   ORBIT CONTROLS
-========================================================= */
-
-const controls =
-  new OrbitControls(
-    camera,
-    dom.canvas
-  );
-
+const controls = new OrbitControls(
+  camera,
+  dom.canvas
+);
 
 controls.target.set(
-  0,
-  1.15,
+  .3,
+  1.2,
   0
 );
 
-
-controls.enableDamping =
-  true;
-
-
-controls.dampingFactor =
-  0.065;
-
-
-/*
-  Do NOT allow wheel zoom.
-  The user's mouse wheel remains normal webpage scrolling.
-*/
-
-controls.enableZoom =
-  false;
-
-
-controls.enablePan =
-  false;
-
-
-controls.minPolarAngle =
-  Math.PI * 0.25;
-
-
-controls.maxPolarAngle =
-  Math.PI * 0.49;
-
+controls.enableDamping = true;
+controls.dampingFactor = .065;
+controls.enableZoom = false;
+controls.enablePan = false;
+controls.minPolarAngle = Math.PI * .22;
+controls.maxPolarAngle = Math.PI * .49;
 
 controls.update();
 
-
-/* =========================================================
-   LIGHTING
-========================================================= */
-
-const hemi =
-  new THREE.HemisphereLight(
-    0xeaf3ff,
-    0x2b3039,
-    2.25
-  );
-
-
 scene.add(
-  hemi
+  new THREE.HemisphereLight(
+    0xe9f2fb,
+    0x252a30,
+    2.1
+  )
 );
 
+const keyLight = new THREE.DirectionalLight(
+  0xffffff,
+  3.0
+);
 
-const mainLight =
-  new THREE.DirectionalLight(
-    0xffffff,
-    3.15
-  );
-
-
-mainLight.position.set(
+keyLight.position.set(
   6,
   10,
-  5
+  6
 );
 
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(2048, 2048);
 
-mainLight.castShadow =
-  true;
+scene.add(keyLight);
 
-
-mainLight.shadow.mapSize.set(
-  2048,
-  2048
+const coolLight = new THREE.DirectionalLight(
+  0x8faecb,
+  1.25
 );
 
-
-mainLight.shadow.camera.left =
-  -10;
-
-
-mainLight.shadow.camera.right =
-  10;
-
-
-mainLight.shadow.camera.top =
-  10;
-
-
-mainLight.shadow.camera.bottom =
-  -10;
-
-
-scene.add(
-  mainLight
-);
-
-
-const warmLight =
-  new THREE.DirectionalLight(
-    0xff932e,
-    1.35
-  );
-
-
-warmLight.position.set(
+coolLight.position.set(
   -5,
   4,
-  -5
+  -4
 );
 
+scene.add(coolLight);
 
-scene.add(
-  warmLight
+const fillLight = new THREE.PointLight(
+  0x587ca0,
+  13,
+  9
 );
 
-
-const blueLight =
-  new THREE.PointLight(
-    0x5d9ee0,
-    18,
-    8
-  );
-
-
-blueLight.position.set(
+fillLight.position.set(
   -4,
-  4,
-  3
+  3.6,
+  4
 );
 
+scene.add(fillLight);
 
-scene.add(
-  blueLight
-);
-
-
-/* =========================================================
-   MATERIAL HELPERS
-========================================================= */
-
-function material(
+function mat(
   color,
-  roughness = 0.55,
-  metalness = 0.15,
+  rough = .55,
+  metal = .15,
   emissive = 0x000000,
-  emissiveIntensity = 0
+  intensity = 0
 ) {
-
   return new THREE.MeshStandardMaterial({
     color,
-    roughness,
-    metalness,
+    roughness: rough,
+    metalness: metal,
     emissive,
-    emissiveIntensity
+    emissiveIntensity: intensity
   });
-
 }
-
 
 function mesh(
   geometry,
   color,
-  roughness = 0.55,
-  metalness = 0.15
+  rough = .55,
+  metal = .15
 ) {
+  const m = new THREE.Mesh(
+    geometry,
+    mat(color, rough, metal)
+  );
 
-  const object =
-    new THREE.Mesh(
-      geometry,
-      material(
-        color,
-        roughness,
-        metalness
-      )
-    );
+  m.castShadow = true;
+  m.receiveShadow = true;
 
-
-  object.castShadow =
-    true;
-
-
-  object.receiveShadow =
-    true;
-
-
-  return object;
-
+  return m;
 }
 
-
-function roundedBox(
-  width,
-  height,
-  depth,
-  radius,
+function box(
+  w,
+  h,
+  d,
+  r,
   color,
-  roughness = 0.55,
-  metalness = 0.15
+  rough = .55,
+  metal = .15
 ) {
-
   return mesh(
     new RoundedBoxGeometry(
-      width,
-      height,
-      depth,
+      w,
+      h,
+      d,
       4,
-      radius
+      r
     ),
     color,
-    roughness,
-    metalness
+    rough,
+    metal
   );
-
 }
 
+/* LAB SURFACE */
 
-/* =========================================================
-   LAB BENCH
-========================================================= */
-
-const bench =
-  new THREE.Group();
-
-
-scene.add(
-  bench
+const floor = box(
+  18,
+  .28,
+  11,
+  .08,
+  0x293038,
+  .92,
+  .04
 );
 
+floor.position.y = -.14;
 
-const floor =
-  roundedBox(
-    18,
-    0.28,
-    11,
-    0.08,
-    0x343941,
-    0.93,
-    0.05
-  );
+scene.add(floor);
 
-
-floor.position.y =
-  -0.14;
-
-
-bench.add(
-  floor
+const grid = new THREE.GridHelper(
+  17.6,
+  22,
+  0x596572,
+  0x3b444e
 );
 
+grid.position.y = .012;
+grid.scale.z = .62;
 
-const grid =
-  new THREE.GridHelper(
-    17.6,
-    22,
-    0x5d6571,
-    0x434a54
-  );
+scene.add(grid);
 
+/* ROBOT ARM */
 
-grid.position.y =
-  0.011;
+const ARM = {
+  L1: 2.05,
+  L2: 1.72,
+  baseY: .66
+};
 
+function buildArm() {
+  const group = new THREE.Group();
 
-grid.scale.z =
-  0.62;
+  const dark = 0x171b20;
+  const steel = 0x9aa5ae;
+  const blue = 0x546f87;
+  const blue2 = 0x3f566b;
 
-
-bench.add(
-  grid
-);
-
-
-/* Back tool rail */
-
-for (
-  let i = -5;
-  i <= 5;
-  i++
-) {
-
-  const railPin =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.035,
-        0.035,
-        0.42,
-        10
-      ),
-      0x68717d,
-      0.38,
-      0.6
-    );
-
-
-  railPin.rotation.x =
-    Math.PI / 2;
-
-
-  railPin.position.set(
-    i * 0.83,
-    0.3,
-    -4.48
-  );
-
-
-  bench.add(
-    railPin
-  );
-
-}
-
-
-/* =========================================================
-   FEATURED PEDESTAL
-========================================================= */
-
-const pedestal =
-  new THREE.Group();
-
-
-scene.add(
-  pedestal
-);
-
-
-const pedestalBase =
-  mesh(
+  const foot = mesh(
     new THREE.CylinderGeometry(
-      1.28,
-      1.48,
-      0.32,
-      40
+      .72,
+      .84,
+      .24,
+      36
     ),
-    0x24272d,
-    0.36,
-    0.65
+    dark,
+    .35,
+    .68
   );
 
+  foot.position.y = .12;
 
-pedestalBase.position.y =
-  0.16;
+  group.add(foot);
 
-
-pedestal.add(
-  pedestalBase
-);
-
-
-const pedestalRing =
-  mesh(
-    new THREE.TorusGeometry(
-      1.15,
-      0.08,
-      14,
-      48
-    ),
-    0xf28c28,
-    0.4,
-    0.4
-  );
-
-
-pedestalRing.rotation.x =
-  Math.PI / 2;
-
-
-pedestalRing.position.y =
-  0.37;
-
-
-pedestal.add(
-  pedestalRing
-);
-
-
-const pedestalTop =
-  mesh(
+  const base = mesh(
     new THREE.CylinderGeometry(
-      1.08,
-      1.08,
-      0.13,
-      40
+      .58,
+      .68,
+      .48,
+      36
     ),
-    0x15171b,
-    0.72,
-    0.3
+    blue2,
+    .4,
+    .45
   );
 
+  base.position.y = .43;
 
-pedestalTop.position.y =
-  0.42;
+  group.add(base);
 
+  const basePivot = new THREE.Group();
 
-pedestal.add(
-  pedestalTop
-);
+  basePivot.position.y = ARM.baseY;
 
+  group.add(basePivot);
 
-pedestal.position.set(
-  -1.2,
-  0,
-  0.25
-);
+  const shoulderHub = mesh(
+    new THREE.CylinderGeometry(
+      .43,
+      .43,
+      .54,
+      30
+    ),
+    dark,
+    .3,
+    .7
+  );
 
+  shoulderHub.rotation.z = Math.PI / 2;
 
-const featuredRoot =
-  new THREE.Group();
+  basePivot.add(shoulderHub);
 
+  const shoulder = new THREE.Group();
 
-featuredRoot.position.set(
-  -1.2,
-  0.51,
-  0.25
-);
+  basePivot.add(shoulder);
 
+  const upper = box(
+    .5,
+    ARM.L1,
+    .54,
+    .12,
+    blue,
+    .4,
+    .32
+  );
 
-scene.add(
-  featuredRoot
-);
+  upper.position.y = ARM.L1 / 2;
 
+  shoulder.add(upper);
 
-/* =========================================================
-   CURATOR ROBOT ARM
-========================================================= */
+  const upperInset = box(
+    .22,
+    1.15,
+    .565,
+    .05,
+    dark,
+    .45,
+    .5
+  );
 
-const arm =
-  buildRobotArm();
+  upperInset.position.y = ARM.L1 / 2;
 
+  shoulder.add(upperInset);
 
-arm.group.position.set(
-  2.1,
-  0,
-  -0.15
-);
+  const elbow = new THREE.Group();
 
+  elbow.position.y = ARM.L1;
 
-scene.add(
-  arm.group
-);
+  shoulder.add(elbow);
 
+  const elbowHub = mesh(
+    new THREE.CylinderGeometry(
+      .42,
+      .42,
+      .5,
+      28
+    ),
+    dark,
+    .3,
+    .72
+  );
 
-/* =========================================================
-   ROBOT ARM MODEL
-========================================================= */
+  elbowHub.rotation.z = Math.PI / 2;
 
-function buildRobotArm() {
+  elbow.add(elbowHub);
 
-  const group =
-    new THREE.Group();
-
-
-  const orange =
-    0xe77713;
-
-
-  const orangeDark =
-    0xb95008;
-
-
-  const dark =
-    0x1b1d21;
-
-
-  const steel =
-    0x9da5ae;
-
-
-  /* Base */
-
-  const baseFoot =
-    mesh(
+  for (const x of [-.275, .275]) {
+    const cap = mesh(
       new THREE.CylinderGeometry(
-        0.72,
-        0.82,
-        0.24,
-        36
-      ),
-      dark,
-      0.35,
-      0.7
-    );
-
-
-  baseFoot.position.y =
-    0.12;
-
-
-  group.add(
-    baseFoot
-  );
-
-
-  const baseBody =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.57,
-        0.66,
-        0.45,
-        36
-      ),
-      orangeDark,
-      0.4,
-      0.35
-    );
-
-
-  baseBody.position.y =
-    0.42;
-
-
-  group.add(
-    baseBody
-  );
-
-
-  const baseJoint =
-    new THREE.Group();
-
-
-  baseJoint.position.y =
-    0.65;
-
-
-  group.add(
-    baseJoint
-  );
-
-
-  const shoulderHousing =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.45,
-        0.45,
-        0.54,
-        30
-      ),
-      dark,
-      0.32,
-      0.68
-    );
-
-
-  shoulderHousing.rotation.z =
-    Math.PI / 2;
-
-
-  baseJoint.add(
-    shoulderHousing
-  );
-
-
-  const shoulder =
-    new THREE.Group();
-
-
-  shoulder.position.y =
-    0.14;
-
-
-  baseJoint.add(
-    shoulder
-  );
-
-
-  /* Upper arm */
-
-  const upper =
-    roundedBox(
-      0.55,
-      2.15,
-      0.58,
-      0.13,
-      orange,
-      0.4,
-      0.28
-    );
-
-
-  upper.position.y =
-    1.03;
-
-
-  shoulder.add(
-    upper
-  );
-
-
-  const upperInset =
-    roundedBox(
-      0.26,
-      1.28,
-      0.61,
-      0.07,
-      0x24272b,
-      0.43,
-      0.45
-    );
-
-
-  upperInset.position.set(
-    0,
-    1.03,
-    0
-  );
-
-
-  shoulder.add(
-    upperInset
-  );
-
-
-  const elbow =
-    new THREE.Group();
-
-
-  elbow.position.y =
-    2.03;
-
-
-  shoulder.add(
-    elbow
-  );
-
-
-  const elbowOuter =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.46,
-        0.46,
-        0.52,
-        30
-      ),
-      dark,
-      0.32,
-      0.72
-    );
-
-
-  elbowOuter.rotation.z =
-    Math.PI / 2;
-
-
-  elbow.add(
-    elbowOuter
-  );
-
-
-  const elbowCap1 =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.31,
-        0.31,
-        0.055,
-        28
+        .29,
+        .29,
+        .05,
+        26
       ),
       steel,
-      0.23,
-      0.82
+      .22,
+      .82
     );
 
+    cap.rotation.z = Math.PI / 2;
+    cap.position.x = x;
 
-  elbowCap1.rotation.z =
-    Math.PI / 2;
+    elbow.add(cap);
+  }
 
+  const forearm = new THREE.Group();
 
-  elbowCap1.position.x =
-    0.29;
+  elbow.add(forearm);
 
-
-  elbow.add(
-    elbowCap1
+  const lower = box(
+    .42,
+    ARM.L2,
+    .45,
+    .1,
+    blue,
+    .4,
+    .32
   );
 
+  lower.position.y = ARM.L2 / 2;
 
-  const elbowCap2 =
-    elbowCap1.clone();
+  forearm.add(lower);
 
+  const wrist = new THREE.Group();
 
-  elbowCap2.position.x =
-    -0.29;
+  wrist.position.y = ARM.L2;
 
+  forearm.add(wrist);
 
-  elbow.add(
-    elbowCap2
+  const wristHub = mesh(
+    new THREE.CylinderGeometry(
+      .29,
+      .29,
+      .36,
+      24
+    ),
+    dark,
+    .3,
+    .72
   );
 
+  wristHub.rotation.z = Math.PI / 2;
 
-  const forearm =
-    new THREE.Group();
+  wrist.add(wristHub);
 
+  const gripper = new THREE.Group();
 
-  elbow.add(
-    forearm
+  gripper.position.y = .26;
+
+  wrist.add(gripper);
+
+  const palm = box(
+    .5,
+    .22,
+    .38,
+    .05,
+    dark,
+    .3,
+    .68
   );
 
+  gripper.add(palm);
 
-  const lower =
-    roundedBox(
-      0.45,
-      1.65,
-      0.47,
-      0.11,
-      orange,
-      0.4,
-      0.28
-    );
-
-
-  lower.position.y =
-    0.78;
-
-
-  forearm.add(
-    lower
+  const fingerL = box(
+    .12,
+    .58,
+    .15,
+    .025,
+    steel,
+    .28,
+    .72
   );
-
-
-  const wrist =
-    new THREE.Group();
-
-
-  wrist.position.y =
-    1.56;
-
-
-  forearm.add(
-    wrist
-  );
-
-
-  const wristJoint =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.31,
-        0.31,
-        0.4,
-        24
-      ),
-      dark,
-      0.3,
-      0.7
-    );
-
-
-  wristJoint.rotation.z =
-    Math.PI / 2;
-
-
-  wrist.add(
-    wristJoint
-  );
-
-
-  const hand =
-    new THREE.Group();
-
-
-  hand.position.y =
-    0.33;
-
-
-  wrist.add(
-    hand
-  );
-
-
-  const palm =
-    roundedBox(
-      0.55,
-      0.25,
-      0.4,
-      0.06,
-      0x25282d,
-      0.3,
-      0.65
-    );
-
-
-  hand.add(
-    palm
-  );
-
-
-  const fingerL =
-    roundedBox(
-      0.13,
-      0.62,
-      0.17,
-      0.03,
-      steel,
-      0.28,
-      0.72
-    );
-
 
   fingerL.position.set(
-    -0.2,
-    0.35,
+    -.2,
+    .35,
     0
   );
 
+  gripper.add(fingerL);
 
-  hand.add(
-    fingerL
-  );
+  const fingerR = fingerL.clone();
 
+  fingerR.position.x = .2;
 
-  const fingerR =
-    roundedBox(
-      0.13,
-      0.62,
-      0.17,
-      0.03,
-      steel,
-      0.28,
-      0.72
-    );
-
-
-  fingerR.position.set(
-    0.2,
-    0.35,
-    0
-  );
-
-
-  hand.add(
-    fingerR
-  );
-
-
-  /* Initial pose */
-
-  baseJoint.rotation.y =
-    ARM_POSES.welcome.base;
-
-
-  shoulder.rotation.z =
-    ARM_POSES.welcome.shoulder;
-
-
-  elbow.rotation.z =
-    ARM_POSES.welcome.elbow;
-
-
-  forearm.rotation.z =
-    ARM_POSES.welcome.forearm;
-
-
-  wrist.rotation.z =
-    ARM_POSES.welcome.wrist;
-
+  gripper.add(fingerR);
 
   return {
     group,
-    baseJoint,
+    basePivot,
     shoulder,
     elbow,
     forearm,
     wrist,
+    gripper,
     fingerL,
     fingerR
   };
-
 }
 
+const arm = buildArm();
 
-/* =========================================================
-   MODEL FACTORY
-========================================================= */
+arm.group.position.set(
+  2.2,
+  0,
+  -.1
+);
 
-function createModel(
-  name
+scene.add(arm.group);
+
+arm.basePivot.rotation.y = Math.PI;
+arm.shoulder.rotation.z = -1.5;
+arm.elbow.rotation.z = 1.05;
+
+const PRESENT_POINT = new THREE.Vector3(
+  -.7,
+  2.15,
+  .75
+);
+
+function solveIK(worldPoint) {
+  arm.group.updateMatrixWorld(true);
+
+  const p = arm.group.worldToLocal(
+    worldPoint.clone()
+  );
+
+  const dx = p.x;
+  const dz = p.z;
+  const py = p.y - ARM.baseY;
+
+  const r = Math.sqrt(
+    dx * dx +
+    dz * dz
+  );
+
+  const originalDistance = Math.sqrt(
+    r * r +
+    py * py
+  );
+
+  const d = Math.max(
+    .2,
+    Math.min(
+      originalDistance,
+      ARM.L1 +
+      ARM.L2 -
+      .08
+    )
+  );
+
+  const scale =
+    d /
+    Math.max(
+      .0001,
+      originalDistance
+    );
+
+  const px = r * scale;
+  const yy = py * scale;
+
+  let c2 =
+    (
+      px * px +
+      yy * yy -
+      ARM.L1 * ARM.L1 -
+      ARM.L2 * ARM.L2
+    ) /
+    (
+      2 *
+      ARM.L1 *
+      ARM.L2
+    );
+
+  c2 = THREE.MathUtils.clamp(
+    c2,
+    -1,
+    1
+  );
+
+  const a2 = Math.acos(c2);
+
+  const a1 =
+    Math.atan2(
+      yy,
+      px
+    ) -
+    Math.atan2(
+      ARM.L2 *
+      Math.sin(a2),
+
+      ARM.L1 +
+      ARM.L2 *
+      Math.cos(a2)
+    );
+
+  return {
+    base: Math.atan2(
+      -dz,
+      dx
+    ),
+
+    shoulder:
+      a1 -
+      Math.PI / 2,
+
+    elbow:
+      a2
+  };
+}
+
+function currentPose() {
+  return {
+    base: arm.basePivot.rotation.y,
+    shoulder: arm.shoulder.rotation.z,
+    elbow: arm.elbow.rotation.z
+  };
+}
+
+function startArmMotion(
+  target,
+  duration = 600
 ) {
+  state.armMotion = {
+    start: performance.now(),
+    duration,
+    from: currentPose(),
+    to: target
+  };
+}
 
+function moveArmTo(
+  worldPoint,
+  duration = 600
+) {
+  startArmMotion(
+    solveIK(worldPoint),
+    duration
+  );
+
+  return wait(duration);
+}
+
+function setGrip(
+  openAmount,
+  duration = 160
+) {
+  state.gripMotion = {
+    start: performance.now(),
+    duration,
+    from: Math.abs(
+      arm.fingerR.position.x
+    ),
+    to: openAmount
+  };
+
+  return wait(duration);
+}
+
+function wait(ms) {
+  return new Promise(
+    resolve =>
+      setTimeout(resolve, ms)
+  );
+}
+
+/* MODEL FACTORY */
+
+function createModel(name) {
   switch (name) {
+    case 'wildfire':
+      return createWildfire();
 
-    case "wildfire":
-      return createWildfireSensor();
-
-    case "robot":
-      return createRobot();
-
-    case "pcb":
+    case 'pcb':
       return createPCB();
 
-    case "monitor":
-      return createMonitor();
+    case 'robot':
+      return createRobot(false);
 
-    case "racket":
+    case 'vex':
+      return createRobot(true);
+
+    case 'racket':
       return createRacket();
 
-    case "shuttlecock":
-      return createShuttlecock();
-
-    case "monkey":
-      return createMonkey();
-
-    case "trombone":
+    case 'trombone':
       return createTrombone();
 
-    case "portrait":
+    case 'monkey':
+      return createMonkey();
+
+    case 'scope':
+      return createScope();
+
+    case 'portrait':
       return createPortrait();
 
-    case "laptop":
-      return createLaptop();
-
-    case "resume":
+    case 'resume':
       return createResume();
 
-    case "books":
+    case 'laptop':
+      return createLaptop();
+
+    case 'books':
       return createBooks();
 
-    case "phone":
-      return createPhone();
+    case 'circuit':
+      return createCircuit();
 
-    case "envelope":
+    case 'envelope':
       return createEnvelope();
 
-    case "cubeStack":
+    case 'phone':
+      return createPhone();
+
+    case 'cubeStack':
       return createCubeStack();
 
     default:
-      return createRobot();
-
+      return createRobot(false);
   }
-
 }
 
+/* WILDFIRE SENSOR */
 
-/* =========================================================
-   WILDFIRE SENSOR
-========================================================= */
+function createWildfire() {
+  const g = new THREE.Group();
 
-function createWildfireSensor() {
-
-  const group =
-    new THREE.Group();
-
-
-  /* Rugged enclosure */
-
-  const enclosure =
-    roundedBox(
-      1.5,
-      0.78,
-      1.15,
-      0.15,
-      0x343c42,
-      0.68,
-      0.15
-    );
-
-
-  enclosure.position.y =
-    0.45;
-
-
-  group.add(
-    enclosure
+  const body = box(
+    1.55,
+    .78,
+    1.15,
+    .14,
+    0x37424b,
+    .7,
+    .12
   );
 
+  body.position.y = .45;
 
-  /* Top plate */
+  g.add(body);
 
-  const lid =
-    roundedBox(
-      1.56,
-      0.12,
-      1.2,
-      0.09,
-      0x465159,
-      0.55,
-      0.25
-    );
-
-
-  lid.position.y =
-    0.88;
-
-
-  group.add(
-    lid
+  const lid = box(
+    1.6,
+    .1,
+    1.2,
+    .07,
+    0x52606b,
+    .55,
+    .18
   );
 
+  lid.position.y = .88;
 
-  /* Sensor grille */
+  g.add(lid);
 
-  const grille =
-    roundedBox(
-      0.48,
-      0.32,
-      0.12,
-      0.04,
-      0x181b1d,
-      0.75,
-      0.05
-    );
-
-
-  grille.position.set(
-    -0.4,
-    0.55,
-    0.585
+  const screen = box(
+    .42,
+    .22,
+    .03,
+    .025,
+    0x6b94a9,
+    .25,
+    .12
   );
-
-
-  group.add(
-    grille
-  );
-
-
-  for (
-    let i = -2;
-    i <= 2;
-    i++
-  ) {
-
-    const vent =
-      roundedBox(
-        0.055,
-        0.22,
-        0.02,
-        0.01,
-        0x8b989f,
-        0.5,
-        0.4
-      );
-
-
-    vent.position.set(
-      -0.4 +
-      i * 0.075,
-      0.55,
-      0.655
-    );
-
-
-    group.add(
-      vent
-    );
-
-  }
-
-
-  /* Display */
-
-  const display =
-    roundedBox(
-      0.42,
-      0.22,
-      0.035,
-      0.03,
-      0x66c7d4,
-      0.25,
-      0.15
-    );
-
-
-  display.position.set(
-    0.42,
-    0.6,
-    0.65
-  );
-
-
-  display.material.emissive.set(
-    0x174a50
-  );
-
-
-  display.material.emissiveIntensity =
-    0.7;
-
-
-  group.add(
-    display
-  );
-
-
-  /* Status LEDs */
-
-  const ledColors = [
-    0x70d454,
-    0xf2b43c,
-    0x4f9ee8
-  ];
-
-
-  ledColors.forEach(
-    (
-      color,
-      index
-    ) => {
-
-      const led =
-        mesh(
-          new THREE.SphereGeometry(
-            0.045,
-            14,
-            10
-          ),
-          color,
-          0.2,
-          0.15
-        );
-
-
-      led.material.emissive.set(
-        color
-      );
-
-
-      led.material.emissiveIntensity =
-        1.5;
-
-
-      led.position.set(
-        -0.18 +
-        index * 0.15,
-        0.34,
-        0.65
-      );
-
-
-      group.add(
-        led
-      );
-
-    }
-  );
-
-
-  /* Antenna base */
-
-  const antennaBase =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.1,
-        0.12,
-        0.17,
-        18
-      ),
-      0x17191b,
-      0.4,
-      0.45
-    );
-
-
-  antennaBase.position.set(
-    0.5,
-    1.02,
-    -0.28
-  );
-
-
-  group.add(
-    antennaBase
-  );
-
-
-  const antenna =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.035,
-        0.043,
-        1.5,
-        14
-      ),
-      0x111214,
-      0.5,
-      0.4
-    );
-
-
-  antenna.position.set(
-    0.5,
-    1.84,
-    -0.28
-  );
-
-
-  group.add(
-    antenna
-  );
-
-
-  /* Small wildfire symbol */
-
-  const flame1 =
-    mesh(
-      new THREE.ConeGeometry(
-        0.14,
-        0.46,
-        20
-      ),
-      0xff8c25,
-      0.45,
-      0.1
-    );
-
-
-  flame1.position.set(
-    -0.03,
-    1.23,
-    0.03
-  );
-
-
-  group.add(
-    flame1
-  );
-
-
-  const flame2 =
-    mesh(
-      new THREE.ConeGeometry(
-        0.07,
-        0.28,
-        16
-      ),
-      0xffd05a,
-      0.42,
-      0.08
-    );
-
-
-  flame2.position.set(
-    0,
-    1.27,
-    0.09
-  );
-
-
-  group.add(
-    flame2
-  );
-
-
-  group.userData.baseRadius =
-    0.9;
-
-
-  return group;
-
-}
-
-
-/* =========================================================
-   ROBOT
-========================================================= */
-
-function createRobot() {
-
-  const group =
-    new THREE.Group();
-
-
-  const chassis =
-    roundedBox(
-      1.75,
-      0.45,
-      1.25,
-      0.13,
-      0x414850,
-      0.43,
-      0.55
-    );
-
-
-  chassis.position.y =
-    0.57;
-
-
-  group.add(
-    chassis
-  );
-
-
-  /* Orange bumper */
-
-  const bumper =
-    roundedBox(
-      1.88,
-      0.17,
-      1.35,
-      0.07,
-      0xe87818,
-      0.42,
-      0.26
-    );
-
-
-  bumper.position.y =
-    0.38;
-
-
-  group.add(
-    bumper
-  );
-
-
-  /* Wheels */
-
-  const wheelPositions = [
-    [-0.74, -0.55],
-    [0.74, -0.55],
-    [-0.74, 0.55],
-    [0.74, 0.55]
-  ];
-
-
-  wheelPositions.forEach(
-    (
-      [x, z]
-    ) => {
-
-      const wheel =
-        mesh(
-          new THREE.CylinderGeometry(
-            0.31,
-            0.31,
-            0.24,
-            26
-          ),
-          0x16181b,
-          0.82,
-          0.08
-        );
-
-
-      wheel.rotation.z =
-        Math.PI / 2;
-
-
-      wheel.position.set(
-        x,
-        0.38,
-        z
-      );
-
-
-      group.add(
-        wheel
-      );
-
-
-      const hub =
-        mesh(
-          new THREE.CylinderGeometry(
-            0.11,
-            0.11,
-            0.27,
-            18
-          ),
-          0xb6bec5,
-          0.28,
-          0.75
-        );
-
-
-      hub.rotation.z =
-        Math.PI / 2;
-
-
-      hub.position.set(
-        x,
-        0.38,
-        z
-      );
-
-
-      group.add(
-        hub
-      );
-
-    }
-  );
-
-
-  /* Electronics deck */
-
-  const deck =
-    roundedBox(
-      1.24,
-      0.13,
-      0.84,
-      0.05,
-      0x285f47,
-      0.68,
-      0.12
-    );
-
-
-  deck.position.y =
-    0.86;
-
-
-  group.add(
-    deck
-  );
-
-
-  /* Mast */
-
-  const mast =
-    roundedBox(
-      0.22,
-      1.2,
-      0.22,
-      0.05,
-      0xe87818,
-      0.4,
-      0.24
-    );
-
-
-  mast.position.set(
-    0,
-    1.47,
-    0
-  );
-
-
-  group.add(
-    mast
-  );
-
-
-  /* Camera */
-
-  const cameraBox =
-    roundedBox(
-      0.72,
-      0.44,
-      0.5,
-      0.09,
-      0x22262b,
-      0.38,
-      0.55
-    );
-
-
-  cameraBox.position.set(
-    0,
-    2.07,
-    0
-  );
-
-
-  group.add(
-    cameraBox
-  );
-
-
-  const lens =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.17,
-        0.17,
-        0.18,
-        22
-      ),
-      0x579bc9,
-      0.18,
-      0.72
-    );
-
-
-  lens.rotation.x =
-    Math.PI / 2;
-
-
-  lens.position.set(
-    0,
-    2.07,
-    0.32
-  );
-
-
-  lens.material.emissive.set(
-    0x123148
-  );
-
-
-  lens.material.emissiveIntensity =
-    0.5;
-
-
-  group.add(
-    lens
-  );
-
-
-  /* Ultrasonic pair */
-
-  for (
-    const x of [-0.28, 0.28]
-  ) {
-
-    const sensor =
-      mesh(
-        new THREE.CylinderGeometry(
-          0.105,
-          0.105,
-          0.08,
-          20
-        ),
-        0x9aa5ad,
-        0.26,
-        0.76
-      );
-
-
-    sensor.rotation.x =
-      Math.PI / 2;
-
-
-    sensor.position.set(
-      x,
-      0.64,
-      0.68
-    );
-
-
-    group.add(
-      sensor
-    );
-
-  }
-
-
-  group.userData.baseRadius =
-    1.15;
-
-
-  return group;
-
-}
-
-
-/* =========================================================
-   PCB
-========================================================= */
-
-function createPCB() {
-
-  const group =
-    new THREE.Group();
-
-
-  const board =
-    roundedBox(
-      2.05,
-      0.12,
-      1.28,
-      0.06,
-      0x246348,
-      0.65,
-      0.15
-    );
-
-
-  board.position.y =
-    0.25;
-
-
-  group.add(
-    board
-  );
-
-
-  /* MCU */
-
-  const chip =
-    roundedBox(
-      0.65,
-      0.14,
-      0.65,
-      0.03,
-      0x101214,
-      0.64,
-      0.08
-    );
-
-
-  chip.position.set(
-    0.05,
-    0.37,
-    0
-  );
-
-
-  group.add(
-    chip
-  );
-
-
-  /* chip pins */
-
-  for (
-    const z of [-0.36, 0.36]
-  ) {
-
-    for (
-      let i = -3;
-      i <= 3;
-      i++
-    ) {
-
-      const pin =
-        roundedBox(
-          0.08,
-          0.035,
-          0.17,
-          0.01,
-          0xc6c9c5,
-          0.25,
-          0.78
-        );
-
-
-      pin.position.set(
-        i * 0.09,
-        0.37,
-        z
-      );
-
-
-      group.add(
-        pin
-      );
-
-    }
-
-  }
-
-
-  /* USB connector */
-
-  const usb =
-    roundedBox(
-      0.42,
-      0.24,
-      0.55,
-      0.04,
-      0xa6adb3,
-      0.26,
-      0.78
-    );
-
-
-  usb.position.set(
-    -0.82,
-    0.4,
-    0
-  );
-
-
-  group.add(
-    usb
-  );
-
-
-  /* antenna block */
-
-  const antenna =
-    roundedBox(
-      0.53,
-      0.07,
-      0.37,
-      0.02,
-      0xdfd4aa,
-      0.75,
-      0.03
-    );
-
-
-  antenna.position.set(
-    0.73,
-    0.35,
-    0.25
-  );
-
-
-  group.add(
-    antenna
-  );
-
-
-  /* capacitors */
-
-  for (
-    let i = 0;
-    i < 4;
-    i++
-  ) {
-
-    const cap =
-      mesh(
-        new THREE.CylinderGeometry(
-          0.07,
-          0.07,
-          0.15,
-          12
-        ),
-        i % 2
-          ? 0x2c3640
-          : 0xd19b38,
-        0.45,
-        0.28
-      );
-
-
-    cap.position.set(
-      0.58 +
-      (i % 2) * 0.19,
-      0.4,
-      -0.28 +
-      Math.floor(i / 2) * 0.2
-    );
-
-
-    group.add(
-      cap
-    );
-
-  }
-
-
-  /* pin headers */
-
-  for (
-    const z of [-0.52, 0.52]
-  ) {
-
-    for (
-      let i = 0;
-      i < 10;
-      i++
-    ) {
-
-      const pin =
-        mesh(
-          new THREE.CylinderGeometry(
-            0.022,
-            0.022,
-            0.25,
-            8
-          ),
-          0xd2af53,
-          0.2,
-          0.8
-        );
-
-
-      pin.position.set(
-        -0.73 +
-        i * 0.16,
-        0.43,
-        z
-      );
-
-
-      group.add(
-        pin
-      );
-
-    }
-
-  }
-
-
-  group.userData.baseRadius =
-    1.1;
-
-
-  return group;
-
-}
-
-
-/* =========================================================
-   MONITOR
-========================================================= */
-
-function createMonitor() {
-
-  const group =
-    new THREE.Group();
-
-
-  const frame =
-    roundedBox(
-      2.25,
-      1.42,
-      0.18,
-      0.13,
-      0x1a1d22,
-      0.36,
-      0.55
-    );
-
-
-  frame.position.y =
-    1.3;
-
-
-  group.add(
-    frame
-  );
-
-
-  const screen =
-    roundedBox(
-      2.02,
-      1.19,
-      0.03,
-      0.08,
-      0x294b66,
-      0.28,
-      0.12
-    );
-
 
   screen.position.set(
-    0,
-    1.31,
-    0.107
+    .42,
+    .59,
+    .59
   );
-
 
   screen.material.emissive.set(
-    0x16344c
+    0x1b3847
   );
 
+  screen.material.emissiveIntensity = .55;
 
-  screen.material.emissiveIntensity =
-    0.65;
+  g.add(screen);
 
-
-  group.add(
-    screen
+  const grille = box(
+    .48,
+    .3,
+    .08,
+    .03,
+    0x15191d,
+    .75,
+    .05
   );
 
+  grille.position.set(
+    -.4,
+    .55,
+    .59
+  );
 
-  /* fake editor lines */
+  g.add(grille);
 
-  const lineColors = [
-    0x6cc4ff,
-    0xf2a95d,
-    0x9ed47d,
-    0xc88bd9
-  ];
-
-
-  for (
-    let i = 0;
-    i < 7;
-    i++
-  ) {
-
-    const line =
-      roundedBox(
-        0.48 +
-        (i % 3) * 0.18,
-        0.035,
-        0.015,
-        0.01,
-        lineColors[
-          i % lineColors.length
-        ],
-        0.35,
-        0.1
-      );
-
-
-    line.position.set(
-      -0.55 +
-      (i % 2) * 0.2,
-      1.62 -
-      i * 0.12,
-      0.135
+  for (let i = -2; i <= 2; i++) {
+    const v = box(
+      .045,
+      .21,
+      .015,
+      .005,
+      0x87939c,
+      .45,
+      .4
     );
 
-
-    line.material.emissive.set(
-      lineColors[
-        i % lineColors.length
-      ]
+    v.position.set(
+      -.4 +
+      i * .075,
+      .55,
+      .64
     );
 
-
-    line.material.emissiveIntensity =
-      0.7;
-
-
-    group.add(
-      line
-    );
-
+    g.add(v);
   }
 
-
-  const stand =
-    roundedBox(
-      0.3,
-      0.66,
-      0.25,
-      0.05,
-      0x3f454c,
-      0.35,
-      0.65
-    );
-
-
-  stand.position.y =
-    0.52;
-
-
-  group.add(
-    stand
-  );
-
-
-  const foot =
-    roundedBox(
-      1.05,
-      0.1,
-      0.64,
-      0.05,
-      0x3d4248,
-      0.36,
-      0.67
-    );
-
-
-  foot.position.y =
-    0.14;
-
-
-  group.add(
-    foot
-  );
-
-
-  group.userData.baseRadius =
-    1.2;
-
-
-  return group;
-
-}
-
-
-/* =========================================================
-   BADMINTON RACKET
-========================================================= */
-
-function createRacket() {
-
-  const group =
-    new THREE.Group();
-
-
-  /* Oval head */
-
-  const frame =
-    mesh(
-      new THREE.TorusGeometry(
-        0.68,
-        0.055,
-        14,
-        64
-      ),
-      0xd8dde2,
-      0.3,
-      0.65
-    );
-
-
-  frame.scale.y =
-    1.29;
-
-
-  frame.position.y =
-    1.75;
-
-
-  group.add(
-    frame
-  );
-
-
-  /* Strings */
-
-  const stringMaterial =
-    new THREE.LineBasicMaterial({
-      color:
-        0xb7c0c8,
-      transparent:
-        true,
-      opacity:
-        0.65
-    });
-
-
-  const stringGroup =
-    new THREE.Group();
-
-
-  for (
-    let i = -5;
-    i <= 5;
-    i++
-  ) {
-
-    const x =
-      i * 0.1;
-
-
-    const normalized =
-      x / 0.63;
-
-
-    const height =
-      Math.sqrt(
-        Math.max(
-          0,
-          1 -
-          normalized *
-          normalized
-        )
-      ) *
-      0.82;
-
-
-    const geometry =
-      new THREE.BufferGeometry()
-        .setFromPoints([
-          new THREE.Vector3(
-            x,
-            1.75 - height,
-            0
-          ),
-
-          new THREE.Vector3(
-            x,
-            1.75 + height,
-            0
-          )
-        ]);
-
-
-    stringGroup.add(
-      new THREE.Line(
-        geometry,
-        stringMaterial.clone()
-      )
-    );
-
-  }
-
-
-  for (
-    let i = -7;
-    i <= 7;
-    i++
-  ) {
-
-    const y =
-      i * 0.1;
-
-
-    const normalized =
-      y / 0.82;
-
-
-    const width =
-      Math.sqrt(
-        Math.max(
-          0,
-          1 -
-          normalized *
-          normalized
-        )
-      ) *
-      0.63;
-
-
-    const geometry =
-      new THREE.BufferGeometry()
-        .setFromPoints([
-          new THREE.Vector3(
-            -width,
-            1.75 + y,
-            0
-          ),
-
-          new THREE.Vector3(
-            width,
-            1.75 + y,
-            0
-          )
-        ]);
-
-
-    stringGroup.add(
-      new THREE.Line(
-        geometry,
-        stringMaterial.clone()
-      )
-    );
-
-  }
-
-
-  group.add(
-    stringGroup
-  );
-
-
-  const shaft =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.027,
-        0.035,
-        1.08,
-        12
-      ),
-      0xc8cdd2,
-      0.28,
-      0.72
-    );
-
-
-  shaft.position.y =
-    0.83;
-
-
-  group.add(
-    shaft
-  );
-
-
-  const throat =
-    mesh(
-      new THREE.ConeGeometry(
-        0.13,
-        0.34,
-        14
-      ),
-      0xe87818,
-      0.36,
-      0.28
-    );
-
-
-  throat.position.y =
-    1.25;
-
-
-  group.add(
-    throat
-  );
-
-
-  const handle =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.06,
-        0.075,
-        0.72,
-        14
-      ),
-      0x1e2023,
-      0.8,
-      0.05
-    );
-
-
-  handle.position.y =
-    0.3;
-
-
-  group.add(
-    handle
-  );
-
-
-  /* Grip rings */
-
-  for (
-    let i = 0;
-    i < 6;
-    i++
-  ) {
-
-    const grip =
-      mesh(
-        new THREE.TorusGeometry(
-          0.072,
-          0.009,
-          8,
-          20
-        ),
-        0x4c4f52,
-        0.78,
-        0.05
-      );
-
-
-    grip.rotation.x =
-      Math.PI / 2;
-
-
-    grip.position.y =
-      0.06 +
-      i * 0.1;
-
-
-    group.add(
-      grip
-    );
-
-  }
-
-
-  group.rotation.z =
-    -0.12;
-
-
-  group.userData.baseRadius =
-    0.9;
-
-
-  return group;
-
-}
-
-
-/* =========================================================
-   SHUTTLECOCK
-========================================================= */
-
-function createShuttlecock() {
-
-  const group =
-    new THREE.Group();
-
-
-  const cork =
-    mesh(
+  for (let i = 0; i < 3; i++) {
+    const colors = [
+      0x86b484,
+      0xd2b36e,
+      0x7193b1
+    ];
+
+    const c = colors[i];
+
+    const led = mesh(
       new THREE.SphereGeometry(
-        0.18,
-        18,
-        12
+        .04,
+        12,
+        8
       ),
-      0xe1c396,
-      0.78,
-      0.02
+      c,
+      .2,
+      .1
     );
 
+    led.material.emissive.set(c);
+    led.material.emissiveIntensity = 1.2;
 
-  cork.scale.y =
-    0.72;
-
-
-  cork.position.y =
-    0.18;
-
-
-  group.add(
-    cork
-  );
-
-
-  for (
-    let i = 0;
-    i < 12;
-    i++
-  ) {
-
-    const feather =
-      roundedBox(
-        0.08,
-        0.54,
-        0.025,
-        0.015,
-        0xf3f3ed,
-        0.86,
-        0
-      );
-
-
-    const angle =
-      (
-        i /
-        12
-      ) *
-      Math.PI *
-      2;
-
-
-    feather.position.set(
-      Math.cos(angle) *
-      0.16,
-      0.55,
-      Math.sin(angle) *
-      0.16
+    led.position.set(
+      -.18 +
+      i * .14,
+      .33,
+      .63
     );
 
-
-    feather.rotation.z =
-      Math.cos(angle) *
-      0.22;
-
-
-    feather.rotation.x =
-      Math.sin(angle) *
-      0.22;
-
-
-    feather.rotation.y =
-      -angle;
-
-
-    group.add(
-      feather
-    );
-
+    g.add(led);
   }
 
+  const ab = mesh(
+    new THREE.CylinderGeometry(
+      .095,
+      .115,
+      .16,
+      16
+    ),
+    0x171a1e,
+    .4,
+    .45
+  );
 
-  group.userData.baseRadius =
-    0.5;
+  ab.position.set(
+    .5,
+    1,
+    -.26
+  );
 
+  g.add(ab);
 
-  return group;
+  const ant = mesh(
+    new THREE.CylinderGeometry(
+      .032,
+      .041,
+      1.5,
+      12
+    ),
+    0x121417,
+    .5,
+    .4
+  );
 
+  ant.position.set(
+    .5,
+    1.8,
+    -.26
+  );
+
+  g.add(ant);
+
+  return g;
 }
 
+/* PCB */
 
-/* =========================================================
-   BLENDER MONKEY-INSPIRED MODEL
-========================================================= */
+function createPCB() {
+  const g = new THREE.Group();
 
-function createMonkey() {
-
-  const group =
-    new THREE.Group();
-
-
-  const brown =
-    0x98705b;
-
-
-  const light =
-    0xba8e70;
-
-
-  /* cranium */
-
-  const head =
-    mesh(
-      new THREE.IcosahedronGeometry(
-        0.64,
-        2
-      ),
-      brown,
-      0.72,
-      0.05
-    );
-
-
-  head.scale.set(
-    1.02,
-    0.95,
-    0.82
+  const board = box(
+    2,
+    .12,
+    1.25,
+    .05,
+    0x315e4d,
+    .65,
+    .12
   );
 
+  board.position.y = .26;
 
-  head.position.y =
-    1.12;
+  g.add(board);
 
-
-  group.add(
-    head
+  const chip = box(
+    .62,
+    .13,
+    .62,
+    .025,
+    0x111417,
+    .65,
+    .08
   );
 
+  chip.position.set(
+    .04,
+    .38,
+    0
+  );
 
-  /* cheeks */
+  g.add(chip);
 
-  for (
-    const x of [-0.42, 0.42]
-  ) {
+  const usb = box(
+    .42,
+    .23,
+    .52,
+    .035,
+    0xaab0b4,
+    .26,
+    .8
+  );
 
-    const cheek =
-      mesh(
-        new THREE.IcosahedronGeometry(
-          0.31,
-          1
+  usb.position.set(
+    -.8,
+    .4,
+    0
+  );
+
+  g.add(usb);
+
+  for (const z of [-.5, .5]) {
+    for (let i = 0; i < 10; i++) {
+      const p = mesh(
+        new THREE.CylinderGeometry(
+          .02,
+          .02,
+          .24,
+          8
         ),
-        brown,
-        0.73,
-        0.04
+        0xc2a257,
+        .2,
+        .8
       );
 
+      p.position.set(
+        -.7 +
+        i * .155,
+        .42,
+        z
+      );
 
-    cheek.scale.set(
-      0.9,
-      1.05,
-      0.78
-    );
-
-
-    cheek.position.set(
-      x,
-      0.96,
-      0.32
-    );
-
-
-    group.add(
-      cheek
-    );
-
+      g.add(p);
+    }
   }
 
-
-  /* ears */
-
-  for (
-    const x of [-0.74, 0.74]
-  ) {
-
-    const ear =
-      mesh(
-        new THREE.IcosahedronGeometry(
-          0.3,
-          1
-        ),
-        brown,
-        0.73,
-        0.04
-      );
-
-
-    ear.scale.set(
-      0.55,
-      0.95,
-      0.32
+  for (let i = 0; i < 4; i++) {
+    const cap = mesh(
+      new THREE.CylinderGeometry(
+        .065,
+        .065,
+        .14,
+        12
+      ),
+      i % 2
+        ? 0x2b333a
+        : 0xb88e4f,
+      .45,
+      .25
     );
 
+    cap.position.set(
+      .52 +
+      (i % 2) * .19,
+      .4,
+      -.28 +
+      Math.floor(i / 2) * .2
+    );
 
-    ear.position.set(
+    g.add(cap);
+  }
+
+  return g;
+}
+
+/* ROBOT / VEX ROBOT */
+
+function createRobot(vex) {
+  const g = new THREE.Group();
+
+  const chassis = box(
+    1.8,
+    .42,
+    1.25,
+    .1,
+    vex
+      ? 0x3d4752
+      : 0x414b54,
+    .43,
+    .5
+  );
+
+  chassis.position.y = .58;
+
+  g.add(chassis);
+
+  const rail = box(
+    1.92,
+    .14,
+    1.35,
+    .04,
+    0x60778d,
+    .4,
+    .38
+  );
+
+  rail.position.y = .37;
+
+  g.add(rail);
+
+  for (
+    const [x, z]
+    of [
+      [-.75, -.55],
+      [.75, -.55],
+      [-.75, .55],
+      [.75, .55]
+    ]
+  ) {
+    const wh = mesh(
+      new THREE.CylinderGeometry(
+        .31,
+        .31,
+        .24,
+        24
+      ),
+      0x15181b,
+      .82,
+      .08
+    );
+
+    wh.rotation.z = Math.PI / 2;
+
+    wh.position.set(
       x,
-      1.13,
+      .38,
+      z
+    );
+
+    g.add(wh);
+
+    const hub = mesh(
+      new THREE.CylinderGeometry(
+        .1,
+        .1,
+        .27,
+        16
+      ),
+      0xabb4bc,
+      .25,
+      .78
+    );
+
+    hub.rotation.z = Math.PI / 2;
+
+    hub.position.set(
+      x,
+      .38,
+      z
+    );
+
+    g.add(hub);
+  }
+
+  if (vex) {
+    const tower = box(
+      .7,
+      1.2,
+      .55,
+      .05,
+      0x687989,
+      .45,
+      .45
+    );
+
+    tower.position.set(
+      0,
+      1.25,
       0
     );
 
+    g.add(tower);
 
-    group.add(
-      ear
+    const claw = box(
+      1.15,
+      .16,
+      .18,
+      .04,
+      0x8996a0,
+      .35,
+      .65
     );
 
+    claw.position.set(
+      0,
+      1.85,
+      .35
+    );
+
+    g.add(claw);
   }
 
-
-  /* muzzle */
-
-  const muzzle =
-    mesh(
-      new THREE.IcosahedronGeometry(
-        0.44,
-        2
-      ),
-      light,
-      0.77,
-      0.03
-    );
-
-
-  muzzle.scale.set(
-    1.08,
-    0.6,
-    0.72
-  );
-
-
-  muzzle.position.set(
-    0,
-    0.91,
-    0.54
-  );
-
-
-  group.add(
-    muzzle
-  );
-
-
-  /* brow ridge */
-
-  for (
-    const x of [-0.24, 0.24]
-  ) {
-
-    const brow =
-      roundedBox(
-        0.38,
-        0.1,
-        0.14,
-        0.03,
-        0x5b4035,
-        0.7,
-        0.03
-      );
-
-
-    brow.position.set(
-      x,
+  else {
+    const deck = box(
       1.25,
-      0.61
+      .12,
+      .82,
+      .05,
+      0x315e4d,
+      .67,
+      .12
     );
 
+    deck.position.y = .86;
 
-    brow.rotation.z =
-      x < 0
-        ? -0.16
-        : 0.16;
+    g.add(deck);
 
-
-    group.add(
-      brow
+    const mast = box(
+      .22,
+      1.15,
+      .22,
+      .04,
+      0x536f88,
+      .4,
+      .28
     );
 
+    mast.position.y = 1.45;
+
+    g.add(mast);
+
+    const cam = box(
+      .7,
+      .42,
+      .48,
+      .07,
+      0x21262b,
+      .36,
+      .55
+    );
+
+    cam.position.y = 2.03;
+
+    g.add(cam);
+
+    const lens = mesh(
+      new THREE.CylinderGeometry(
+        .16,
+        .16,
+        .16,
+        20
+      ),
+      0x6d96b4,
+      .2,
+      .7
+    );
+
+    lens.rotation.x = Math.PI / 2;
+
+    lens.position.set(
+      0,
+      2.03,
+      .31
+    );
+
+    g.add(lens);
   }
 
-
-  /* eyes */
-
-  for (
-    const x of [-0.23, 0.23]
-  ) {
-
-    const eye =
-      mesh(
-        new THREE.SphereGeometry(
-          0.07,
-          14,
-          10
-        ),
-        0x151515,
-        0.3,
-        0.05
-      );
-
-
-    eye.position.set(
-      x,
-      1.16,
-      0.69
-    );
-
-
-    group.add(
-      eye
-    );
-
-  }
-
-
-  group.userData.baseRadius =
-    0.9;
-
-
-  return group;
-
+  return g;
 }
 
+/* BADMINTON RACKET */
 
-/* =========================================================
-   TROMBONE
-========================================================= */
+function createRacket() {
+  const g = new THREE.Group();
+
+  const frame = mesh(
+    new THREE.TorusGeometry(
+      .67,
+      .05,
+      12,
+      56
+    ),
+    0xaeb8c0,
+    .3,
+    .62
+  );
+
+  frame.scale.y = 1.28;
+  frame.position.y = 1.72;
+
+  g.add(frame);
+
+  const lineMat = new THREE.LineBasicMaterial({
+    color: 0x88949e,
+    transparent: true,
+    opacity: .68
+  });
+
+  for (let i = -5; i <= 5; i++) {
+    const x = i * .1;
+    const n = x / .62;
+
+    const h =
+      Math.sqrt(
+        Math.max(
+          0,
+          1 - n * n
+        )
+      ) *
+      .8;
+
+    g.add(
+      new THREE.Line(
+        new THREE.BufferGeometry()
+          .setFromPoints([
+            new THREE.Vector3(
+              x,
+              1.72 - h,
+              0
+            ),
+
+            new THREE.Vector3(
+              x,
+              1.72 + h,
+              0
+            )
+          ]),
+        lineMat.clone()
+      )
+    );
+  }
+
+  for (let i = -7; i <= 7; i++) {
+    const y = i * .1;
+    const n = y / .8;
+
+    const w =
+      Math.sqrt(
+        Math.max(
+          0,
+          1 - n * n
+        )
+      ) *
+      .62;
+
+    g.add(
+      new THREE.Line(
+        new THREE.BufferGeometry()
+          .setFromPoints([
+            new THREE.Vector3(
+              -w,
+              1.72 + y,
+              0
+            ),
+
+            new THREE.Vector3(
+              w,
+              1.72 + y,
+              0
+            )
+          ]),
+        lineMat.clone()
+      )
+    );
+  }
+
+  const shaft = mesh(
+    new THREE.CylinderGeometry(
+      .026,
+      .033,
+      1.05,
+      12
+    ),
+    0xb3bdc5,
+    .28,
+    .72
+  );
+
+  shaft.position.y = .82;
+
+  g.add(shaft);
+
+  const handle = mesh(
+    new THREE.CylinderGeometry(
+      .058,
+      .073,
+      .7,
+      14
+    ),
+    0x202429,
+    .78,
+    .04
+  );
+
+  handle.position.y = .3;
+
+  g.add(handle);
+
+  g.rotation.z = -.12;
+
+  return g;
+}
+
+/* TROMBONE */
 
 function createTrombone() {
+  const g = new THREE.Group();
 
-  const group =
-    new THREE.Group();
+  const brass = 0xa98b4c;
 
+  for (const y of [.84, 1.12]) {
+    const t = mesh(
+      new THREE.CylinderGeometry(
+        .032,
+        .032,
+        2.15,
+        12
+      ),
+      brass,
+      .24,
+      .78
+    );
 
-  const brass =
-    0xc99735;
+    t.rotation.z = Math.PI / 2;
 
-
-  const darkBrass =
-    0x8a611f;
-
-
-  /* Main tubes */
-
-  for (
-    const y of [0.84, 1.12]
-  ) {
-
-    const tube =
-      mesh(
-        new THREE.CylinderGeometry(
-          0.035,
-          0.035,
-          2.2,
-          12
-        ),
-        brass,
-        0.23,
-        0.8
-      );
-
-
-    tube.rotation.z =
-      Math.PI / 2;
-
-
-    tube.position.set(
-      -0.05,
+    t.position.set(
+      -.04,
       y,
       0
     );
 
-
-    group.add(
-      tube
-    );
-
+    g.add(t);
   }
 
+  for (const x of [-.48, .2]) {
+    const b = mesh(
+      new THREE.CylinderGeometry(
+        .022,
+        .022,
+        .28,
+        10
+      ),
+      0x816a39,
+      .24,
+      .75
+    );
 
-  /* braces */
-
-  for (
-    const x of [-0.48, 0.2]
-  ) {
-
-    const brace =
-      mesh(
-        new THREE.CylinderGeometry(
-          0.024,
-          0.024,
-          0.28,
-          10
-        ),
-        darkBrass,
-        0.25,
-        0.75
-      );
-
-
-    brace.position.set(
+    b.position.set(
       x,
-      0.98,
+      .98,
       0
     );
 
-
-    group.add(
-      brace
-    );
-
+    g.add(b);
   }
 
+  const bell = mesh(
+    new THREE.ConeGeometry(
+      .42,
+      .72,
+      34,
+      1,
+      true
+    ),
+    brass,
+    .22,
+    .82
+  );
 
-  /* Bell */
-
-  const bell =
-    mesh(
-      new THREE.ConeGeometry(
-        0.43,
-        0.74,
-        36,
-        1,
-        true
-      ),
-      brass,
-      0.22,
-      0.82
-    );
-
-
-  bell.rotation.z =
-    -Math.PI / 2;
-
+  bell.rotation.z = -Math.PI / 2;
 
   bell.position.set(
-    1.36,
+    1.34,
     1.12,
     0
   );
 
+  g.add(bell);
 
-  group.add(
-    bell
+  const rim = mesh(
+    new THREE.TorusGeometry(
+      .42,
+      .024,
+      10,
+      38
+    ),
+    0xc4a15d,
+    .2,
+    .85
   );
 
+  rim.rotation.y = Math.PI / 2;
 
-  const bellRim =
-    mesh(
-      new THREE.TorusGeometry(
-        0.43,
-        0.025,
-        10,
-        40
-      ),
-      0xd9ac4c,
-      0.2,
-      0.85
-    );
-
-
-  bellRim.rotation.y =
-    Math.PI / 2;
-
-
-  bellRim.position.set(
-    1.73,
+  rim.position.set(
+    1.7,
     1.12,
     0
   );
 
+  g.add(rim);
 
-  group.add(
-    bellRim
+  const bend = mesh(
+    new THREE.TorusGeometry(
+      .14,
+      .032,
+      10,
+      28,
+      Math.PI
+    ),
+    brass,
+    .22,
+    .82
   );
-
-
-  /* Slide U bend */
-
-  const bend =
-    mesh(
-      new THREE.TorusGeometry(
-        0.14,
-        0.034,
-        10,
-        30,
-        Math.PI
-      ),
-      brass,
-      0.22,
-      0.82
-    );
-
 
   bend.rotation.set(
     Math.PI / 2,
@@ -3985,1238 +1815,1108 @@ function createTrombone() {
     Math.PI / 2
   );
 
-
   bend.position.set(
-    -1.18,
-    0.98,
+    -1.15,
+    .98,
     0
   );
 
+  g.add(bend);
 
-  group.add(
-    bend
-  );
-
-
-  /* mouthpiece */
-
-  const mouthpiece =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.05,
-        0.075,
-        0.35,
-        14
-      ),
-      0xbec3c5,
-      0.18,
-      0.9
-    );
-
-
-  mouthpiece.rotation.z =
-    Math.PI / 2;
-
-
-  mouthpiece.position.set(
-    -1.3,
-    1.12,
-    0
-  );
-
-
-  group.add(
-    mouthpiece
-  );
-
-
-  group.userData.baseRadius =
-    1.25;
-
-
-  return group;
-
+  return g;
 }
 
+/* BLENDER MONKEY */
 
-/* =========================================================
-   PORTRAIT BUST
-========================================================= */
+function createMonkey() {
+  const g = new THREE.Group();
 
-function createPortrait() {
+  const brown = 0x7f736b;
+  const light = 0xa6988e;
 
-  const group =
-    new THREE.Group();
-
-
-  const torso =
-    roundedBox(
-      1.32,
-      0.86,
-      0.72,
-      0.22,
-      0x52697c,
-      0.72,
-      0.06
-    );
-
-
-  torso.position.y =
-    0.47;
-
-
-  torso.scale.x =
-    1.12;
-
-
-  group.add(
-    torso
+  const head = mesh(
+    new THREE.IcosahedronGeometry(
+      .64,
+      2
+    ),
+    brown,
+    .72,
+    .04
   );
-
-
-  const neck =
-    mesh(
-      new THREE.CylinderGeometry(
-        0.19,
-        0.22,
-        0.33,
-        18
-      ),
-      0xcba887,
-      0.85,
-      0.02
-    );
-
-
-  neck.position.y =
-    1.02;
-
-
-  group.add(
-    neck
-  );
-
-
-  const head =
-    mesh(
-      new THREE.IcosahedronGeometry(
-        0.48,
-        3
-      ),
-      0xd1ae8d,
-      0.86,
-      0.02
-    );
-
 
   head.scale.set(
-    0.9,
-    1.08,
-    0.86
+    1.02,
+    .95,
+    .82
   );
 
+  head.position.y = 1.12;
 
-  head.position.y =
-    1.46;
+  g.add(head);
 
-
-  group.add(
-    head
-  );
-
-
-  const hair =
-    mesh(
+  for (const x of [-.42, .42]) {
+    const cheek = mesh(
       new THREE.IcosahedronGeometry(
-        0.49,
-        2
+        .31,
+        1
       ),
-      0x252525,
-      0.85,
-      0.02
+      brown,
+      .73,
+      .04
     );
 
+    cheek.scale.set(
+      .9,
+      1.05,
+      .78
+    );
 
-  hair.scale.set(
-    0.93,
-    0.52,
-    0.89
+    cheek.position.set(
+      x,
+      .96,
+      .32
+    );
+
+    g.add(cheek);
+
+    const ear = mesh(
+      new THREE.IcosahedronGeometry(
+        .28,
+        1
+      ),
+      brown,
+      .73,
+      .04
+    );
+
+    ear.scale.set(
+      .55,
+      .95,
+      .32
+    );
+
+    ear.position.set(
+      x < 0
+        ? -.74
+        : .74,
+      1.13,
+      0
+    );
+
+    g.add(ear);
+  }
+
+  const muzzle = mesh(
+    new THREE.IcosahedronGeometry(
+      .43,
+      2
+    ),
+    light,
+    .77,
+    .03
   );
 
+  muzzle.scale.set(
+    1.08,
+    .6,
+    .72
+  );
+
+  muzzle.position.set(
+    0,
+    .91,
+    .54
+  );
+
+  g.add(muzzle);
+
+  return g;
+}
+
+/* OSCILLOSCOPE */
+
+function createScope() {
+  const g = new THREE.Group();
+
+  const body = box(
+    1.7,
+    1.05,
+    1.15,
+    .11,
+    0x39434c,
+    .58,
+    .24
+  );
+
+  body.position.y = .58;
+
+  g.add(body);
+
+  const screen = box(
+    .95,
+    .55,
+    .025,
+    .04,
+    0x365f6f,
+    .25,
+    .08
+  );
+
+  screen.position.set(
+    -.22,
+    .68,
+    .59
+  );
+
+  screen.material.emissive.set(
+    0x18333b
+  );
+
+  screen.material.emissiveIntensity = .6;
+
+  g.add(screen);
+
+  for (let i = 0; i < 3; i++) {
+    const k = mesh(
+      new THREE.CylinderGeometry(
+        .09,
+        .09,
+        .08,
+        18
+      ),
+      0x8d9aa4,
+      .35,
+      .6
+    );
+
+    k.rotation.x = Math.PI / 2;
+
+    k.position.set(
+      .55,
+      .78 - i * .25,
+      .61
+    );
+
+    g.add(k);
+  }
+
+  const trace = new THREE.Line(
+    new THREE.BufferGeometry()
+      .setFromPoints([
+        new THREE.Vector3(
+          -.6,
+          .7,
+          .615
+        ),
+
+        new THREE.Vector3(
+          -.45,
+          .78,
+          .615
+        ),
+
+        new THREE.Vector3(
+          -.3,
+          .58,
+          .615
+        ),
+
+        new THREE.Vector3(
+          -.15,
+          .82,
+          .615
+        ),
+
+        new THREE.Vector3(
+          .05,
+          .66,
+          .615
+        )
+      ]),
+
+    new THREE.LineBasicMaterial({
+      color: 0x91c5c8
+    })
+  );
+
+  g.add(trace);
+
+  return g;
+}
+
+/* PORTRAIT */
+
+function createPortrait() {
+  const g = new THREE.Group();
+
+  const torso = box(
+    1.3,
+    .82,
+    .68,
+    .2,
+    0x4d5e6b,
+    .72,
+    .06
+  );
+
+  torso.position.y = .46;
+
+  g.add(torso);
+
+  const neck = mesh(
+    new THREE.CylinderGeometry(
+      .18,
+      .21,
+      .3,
+      16
+    ),
+    0xb99a82,
+    .85,
+    .02
+  );
+
+  neck.position.y = 1;
+
+  g.add(neck);
+
+  const head = mesh(
+    new THREE.IcosahedronGeometry(
+      .47,
+      3
+    ),
+    0xc6a78e,
+    .86,
+    .02
+  );
+
+  head.scale.set(
+    .9,
+    1.08,
+    .86
+  );
+
+  head.position.y = 1.43;
+
+  g.add(head);
+
+  const hair = mesh(
+    new THREE.IcosahedronGeometry(
+      .48,
+      2
+    ),
+    0x25282b,
+    .85,
+    .02
+  );
+
+  hair.scale.set(
+    .93,
+    .5,
+    .89
+  );
 
   hair.position.set(
     0,
-    1.74,
-    -0.02
+    1.7,
+    -.02
   );
 
+  g.add(hair);
 
-  group.add(
-    hair
-  );
-
-
-  group.userData.baseRadius =
-    0.85;
-
-
-  return group;
-
+  return g;
 }
 
+/* RESUME */
 
-/* =========================================================
-   LAPTOP
-========================================================= */
+function createResume() {
+  const g = new THREE.Group();
+
+  const paper = box(
+    1.28,
+    .035,
+    1.72,
+    .02,
+    0xd7d9d8,
+    .86,
+    0
+  );
+
+  paper.position.y = .05;
+
+  g.add(paper);
+
+  [
+    .72,
+    .9,
+    .8,
+    .62,
+    .93,
+    .78,
+    .88
+  ].forEach((l, i) => {
+    const ln = box(
+      l,
+      .015,
+      .04,
+      .006,
+      i === 0
+        ? 0x37414a
+        : 0x747d84,
+      .75,
+      0
+    );
+
+    ln.position.set(
+      -.1,
+      .075,
+      -.57 + i * .18
+    );
+
+    g.add(ln);
+  });
+
+  return g;
+}
+
+/* LAPTOP */
 
 function createLaptop() {
+  const g = new THREE.Group();
 
-  const group =
-    new THREE.Group();
-
-
-  const base =
-    roundedBox(
-      1.8,
-      0.1,
-      1.15,
-      0.06,
-      0x737980,
-      0.32,
-      0.7
-    );
-
-
-  base.position.y =
-    0.12;
-
-
-  group.add(
-    base
+  const base = box(
+    1.8,
+    .09,
+    1.12,
+    .05,
+    0x737b82,
+    .32,
+    .7
   );
 
+  base.position.y = .11;
 
-  const screenGroup =
-    new THREE.Group();
+  g.add(base);
 
+  const sg = new THREE.Group();
 
-  screenGroup.position.set(
+  sg.position.set(
     0,
-    0.18,
-    -0.5
+    .17,
+    -.49
   );
 
+  sg.rotation.x = -.22;
 
-  screenGroup.rotation.x =
-    -0.23;
+  g.add(sg);
 
-
-  group.add(
-    screenGroup
+  const frame = box(
+    1.68,
+    1,
+    .07,
+    .06,
+    0x30363b,
+    .34,
+    .62
   );
 
+  frame.position.y = .51;
 
-  const frame =
-    roundedBox(
-      1.7,
-      1.03,
-      0.08,
-      0.07,
-      0x33383e,
-      0.34,
-      0.62
-    );
+  sg.add(frame);
 
-
-  frame.position.y =
-    0.53;
-
-
-  screenGroup.add(
-    frame
+  const screen = box(
+    1.5,
+    .82,
+    .015,
+    .035,
+    0x284d61,
+    .25,
+    .1
   );
-
-
-  const screen =
-    roundedBox(
-      1.52,
-      0.84,
-      0.02,
-      0.04,
-      0x224863,
-      0.25,
-      0.1
-    );
-
 
   screen.position.set(
     0,
-    0.54,
-    0.051
+    .52,
+    .045
   );
-
 
   screen.material.emissive.set(
-    0x133044
+    0x152e3c
   );
 
+  screen.material.emissiveIntensity = .5;
 
-  screen.material.emissiveIntensity =
-    0.65;
+  sg.add(screen);
 
-
-  screenGroup.add(
-    screen
-  );
-
-
-  /* Keyboard */
-
-  for (
-    let row = 0;
-    row < 4;
-    row++
-  ) {
-
-    for (
-      let col = 0;
-      col < 9;
-      col++
-    ) {
-
-      const key =
-        roundedBox(
-          0.12,
-          0.018,
-          0.095,
-          0.01,
-          0x24282d,
-          0.52,
-          0.3
-        );
-
-
-      key.position.set(
-        -0.56 +
-        col * 0.14,
-        0.18,
-        -0.22 +
-        row * 0.13
-      );
-
-
-      group.add(
-        key
-      );
-
-    }
-
-  }
-
-
-  group.userData.baseRadius =
-    1.0;
-
-
-  return group;
-
+  return g;
 }
 
-
-/* =========================================================
-   RESUME SHEET
-========================================================= */
-
-function createResume() {
-
-  const group =
-    new THREE.Group();
-
-
-  const paper =
-    roundedBox(
-      1.3,
-      0.04,
-      1.75,
-      0.03,
-      0xe8e7e0,
-      0.86,
-      0
-    );
-
-
-  paper.position.y =
-    0.06;
-
-
-  group.add(
-    paper
-  );
-
-
-  const lineLengths = [
-    0.74,
-    0.92,
-    0.82,
-    0.62,
-    0.94,
-    0.8,
-    0.9
-  ];
-
-
-  lineLengths.forEach(
-    (
-      length,
-      index
-    ) => {
-
-      const line =
-        roundedBox(
-          length,
-          0.018,
-          0.045,
-          0.01,
-          index === 0
-            ? 0x333940
-            : 0x7a8085,
-          0.74,
-          0
-        );
-
-
-      line.position.set(
-        -0.1,
-        0.09,
-        -0.58 +
-        index * 0.18
-      );
-
-
-      group.add(
-        line
-      );
-
-    }
-  );
-
-
-  const orangeLine =
-    roundedBox(
-      0.28,
-      0.022,
-      0.05,
-      0.01,
-      0xe87818,
-      0.55,
-      0
-    );
-
-
-  orangeLine.position.set(
-    -0.44,
-    0.095,
-    -0.73
-  );
-
-
-  group.add(
-    orangeLine
-  );
-
-
-  group.userData.baseRadius =
-    0.95;
-
-
-  return group;
-
-}
-
-
-/* =========================================================
-   BOOK STACK
-========================================================= */
+/* BOOKS */
 
 function createBooks() {
+  const g = new THREE.Group();
 
-  const group =
-    new THREE.Group();
-
-
-  const books = [
-    [1.35, 0.22, 0.82, 0x4f6f89],
-    [1.18, 0.2, 0.78, 0xb45d3b],
-    [1.3, 0.21, 0.8, 0x5d7550]
-  ];
-
-
-  books.forEach(
-    (
-      [
+  [
+    [1.35, .22, .82, 0x516a7d],
+    [1.18, .2, .78, 0x765f58],
+    [1.3, .21, .8, 0x566754]
+  ].forEach(
+    ([w, h, d, c], i) => {
+      const b = box(
         w,
         h,
         d,
-        color
-      ],
-      index
-    ) => {
-
-      const book =
-        roundedBox(
-          w,
-          h,
-          d,
-          0.05,
-          color,
-          0.76,
-          0.02
-        );
-
-
-      book.position.y =
-        0.11 +
-        index * 0.21;
-
-
-      book.rotation.y =
-        (
-          index -
-          1
-        ) *
-        0.06;
-
-
-      group.add(
-        book
+        .045,
+        c,
+        .76,
+        .02
       );
 
+      b.position.y =
+        .11 +
+        i * .21;
+
+      b.rotation.y =
+        (i - 1) * .06;
+
+      g.add(b);
     }
   );
 
-
-  group.userData.baseRadius =
-    0.8;
-
-
-  return group;
-
+  return g;
 }
 
+/* ANALOG CIRCUIT */
 
-/* =========================================================
-   PHONE
-========================================================= */
+function createCircuit() {
+  const g = new THREE.Group();
 
-function createPhone() {
-
-  const group =
-    new THREE.Group();
-
-
-  const body =
-    roundedBox(
-      0.62,
-      0.1,
-      1.22,
-      0.12,
-      0x20242a,
-      0.35,
-      0.68
-    );
-
-
-  body.position.y =
-    0.08;
-
-
-  group.add(
-    body
+  const board = box(
+    1.85,
+    .09,
+    1.15,
+    .04,
+    0x4e5d66,
+    .72,
+    .06
   );
 
+  board.position.y = .18;
 
-  const screen =
-    roundedBox(
-      0.53,
-      0.02,
-      1.04,
-      0.09,
-      0x1f5575,
-      0.25,
-      0.12
-    );
+  g.add(board);
 
-
-  screen.position.y =
-    0.145;
-
-
-  screen.material.emissive.set(
-    0x12354b
+  const op = box(
+    .55,
+    .14,
+    .4,
+    .025,
+    0x171a1e,
+    .62,
+    .08
   );
 
-
-  screen.material.emissiveIntensity =
-    0.72;
-
-
-  group.add(
-    screen
+  op.position.set(
+    -.28,
+    .3,
+    0
   );
 
+  g.add(op);
 
-  const cameraDot =
-    mesh(
-      new THREE.SphereGeometry(
-        0.035,
-        12,
-        8
+  for (const x of [.3, .55]) {
+    const cap = mesh(
+      new THREE.CylinderGeometry(
+        .07,
+        .07,
+        .23,
+        14
       ),
-      0x090a0b,
-      0.3,
-      0.45
+      0x7f8f9b,
+      .38,
+      .4
     );
 
+    cap.position.set(
+      x,
+      .34,
+      -.2
+    );
 
-  cameraDot.position.set(
-    0,
-    0.17,
-    -0.43
-  );
+    g.add(cap);
+  }
 
+  for (let i = 0; i < 4; i++) {
+    const r = box(
+      .36,
+      .06,
+      .08,
+      .018,
+      0x9a8c6a,
+      .62,
+      .12
+    );
 
-  group.add(
-    cameraDot
-  );
+    r.position.set(
+      .25 +
+      (i % 2) * .38,
+      .31,
+      .15 +
+      Math.floor(i / 2) * .2
+    );
 
+    g.add(r);
+  }
 
-  group.userData.baseRadius =
-    0.72;
-
-
-  return group;
-
+  return g;
 }
 
-
-/* =========================================================
-   ENVELOPE
-========================================================= */
+/* ENVELOPE */
 
 function createEnvelope() {
+  const g = new THREE.Group();
 
-  const group =
-    new THREE.Group();
-
-
-  const envelope =
-    roundedBox(
-      1.65,
-      0.08,
-      1.08,
-      0.06,
-      0xe2e0d9,
-      0.8,
-      0
-    );
-
-
-  envelope.position.y =
-    0.08;
-
-
-  group.add(
-    envelope
+  const e = box(
+    1.62,
+    .07,
+    1.05,
+    .05,
+    0xd7d8d5,
+    .82,
+    0
   );
 
+  e.position.y = .07;
 
-  const lineMaterial =
-    new THREE.LineBasicMaterial({
-      color:
-        0x7a7e80
-    });
+  g.add(e);
 
+  const lm = new THREE.LineBasicMaterial({
+    color: 0x777e83
+  });
 
-  const points1 = [
-    new THREE.Vector3(
-      -0.75,
-      0.13,
-      -0.45
-    ),
-
-    new THREE.Vector3(
-      0,
-      0.13,
-      0.02
-    ),
-
-    new THREE.Vector3(
-      0.75,
-      0.13,
-      -0.45
-    )
-  ];
-
-
-  group.add(
+  g.add(
     new THREE.Line(
       new THREE.BufferGeometry()
-        .setFromPoints(
-          points1
-        ),
-      lineMaterial
+        .setFromPoints([
+          new THREE.Vector3(
+            -.72,
+            .11,
+            -.43
+          ),
+
+          new THREE.Vector3(
+            0,
+            .11,
+            .02
+          ),
+
+          new THREE.Vector3(
+            .72,
+            .11,
+            -.43
+          )
+        ]),
+      lm
     )
   );
 
-
-  const points2 = [
-    new THREE.Vector3(
-      -0.75,
-      0.13,
-      0.45
-    ),
-
-    new THREE.Vector3(
-      0,
-      0.13,
-      0
-    ),
-
-    new THREE.Vector3(
-      0.75,
-      0.13,
-      0.45
-    )
-  ];
-
-
-  group.add(
-    new THREE.Line(
-      new THREE.BufferGeometry()
-        .setFromPoints(
-          points2
-        ),
-      lineMaterial.clone()
-    )
-  );
-
-
-  group.userData.baseRadius =
-    0.9;
-
-
-  return group;
-
+  return g;
 }
 
+/* PHONE */
 
-/* =========================================================
-   CUBE STACK
-========================================================= */
+function createPhone() {
+  const g = new THREE.Group();
+
+  const b = box(
+    .6,
+    .09,
+    1.18,
+    .1,
+    0x242a30,
+    .35,
+    .68
+  );
+
+  b.position.y = .07;
+
+  g.add(b);
+
+  const s = box(
+    .51,
+    .016,
+    1,
+    .08,
+    0x315668,
+    .25,
+    .1
+  );
+
+  s.position.y = .125;
+
+  s.material.emissive.set(
+    0x18313c
+  );
+
+  s.material.emissiveIntensity = .5;
+
+  g.add(s);
+
+  return g;
+}
+
+/* CUBE STACK */
 
 function createCubeStack() {
+  const g = new THREE.Group();
 
-  const group =
-    new THREE.Group();
+  [
+    [0x58738c, -.5, .3],
+    [0x7a8791, .1, .3],
+    [0x596b60, .67, .3],
+    [0x6f677b, -.2, .85],
+    [0x82735e, .4, .87]
+  ].forEach(
+    ([c, x, y], i) => {
+      const q = box(
+        .54,
+        .54,
+        .54,
+        .06,
+        c,
+        .54,
+        .14
+      );
 
-
-  const colors = [
-    0xe87818,
-    0x5f8eb8,
-    0x6fa25a,
-    0x9b6fad,
-    0xd4a247
-  ];
-
-
-  const positions = [
-    [-0.5, 0.32, 0],
-    [0.1, 0.32, 0],
-    [0.68, 0.32, 0.04],
-    [-0.2, 0.88, 0.02],
-    [0.4, 0.9, -0.03]
-  ];
-
-
-  positions.forEach(
-    (
-      [x, y, z],
-      index
-    ) => {
-
-      const cube =
-        roundedBox(
-          0.55,
-          0.55,
-          0.55,
-          0.07,
-          colors[index],
-          0.53,
-          0.14
-        );
-
-
-      cube.position.set(
+      q.position.set(
         x,
         y,
-        z
+        0
       );
 
-
-      cube.rotation.set(
-        index * 0.07,
-        index * 0.13,
-        index * 0.04
+      q.rotation.set(
+        i * .06,
+        i * .11,
+        i * .04
       );
 
-
-      group.add(
-        cube
-      );
-
+      g.add(q);
     }
   );
 
-
-  group.userData.baseRadius =
-    1.0;
-
-
-  return group;
-
+  return g;
 }
 
+/* SCENE KITS */
 
-/* =========================================================
-   MODEL OPACITY
-========================================================= */
+function clearKit() {
+  if (state.held) {
+    const heldObject =
+      state.held.object;
 
-function setGroupOpacity(
-  group,
-  opacity
-) {
+    if (heldObject?.parent) {
+      heldObject.parent.remove(
+        heldObject
+      );
+    }
 
-  group.traverse(
+    disposeGroup(heldObject);
+
+    state.held = null;
+  }
+
+  if (!state.kit) {
+    return;
+  }
+
+  scene.remove(state.kit);
+
+  disposeGroup(state.kit);
+
+  state.kit = null;
+}
+
+function loadKit(section) {
+  clearKit();
+
+  const group =
+    new THREE.Group();
+
+  group.userData.props = [];
+
+  for (
+    const [
+      model,
+      itemId,
+      x,
+      y,
+      z,
+      scale
+    ]
+    of
+    KIT_LAYOUTS[section] ||
+    KIT_LAYOUTS.home
+  ) {
+    const obj =
+      createModel(model);
+
+    obj.position.set(
+      x,
+      y,
+      z
+    );
+
+    obj.scale.setScalar(scale);
+
+    obj.rotation.y =
+      x < 0
+        ? .35
+        : -.35;
+
+    obj.userData.home = {
+      position: obj.position.clone(),
+      rotation: obj.rotation.clone(),
+      scale: obj.scale.clone()
+    };
+
+    obj.userData.itemId = itemId;
+    obj.userData.model = model;
+
+    group.add(obj);
+
+    group.userData.props.push(
+      obj
+    );
+  }
+
+  scene.add(group);
+
+  state.kit = group;
+}
+
+function disposeGroup(group) {
+  group?.traverse(
     child => {
+      child.geometry?.dispose?.();
 
       if (
-        !child.material
-      ) {
-        return;
-      }
-
-
-      const materials =
         Array.isArray(
           child.material
         )
-          ? child.material
-          : [child.material];
+      ) {
+        child.material.forEach(
+          m =>
+            m.dispose?.()
+        );
+      }
 
-
-      materials.forEach(
-        mat => {
-
-          mat.transparent =
-            opacity < 0.999;
-
-
-          mat.opacity =
-            opacity;
-
-        }
-      );
-
+      else {
+        child.material
+          ?.dispose?.();
+      }
     }
   );
-
 }
 
+function getPropFor(item) {
+  return (
+    state.kit
+      ?.userData
+      .props
+      .find(
+        p =>
+          p.userData.itemId ===
+          item.id
+      ) ||
+    state.kit
+      ?.userData
+      .props[0] ||
+    null
+  );
+}
 
-/* =========================================================
-   DISPOSAL
-========================================================= */
+/* RETURN PREVIOUS OBJECT */
 
-function disposeGroup(
-  group
-) {
+function resetHeld() {
+  if (!state.held) {
+    return;
+  }
+
+  const {
+    object,
+    kit,
+    home
+  } = state.held;
+
+  if (object.parent) {
+    object.parent.remove(object);
+  }
 
   if (
-    !group
+    kit &&
+    kit.parent
+  ) {
+    kit.add(object);
+
+    object.position.copy(
+      home.position
+    );
+
+    object.rotation.copy(
+      home.rotation
+    );
+
+    object.scale.copy(
+      home.scale
+    );
+  }
+
+  state.held = null;
+}
+
+/* ACTUAL GRAB SEQUENCE */
+
+async function curateItem(item) {
+  const token =
+    ++state.sequence;
+
+  resetHeld();
+
+  await setGrip(
+    .21,
+    80
+  );
+
+  if (
+    token !==
+    state.sequence
   ) {
     return;
   }
 
+  const prop =
+    getPropFor(item);
 
-  group.traverse(
-    child => {
+  if (!prop) {
+    return;
+  }
 
-      child.geometry
-        ?.dispose?.();
+  dom.armStatus.textContent =
+    'Reaching';
 
+  prop.updateMatrixWorld(true);
 
-      if (
-        Array.isArray(
-          child.material
-        )
-      ) {
+  const target =
+    new THREE.Vector3();
 
-        child.material.forEach(
-          mat =>
-            mat.dispose?.()
-        );
+  prop.getWorldPosition(target);
 
-      }
+  target.y += .55;
 
-      else {
-
-        child.material
-          ?.dispose?.();
-
-      }
-
-    }
+  await moveArmTo(
+    target,
+    560
   );
 
-}
+  if (
+    token !==
+    state.sequence
+  ) {
+    return;
+  }
 
+  dom.armStatus.textContent =
+    'Grabbing';
 
-/* =========================================================
-   SCENE KIT LOADING
-========================================================= */
-
-function loadSceneKit(
-  section
-) {
-
-  const descriptors =
-    SCENE_KITS[
-      section
-    ] ||
-    SCENE_KITS.home;
-
-
-  const newGroup =
-    new THREE.Group();
-
-
-  newGroup.scale.setScalar(
-    0.96
+  await setGrip(
+    .095,
+    150
   );
 
+  if (
+    token !==
+    state.sequence
+  ) {
+    return;
+  }
 
-  newGroup.userData.props =
-    [];
+  const kit =
+    state.kit;
 
+  const home = {
+    position:
+      prop.userData.home
+        .position.clone(),
 
-  descriptors.forEach(
-    descriptor => {
+    rotation:
+      prop.userData.home
+        .rotation.clone(),
 
-      const object =
-        createModel(
-          descriptor.model
-        );
-
-
-      object.position.set(
-        ...descriptor.position
-      );
-
-
-      object.rotation.set(
-        ...descriptor.rotation
-      );
-
-
-      object.scale.setScalar(
-        descriptor.scale
-      );
-
-
-      object.userData.baseScale =
-        descriptor.scale;
-
-
-      object.userData.highlightScale =
-        descriptor.scale *
-        1.1;
-
-
-      object.userData.targetScale =
-        descriptor.scale;
-
-
-      if (
-        descriptor.target
-      ) {
-
-        object.userData.clickTarget = {
-          section:
-            descriptor.target[0],
-
-          id:
-            descriptor.target[1]
-        };
-
-      }
-
-
-      newGroup.add(
-        object
-      );
-
-
-      newGroup.userData.props.push(
-        object
-      );
-
-    }
-  );
-
-
-  setGroupOpacity(
-    newGroup,
-    0
-  );
-
-
-  scene.add(
-    newGroup
-  );
-
-
-  state.previousKit =
-    state.activeKit;
-
-
-  state.activeKit =
-    newGroup;
-
-
-  state.kitAnimation = {
-    start:
-      performance.now(),
-
-    duration:
-      430
+    scale:
+      prop.userData.home
+        .scale.clone()
   };
 
-}
+  /*
+    This is the important part.
 
+    Object3D.attach() reparents the object
+    to the robot gripper while preserving
+    its world transform.
 
-/* =========================================================
-   FEATURED MODEL
-========================================================= */
+    From here on, when the gripper moves,
+    the selected object moves with it.
+  */
 
-function swapFeaturedModel(
-  modelName
-) {
+  arm.gripper.attach(prop);
 
-  const incoming =
-    createModel(
-      modelName
+  state.held = {
+    object: prop,
+    kit,
+    home
+  };
+
+  /*
+    Move the grabbed object into the space
+    directly between the fingers.
+  */
+
+  const fromPos =
+    prop.position.clone();
+
+  const fromQuat =
+    prop.quaternion.clone();
+
+  const toPos =
+    new THREE.Vector3(
+      0,
+      .52,
+      0
     );
 
+  const toQuat =
+    new THREE.Quaternion()
+      .setFromEuler(
+        new THREE.Euler(
+          0,
+          0,
+          0
+        )
+      );
 
-  incoming.scale.setScalar(
-    0.02
+  state.restoreTweens.push({
+    object: prop,
+    start: performance.now(),
+    duration: 180,
+    fromPos,
+    toPos,
+    fromQuat,
+    toQuat,
+    local: true
+  });
+
+  dom.armStatus.textContent =
+    'Presenting';
+
+  await moveArmTo(
+    PRESENT_POINT,
+    620
   );
 
+  if (
+    token !==
+    state.sequence
+  ) {
+    return;
+  }
 
-  incoming.position.set(
-    0.25,
-    0.08,
-    0
-  );
-
-
-  featuredRoot.add(
-    incoming
-  );
-
-
-  state.previousFeatured =
-    state.featuredModel;
-
-
-  state.featuredModel =
-    incoming;
-
-
-  state.featuredAnimation = {
-    start:
-      performance.now(),
-
-    duration:
-      480
-  };
-
+  dom.armStatus.textContent =
+    'Holding selected object';
 }
 
-
-/* =========================================================
-   ARM TARGET
-========================================================= */
-
-function setArmPose(
-  poseName
-) {
-
-  const pose =
-    ARM_POSES[
-      poseName
-    ] ||
-    ARM_POSES.welcome;
-
-
-  state.armTarget =
-    {
-      ...pose
-    };
-
-}
-
-
-/* =========================================================
-   CONTENT RENDERING
-========================================================= */
+/* CONTENT */
 
 function currentItems() {
-
-  return CONTENT[
-    state.section
-  ];
-
+  return (
+    CONTENT[state.section] ||
+    CONTENT.home
+  );
 }
 
-
 function currentItem() {
-
   return currentItems()[
     state.index
   ];
-
 }
-
 
 function setSection(
   section,
   itemId = null,
   updateHash = true
 ) {
-
-  if (
-    !CONTENT[section]
-  ) {
-    section =
-      "home";
+  if (!CONTENT[section]) {
+    section = 'home';
   }
 
-
-  const sectionChanged =
-    state.section !== section;
-
+  const changed =
+    section !==
+    state.section ||
+    !state.kit;
 
   state.section =
     section;
 
-
   const items =
     CONTENT[section];
 
-
-  if (
+  const found =
     itemId
-  ) {
+      ? items.findIndex(
+          i =>
+            i.id === itemId
+        )
+      : -1;
 
-    const found =
-      items.findIndex(
-        item =>
-          item.id === itemId
-      );
+  state.index =
+    found >= 0
+      ? found
+      : 0;
 
-
-    state.index =
-      found >= 0
-        ? found
-        : 0;
-
+  if (changed) {
+    loadKit(section);
   }
 
-  else {
+  render();
 
-    state.index =
-      0;
+  updateNav();
 
-  }
+  curateItem(
+    currentItem()
+  );
 
-
-  if (
-    sectionChanged ||
-    !state.activeKit
-  ) {
-
-    loadSceneKit(
-      section
-    );
-
-  }
-
-
-  renderCurrentItem();
-
-
-  updateNavigationStyles();
-
-
-  if (
-    updateHash
-  ) {
-
-    const item =
-      currentItem();
-
-
+  if (updateHash) {
     history.replaceState(
       null,
-      "",
-      `#${section}/${item.id}`
+      '',
+      `#${section}/${currentItem().id}`
     );
-
   }
-
 
   if (
-    !dom.mobileNav.hidden
+    !dom.mobileMenu.hidden
   ) {
-
-    dom.mobileNav.hidden =
+    dom.mobileMenu.hidden =
       true;
 
-
-    dom.mobileMenuButton
+    dom.menuButton
       .setAttribute(
-        "aria-expanded",
-        "false"
+        'aria-expanded',
+        'false'
       );
-
   }
-
 }
 
-
-/* =========================================================
-   SELECT ITEM
-========================================================= */
-
-function selectItem(
-  index,
-  updateHash = true
-) {
-
+function selectItem(index) {
   const items =
     currentItems();
-
 
   state.index =
     (
@@ -5225,989 +2925,529 @@ function selectItem(
     ) %
     items.length;
 
+  render();
 
-  renderCurrentItem();
+  curateItem(
+    currentItem()
+  );
 
-
-  if (
-    updateHash
-  ) {
-
-    const item =
-      currentItem();
-
-
-    history.replaceState(
-      null,
-      "",
-      `#${state.section}/${item.id}`
-    );
-
-  }
-
+  history.replaceState(
+    null,
+    '',
+    `#${state.section}/${currentItem().id}`
+  );
 }
 
-
-/* =========================================================
-   MAIN CONTENT
-========================================================= */
-
-function renderCurrentItem() {
-
+function render() {
   const item =
     currentItem();
-
 
   const items =
     currentItems();
 
-
-  dom.contentKicker.textContent =
+  dom.kicker.textContent =
     item.kicker;
 
-
-  dom.contentCount.textContent =
+  dom.count.textContent =
     `${String(
       state.index + 1
     ).padStart(
       2,
-      "0"
+      '0'
     )} / ${String(
       items.length
     ).padStart(
       2,
-      "0"
+      '0'
     )}`;
 
-
-  dom.contentTitle.textContent =
+  dom.title.textContent =
     item.title;
 
-
-  dom.contentMeta.textContent =
+  dom.meta.textContent =
     item.meta;
 
-
-  dom.contentDescription.textContent =
+  dom.description.textContent =
     item.description;
-
 
   dom.sceneLabel.textContent =
     `${capitalize(
       state.section
-    )} / ${item.label}`;
+    )} · ${item.label}`;
 
+  dom.metrics.replaceChildren(
+    ...item.metrics.map(
+      ([value, label]) => {
+        const d =
+          document.createElement(
+            'div'
+          );
 
-  dom.sceneFooterName.textContent =
-    sectionSceneName(
-      state.section
-    );
+        d.className =
+          'metric';
 
+        const s =
+          document.createElement(
+            'strong'
+          );
 
-  renderFacts(
-    item.facts
+        s.textContent =
+          value;
+
+        const sp =
+          document.createElement(
+            'span'
+          );
+
+        sp.textContent =
+          label;
+
+        d.append(
+          s,
+          sp
+        );
+
+        return d;
+      }
+    )
   );
 
+  dom.details.replaceChildren(
+    ...item.details.map(
+      text => {
+        const li =
+          document.createElement(
+            'li'
+          );
 
-  renderDetails(
-    item.details
+        li.textContent =
+          text;
+
+        return li;
+      }
+    )
   );
 
+  dom.itemNav.hidden =
+    items.length <= 1;
 
-  renderItemNavigation();
+  dom.itemList.replaceChildren(
+    ...items.map(
+      (it, i) => {
+        const b =
+          document.createElement(
+            'button'
+          );
 
+        b.type =
+          'button';
+
+        b.className =
+          `item-button${
+            i === state.index
+              ? ' is-active'
+              : ''
+          }`;
+
+        b.textContent =
+          it.label;
+
+        b.addEventListener(
+          'click',
+          () =>
+            selectItem(i)
+        );
+
+        return b;
+      }
+    )
+  );
 
   renderLinks(
     item.links || {}
   );
-
-
-  swapFeaturedModel(
-    item.model
-  );
-
-
-  setArmPose(
-    item.armPose
-  );
-
-
-  highlightProps(
-    item.id
-  );
-
 }
 
-
-/* =========================================================
-   FACTS
-========================================================= */
-
-function renderFacts(
-  facts
-) {
-
-  dom.factGrid
-    .replaceChildren();
-
-
-  facts.forEach(
-    fact => {
-
-      const card =
-        document.createElement(
-          "div"
-        );
-
-
-      card.className =
-        "fact-card";
-
-
-      const strong =
-        document.createElement(
-          "strong"
-        );
-
-
-      strong.textContent =
-        fact.value;
-
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-
-      span.textContent =
-        fact.label;
-
-
-      card.append(
-        strong,
-        span
-      );
-
-
-      dom.factGrid.append(
-        card
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   DETAILS
-========================================================= */
-
-function renderDetails(
-  details
-) {
-
-  dom.contentDetails
-    .replaceChildren();
-
-
-  details.forEach(
-    detail => {
-
-      const li =
-        document.createElement(
-          "li"
-        );
-
-
-      li.textContent =
-        detail;
-
-
-      dom.contentDetails.append(
-        li
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   ITEM NAV
-========================================================= */
-
-function renderItemNavigation() {
-
-  const items =
-    currentItems();
-
-
-  dom.itemNavigation.hidden =
-    items.length <= 1;
-
-
-  dom.itemList
-    .replaceChildren();
-
-
-  items.forEach(
-    (
-      item,
-      index
-    ) => {
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.type =
-        "button";
-
-
-      button.className =
-        "item-button";
-
-
-      if (
-        index ===
-        state.index
-      ) {
-
-        button.classList.add(
-          "is-active"
-        );
-
-      }
-
-
-      button.textContent =
-        item.label;
-
-
-      button.addEventListener(
-        "click",
-        () =>
-          selectItem(
-            index
-          )
-      );
-
-
-      dom.itemList.append(
-        button
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   LINKS
-========================================================= */
-
-function renderLinks(
-  links
-) {
-
-  configureLink(
-    dom.primaryLink,
+function renderLinks(links) {
+  configLink(
+    dom.primary,
     links.primary
   );
 
-
-  configureLink(
-    dom.secondaryLink,
+  configLink(
+    dom.secondary,
     links.secondary
   );
 
-
-  configureLink(
-    dom.tertiaryLink,
+  configLink(
+    dom.tertiary,
     links.tertiary
   );
-
 }
 
-
-function configureLink(
-  element,
+function configLink(
+  el,
   data
 ) {
+  if (!data) {
+    el.hidden = true;
 
-  if (
-    !data
-  ) {
-
-    element.hidden =
-      true;
-
-
-    element.removeAttribute(
-      "href"
+    el.removeAttribute(
+      'href'
     );
 
-
-    element.onclick =
-      null;
-
-
     return;
-
   }
 
+  el.hidden = false;
 
-  element.hidden =
-    false;
+  el.textContent =
+    data[0];
 
-
-  element.textContent =
-    data.label;
-
+  el.href =
+    data[1];
 
   if (
-    data.action
+    !data[1]
+      .startsWith(
+        'mailto:'
+      )
   ) {
+    el.target =
+      '_blank';
 
-    element.href =
-      "#";
-
-
-    element.target =
-      "";
-
-
-    element.onclick =
-      event => {
-
-        event.preventDefault();
-
-
-        setSection(
-          data.action
-        );
-
-      };
-
-
-    return;
-
+    el.rel =
+      'noreferrer';
   }
 
-
-  element.onclick =
-    null;
-
-
-  element.href =
-    data.href;
-
-
-  if (
-    data.href &&
-    !data.href.startsWith(
-      "mailto:"
-    )
-  ) {
-
-    element.target =
-      "_blank";
-
-
-    element.rel =
-      "noreferrer";
-
+  else {
+    el.removeAttribute(
+      'target'
+    );
   }
-
 }
 
-
-/* =========================================================
-   NAV STYLE
-========================================================= */
-
-function updateNavigationStyles() {
-
+function updateNav() {
   document
     .querySelectorAll(
-      "[data-section]"
+      '[data-section]'
     )
     .forEach(
-      button => {
-
-        const active =
-          button.dataset.section ===
-          state.section;
-
-
-        button.classList.toggle(
-          "is-active",
-          active
+      el => {
+        el.classList.toggle(
+          'is-active',
+          el.dataset.section ===
+          state.section
         );
-
       }
     );
-
 }
 
-
-/* =========================================================
-   PROP HIGHLIGHTING
-========================================================= */
-
-function highlightProps(
-  itemId
-) {
-
-  if (
-    !state.activeKit
-  ) {
-    return;
-  }
-
-
-  const props =
-    state.activeKit
-      .userData
-      .props || [];
-
-
-  props.forEach(
-    prop => {
-
-      const target =
-        prop.userData
-          .clickTarget;
-
-
-      const matches =
-        target &&
-        target.section ===
-        state.section &&
-        target.id ===
-        itemId;
-
-
-      prop.userData.targetScale =
-        matches
-          ? prop.userData.highlightScale
-          : prop.userData.baseScale;
-
-    }
+function capitalize(s) {
+  return (
+    s.charAt(0)
+      .toUpperCase() +
+    s.slice(1)
   );
-
 }
 
-
-/* =========================================================
-   3D CLICKING
-========================================================= */
+/* CLICKABLE 3D PROPS */
 
 const raycaster =
   new THREE.Raycaster();
 
-
 const pointer =
   new THREE.Vector2();
-
 
 let pointerDown = {
   x: 0,
   y: 0
 };
 
-
-function updatePointer(
-  event
-) {
-
-  const rect =
+function pointerFromEvent(e) {
+  const r =
     dom.canvas
       .getBoundingClientRect();
-
 
   pointer.x =
     (
       (
-        event.clientX -
-        rect.left
+        e.clientX -
+        r.left
       ) /
-      rect.width
+      r.width
     ) *
     2 -
     1;
 
-
   pointer.y =
     -(
       (
-        event.clientY -
-        rect.top
+        e.clientY -
+        r.top
       ) /
-      rect.height
+      r.height
     ) *
     2 +
     1;
-
 }
 
+function findItemProp(obj) {
+  let p = obj;
 
-function findClickable(
-  object
-) {
-
-  let current =
-    object;
-
-
-  while (
-    current
-  ) {
-
+  while (p) {
     if (
-      current.userData
-        .clickTarget
+      p.userData
+        ?.itemId
     ) {
-
-      return current;
-
+      return p;
     }
 
-
-    current =
-      current.parent;
-
+    p = p.parent;
   }
-
 
   return null;
-
 }
 
-
-function raycastProps(
-  event
-) {
-
-  if (
-    !state.activeKit
-  ) {
-
+function raycastItem(e) {
+  if (!state.kit) {
     return null;
-
   }
 
+  pointerFromEvent(e);
 
-  updatePointer(
-    event
+  raycaster.setFromCamera(
+    pointer,
+    camera
   );
 
-
-  raycaster
-    .setFromCamera(
-      pointer,
-      camera
-    );
-
-
-  const intersections =
-    raycaster
-      .intersectObjects(
-        state.activeKit.children,
-        true
-      );
-
-
   for (
-    const hit of intersections
+    const hit
+    of raycaster
+      .intersectObjects(
+        state.kit.children,
+        true
+      )
   ) {
-
-    const clickable =
-      findClickable(
+    const p =
+      findItemProp(
         hit.object
       );
 
-
-    if (
-      clickable
-    ) {
-
-      return clickable;
-
+    if (p) {
+      return p;
     }
-
   }
-
 
   return null;
-
 }
 
-
 dom.canvas.addEventListener(
-  "pointermove",
-  event => {
-
-    const clickable =
-      raycastProps(
-        event
-      );
-
-
+  'pointermove',
+  e => {
     dom.canvas.style.cursor =
-      clickable
-        ? "pointer"
-        : "grab";
-
+      raycastItem(e)
+        ? 'pointer'
+        : 'grab';
   }
 );
 
-
 dom.canvas.addEventListener(
-  "pointerdown",
-  event => {
-
+  'pointerdown',
+  e => {
     pointerDown = {
-      x:
-        event.clientX,
-
-      y:
-        event.clientY
+      x: e.clientX,
+      y: e.clientY
     };
-
-
-    dom.viewport.focus({
-      preventScroll:
-        true
-    });
-
   }
 );
 
-
 dom.canvas.addEventListener(
-  "pointerup",
-  event => {
-
-    const distance =
+  'pointerup',
+  e => {
+    if (
       Math.hypot(
-        event.clientX -
+        e.clientX -
         pointerDown.x,
 
-        event.clientY -
+        e.clientY -
         pointerDown.y
-      );
-
-
-    if (
-      distance > 6
+      ) >
+      6
     ) {
       return;
     }
 
+    const p =
+      raycastItem(e);
 
-    const clickable =
-      raycastProps(
-        event
-      );
-
-
-    if (
-      !clickable
-    ) {
+    if (!p) {
       return;
     }
 
+    const idx =
+      currentItems()
+        .findIndex(
+          i =>
+            i.id ===
+            p.userData.itemId
+        );
 
-    const target =
-      clickable.userData
-        .clickTarget;
-
-
-    setSection(
-      target.section,
-      target.id
-    );
-
+    if (idx >= 0) {
+      selectItem(idx);
+    }
   }
 );
 
+/* BLENDER ADD MENU + LIGHT PHYSICS */
 
-/* =========================================================
-   BLENDER-STYLE SPAWN OBJECTS
-========================================================= */
+const BOUNDS = 7.4;
 
-const BOUNDS =
-  7.6;
+function spawnShape(kind) {
+  let o;
 
+  switch (kind) {
+    case 'plane':
+      o = box(
+        1.3,
+        .1,
+        1.3,
+        .03,
+        0x6d747b,
+        .8,
+        .05
+      );
+      break;
 
-function buildSpawnObject(
-  type
-) {
+    case 'circle':
+      o = mesh(
+        new THREE.CylinderGeometry(
+          .62,
+          .62,
+          .1,
+          32
+        ),
+        0x7f776c,
+        .65,
+        .12
+      );
+      break;
 
-  switch (type) {
+    case 'sphere':
+      o = mesh(
+        new THREE.SphereGeometry(
+          .6,
+          26,
+          18
+        ),
+        0x677b6a,
+        .52,
+        .12
+      );
+      break;
 
-    case "plane": {
+    case 'icosphere':
+      o = mesh(
+        new THREE.IcosahedronGeometry(
+          .63,
+          2
+        ),
+        0x5d7183,
+        .5,
+        .16
+      );
+      break;
 
-      const object =
-        roundedBox(
-          1.35,
-          0.1,
-          1.35,
-          0.03,
-          0x737a81,
-          0.78,
-          0.06
-        );
+    case 'cylinder':
+      o = mesh(
+        new THREE.CylinderGeometry(
+          .5,
+          .5,
+          1.1,
+          24
+        ),
+        0x776b6b,
+        .55,
+        .16
+      );
+      break;
 
+    case 'cone':
+      o = mesh(
+        new THREE.ConeGeometry(
+          .62,
+          1.2,
+          26
+        ),
+        0x81775e,
+        .55,
+        .16
+      );
+      break;
 
-      object.userData.radius =
-        0.72;
+    case 'torus':
+      o = mesh(
+        new THREE.TorusGeometry(
+          .53,
+          .18,
+          16,
+          42
+        ),
+        0x736878,
+        .5,
+        .2
+      );
+      break;
 
-
-      return object;
-
-    }
-
-
-    case "circle": {
-
-      const object =
-        mesh(
-          new THREE.CylinderGeometry(
-            0.64,
-            0.64,
-            0.1,
-            34
-          ),
-          0xb48054,
-          0.62,
-          0.16
-        );
-
-
-      object.userData.radius =
-        0.67;
-
-
-      return object;
-
-    }
-
-
-    case "sphere": {
-
-      const object =
-        mesh(
-          new THREE.SphereGeometry(
-            0.6,
-            28,
-            20
-          ),
-          0x6fa45a,
-          0.5,
-          0.14
-        );
-
-
-      object.userData.radius =
-        0.6;
-
-
-      return object;
-
-    }
-
-
-    case "icosphere": {
-
-      const object =
-        mesh(
-          new THREE.IcosahedronGeometry(
-            0.63,
-            2
-          ),
-          0x5a94bf,
-          0.47,
-          0.18
-        );
-
-
-      object.userData.radius =
-        0.63;
-
-
-      return object;
-
-    }
-
-
-    case "cylinder": {
-
-      const object =
-        mesh(
-          new THREE.CylinderGeometry(
-            0.5,
-            0.5,
-            1.1,
-            26
-          ),
-          0xc45e53,
-          0.52,
-          0.18
-        );
-
-
-      object.userData.radius =
-        0.64;
-
-
-      return object;
-
-    }
-
-
-    case "cone": {
-
-      const object =
-        mesh(
-          new THREE.ConeGeometry(
-            0.62,
-            1.2,
-            28
-          ),
-          0xc5a34b,
-          0.52,
-          0.18
-        );
-
-
-      object.userData.radius =
-        0.67;
-
-
-      return object;
-
-    }
-
-
-    case "torus": {
-
-      const object =
-        mesh(
-          new THREE.TorusGeometry(
-            0.53,
-            0.18,
-            18,
-            46
-          ),
-          0xa05aa4,
-          0.48,
-          0.2
-        );
-
-
-      object.userData.radius =
-        0.74;
-
-
-      return object;
-
-    }
-
-
-    case "monkey": {
-
-      const object =
+    case 'monkey':
+      o =
         createMonkey();
 
+      o.scale.setScalar(.8);
+      break;
 
-      object.scale.setScalar(
-        0.78
+    default:
+      o = box(
+        1,
+        1,
+        1,
+        .06,
+        0x5d7183,
+        .5,
+        .18
       );
-
-
-      object.userData.radius =
-        0.82;
-
-
-      return object;
-
-    }
-
-
-    case "cube":
-    default: {
-
-      const object =
-        roundedBox(
-          1.02,
-          1.02,
-          1.02,
-          0.06,
-          0xe87818,
-          0.49,
-          0.18
-        );
-
-
-      object.userData.radius =
-        0.76;
-
-
-      return object;
-
-    }
-
   }
 
-}
+  o.userData.radius = .72;
 
-
-function spawnObject(
-  type
-) {
-
-  const object =
-    buildSpawnObject(
-      type
-    );
-
-
-  object.position.set(
+  o.position.set(
     (
       Math.random() -
-      0.5
-    ) * 3,
+      .5
+    ) *
+    3,
 
-    4.2 +
+    4 +
     Math.random(),
 
     (
       Math.random() -
-      0.5
-    ) * 2.7
+      .5
+    ) *
+    2.5
   );
 
-
-  object.rotation.set(
+  o.rotation.set(
     Math.random(),
     Math.random(),
     Math.random()
   );
 
-
-  object.userData.velocity =
+  o.userData.velocity =
     new THREE.Vector3(
       (
         Math.random() -
-        0.5
+        .5
       ) *
       1.4,
 
@@ -6215,1417 +3455,661 @@ function spawnObject(
 
       (
         Math.random() -
-        0.5
+        .5
       ) *
       1.4
     );
 
-
-  object.userData.angular =
+  o.userData.angular =
     new THREE.Vector3(
-      Math.random() -
-      0.5,
-
-      Math.random() -
-      0.5,
-
-      Math.random() -
-      0.5
+      Math.random() - .5,
+      Math.random() - .5,
+      Math.random() - .5
     )
       .multiplyScalar(
-        1.6
+        1.5
       );
 
+  scene.add(o);
 
-  object.userData.dynamic =
-    true;
+  state.spawned.push(o);
 
+  state.selectedSpawn = o;
 
-  scene.add(
-    object
-  );
-
-
-  state.spawned.push(
-    object
-  );
-
-
-  state.selectedSpawn =
-    object;
-
-
-  closeAddMenu();
-
+  closeAdd();
 
   if (
     state.spawned.length >
-    15
+    14
   ) {
-
-    const oldest =
+    const old =
       state.spawned.shift();
 
+    scene.remove(old);
 
-    scene.remove(
-      oldest
-    );
-
-
-    disposeGroup(
-      oldest
-    );
-
+    disposeGroup(old);
   }
-
 }
 
+function updatePhysics(dt) {
+  for (
+    const o
+    of state.spawned
+  ) {
+    const v =
+      o.userData.velocity;
 
-/* =========================================================
-   SIMPLE PHYSICS
-========================================================= */
+    const a =
+      o.userData.angular;
 
-function updatePhysics(
-  dt
-) {
+    const r =
+      o.userData.radius ||
+      .6;
 
-  const gravity =
-    -7.8;
+    v.y +=
+      -7.7 *
+      dt;
 
+    o.position
+      .addScaledVector(
+        v,
+        dt
+      );
 
-  state.spawned.forEach(
-    object => {
+    o.rotation.x +=
+      a.x * dt;
 
-      if (
-        !object.userData
-          .dynamic
-      ) {
-        return;
+    o.rotation.y +=
+      a.y * dt;
+
+    o.rotation.z +=
+      a.z * dt;
+
+    if (
+      o.position.y -
+      r <
+      0
+    ) {
+      o.position.y = r;
+
+      if (v.y < 0) {
+        v.y *= -.42;
       }
 
+      v.x *= .986;
+      v.z *= .986;
 
-      const velocity =
-        object.userData
-          .velocity;
-
-
-      const angular =
-        object.userData
-          .angular;
-
-
-      const radius =
-        object.userData
-          .radius || 0.55;
-
-
-      velocity.y +=
-        gravity *
-        dt;
-
-
-      object.position
-        .addScaledVector(
-          velocity,
-          dt
-        );
-
-
-      object.rotation.x +=
-        angular.x *
-        dt;
-
-
-      object.rotation.y +=
-        angular.y *
-        dt;
-
-
-      object.rotation.z +=
-        angular.z *
-        dt;
-
-
-      /* floor */
-
-      if (
-        object.position.y -
-        radius <
-        0
-      ) {
-
-        object.position.y =
-          radius;
-
-
-        if (
-          velocity.y <
-          0
-        ) {
-
-          velocity.y *=
-            -0.42;
-
-        }
-
-
-        velocity.x *=
-          0.986;
-
-
-        velocity.z *=
-          0.986;
-
-
-        angular.multiplyScalar(
-          0.992
-        );
-
-      }
-
-
-      /* Invisible bench walls */
-
-      for (
-        const axis of [
-          "x",
-          "z"
-        ]
-      ) {
-
-        if (
-          object.position[axis] +
-          radius >
-          BOUNDS
-        ) {
-
-          object.position[axis] =
-            BOUNDS -
-            radius;
-
-
-          velocity[axis] =
-            -Math.abs(
-              velocity[axis]
-            ) *
-            0.55;
-
-        }
-
-
-        else if (
-          object.position[axis] -
-          radius <
-          -BOUNDS
-        ) {
-
-          object.position[axis] =
-            -BOUNDS +
-            radius;
-
-
-          velocity[axis] =
-            Math.abs(
-              velocity[axis]
-            ) *
-            0.55;
-
-        }
-
-      }
-
+      a.multiplyScalar(
+        .992
+      );
     }
-  );
 
+    for (
+      const axis
+      of ['x', 'z']
+    ) {
+      if (
+        o.position[axis] +
+        r >
+        BOUNDS
+      ) {
+        o.position[axis] =
+          BOUNDS - r;
+
+        v[axis] =
+          -Math.abs(
+            v[axis]
+          ) *
+          .54;
+      }
+
+      else if (
+        o.position[axis] -
+        r <
+        -BOUNDS
+      ) {
+        o.position[axis] =
+          -BOUNDS + r;
+
+        v[axis] =
+          Math.abs(
+            v[axis]
+          ) *
+          .54;
+      }
+    }
+  }
 }
-
-
-/* =========================================================
-   SPAWN OBJECT ACTIONS
-========================================================= */
 
 function tossSelected() {
-
-  const object =
+  const o =
     state.selectedSpawn;
 
-
-  if (
-    !object
-  ) {
-    return;
-  }
-
-
-  object.userData
-    .velocity
-    .set(
+  if (o) {
+    o.userData.velocity.set(
       (
         Math.random() -
-        0.5
-      ) * 3.2,
+        .5
+      ) *
+      3.2,
 
       5.3,
 
       (
         Math.random() -
-        0.5
-      ) * 3.2
+        .5
+      ) *
+      3.2
     );
-
+  }
 }
-
 
 function spinSelected() {
-
-  const object =
+  const o =
     state.selectedSpawn;
 
-
-  if (
-    !object
-  ) {
-    return;
-  }
-
-
-  object.userData
-    .angular
-    .add(
+  if (o) {
+    o.userData.angular.add(
       new THREE.Vector3(
-        0.7,
+        .7,
         1.4,
-        0.35
+        .35
       )
     );
-
+  }
 }
 
-
 function deleteSelected() {
-
-  const object =
+  const o =
     state.selectedSpawn;
 
-
-  if (
-    !object
-  ) {
+  if (!o) {
     return;
   }
 
-
-  scene.remove(
-    object
-  );
-
+  scene.remove(o);
 
   state.spawned =
     state.spawned.filter(
-      item =>
-        item !== object
+      x =>
+        x !== o
     );
 
-
-  disposeGroup(
-    object
-  );
-
+  disposeGroup(o);
 
   state.selectedSpawn =
-    state.spawned[
-      state.spawned.length -
-      1
-    ] ||
+    state.spawned.at(-1) ||
     null;
-
 }
 
-
-/* =========================================================
-   ADD MENU
-========================================================= */
-
-function positionAddMenu() {
-
-  const rect =
-    dom.viewport
-      .getBoundingClientRect();
-
-
-  const width =
-    242;
-
-
-  const left =
-    Math.max(
-      10,
-
-      Math.min(
-        rect.width -
-        width -
-        10,
-
-        rect.width *
-        0.5 -
-        width *
-        0.5
-      )
-    );
-
-
-  const top =
-    Math.max(
-      52,
-
-      Math.min(
-        rect.height -
-        390,
-
-        rect.height *
-        0.27
-      )
-    );
-
-
-  dom.addMenu.style.left =
-    `${left}px`;
-
-
-  dom.addMenu.style.top =
-    `${top}px`;
-
-}
-
-
-function openAddMenu() {
-
-  state.addMenuOpen =
-    true;
-
+function openAdd() {
+  state.addOpen = true;
 
   dom.addMenu.hidden =
     false;
 
-
   dom.addObject
     .setAttribute(
-      "aria-expanded",
-      "true"
+      'aria-expanded',
+      'true'
     );
 
-
-  positionAddMenu();
-
+  positionAdd();
 }
 
-
-function closeAddMenu() {
-
-  state.addMenuOpen =
-    false;
-
+function closeAdd() {
+  state.addOpen = false;
 
   dom.addMenu.hidden =
     true;
 
-
   dom.addObject
     .setAttribute(
-      "aria-expanded",
-      "false"
+      'aria-expanded',
+      'false'
     );
-
 }
 
+function positionAdd() {
+  dom.addMenu.style.right =
+    '20px';
 
-/* =========================================================
-   EVENT LISTENERS — SECTION TABS
-========================================================= */
+  dom.addMenu.style.bottom =
+    '60px';
+}
+
+/* UI EVENTS */
 
 document
   .querySelectorAll(
-    "[data-section]"
+    '[data-section]'
   )
   .forEach(
-    button => {
-
-      button.addEventListener(
-        "click",
-        () => {
+    el =>
+      el.addEventListener(
+        'click',
+        e => {
+          if (
+            el.tagName ===
+            'A'
+          ) {
+            e.preventDefault();
+          }
 
           setSection(
-            button.dataset
-              .section
+            el.dataset.section
           );
-
         }
-      );
-
-    }
+      )
   );
 
+dom.prev.addEventListener(
+  'click',
+  () =>
+    selectItem(
+      state.index - 1
+    )
+);
 
-/* =========================================================
-   ITEM ARROWS
-========================================================= */
+dom.next.addEventListener(
+  'click',
+  () =>
+    selectItem(
+      state.index + 1
+    )
+);
 
-dom.previousItem
-  .addEventListener(
-    "click",
-    () => {
+dom.reset.addEventListener(
+  'click',
+  () => {
+    camera.position.set(
+      8.4,
+      5.6,
+      10.5
+    );
 
-      selectItem(
-        state.index -
-        1
-      );
+    controls.target.set(
+      .3,
+      1.2,
+      0
+    );
 
-    }
-  );
+    controls.update();
+  }
+);
 
-
-dom.nextItem
-  .addEventListener(
-    "click",
-    () => {
-
-      selectItem(
-        state.index +
-        1
-      );
-
-    }
-  );
-
-
-/* =========================================================
-   MOBILE MENU
-========================================================= */
-
-dom.mobileMenuButton
-  .addEventListener(
-    "click",
-    () => {
-
-      const opening =
-        dom.mobileNav
-          .hidden;
-
-
-      dom.mobileNav.hidden =
-        !opening;
-
-
-      dom.mobileMenuButton
-        .setAttribute(
-          "aria-expanded",
-          String(
-            opening
-          )
-        );
-
-    }
-  );
-
-
-/* =========================================================
-   VIEWPORT BUTTONS
-========================================================= */
-
-dom.resetView
-  .addEventListener(
-    "click",
-    resetView
-  );
-
-
-dom.addObject
-  .addEventListener(
-    "click",
-    () => {
-
-      if (
-        state.addMenuOpen
-      ) {
-
-        closeAddMenu();
-
-      }
-
-      else {
-
-        openAddMenu();
-
-      }
-
-    }
-  );
-
+dom.addObject.addEventListener(
+  'click',
+  () =>
+    state.addOpen
+      ? closeAdd()
+      : openAdd()
+);
 
 dom.addMenu
   .querySelectorAll(
-    "[data-add]"
+    '[data-add]'
   )
   .forEach(
-    button => {
+    b =>
+      b.addEventListener(
+        'click',
+        () =>
+          spawnShape(
+            b.dataset.add
+          )
+      )
+  );
 
-      button.addEventListener(
-        "click",
-        () => {
+dom.menuButton.addEventListener(
+  'click',
+  () => {
+    const opening =
+      dom.mobileMenu.hidden;
 
-          spawnObject(
-            button.dataset
-              .add
-          );
+    dom.mobileMenu.hidden =
+      !opening;
 
-        }
+    dom.menuButton
+      .setAttribute(
+        'aria-expanded',
+        String(opening)
+      );
+  }
+);
+
+window.addEventListener(
+  'hashchange',
+  readHash
+);
+
+window.addEventListener(
+  'resize',
+  resize
+);
+
+document.addEventListener(
+  'pointerdown',
+  e => {
+    if (
+      state.addOpen &&
+      !dom.addMenu.contains(
+        e.target
+      ) &&
+      !dom.addObject.contains(
+        e.target
+      )
+    ) {
+      closeAdd();
+    }
+  }
+);
+
+window.addEventListener(
+  'keydown',
+  e => {
+    if (
+      e.target instanceof
+      HTMLInputElement ||
+      e.target instanceof
+      HTMLTextAreaElement
+    ) {
+      return;
+    }
+
+    if (
+      e.shiftKey &&
+      e.key.toLowerCase() ===
+      'a'
+    ) {
+      e.preventDefault();
+
+      openAdd();
+
+      return;
+    }
+
+    if (
+      state.addOpen &&
+      /^[1-9]$/.test(
+        e.key
+      )
+    ) {
+      spawnShape(
+        [
+          'plane',
+          'cube',
+          'circle',
+          'sphere',
+          'icosphere',
+          'cylinder',
+          'cone',
+          'torus',
+          'monkey'
+        ][
+          Number(e.key) - 1
+        ]
       );
 
+      return;
     }
-  );
 
-
-/* =========================================================
-   KEYBOARD SHORTCUTS
-========================================================= */
-
-dom.viewport
-  .addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.shiftKey &&
-        event.key.toLowerCase() ===
-        "a"
-      ) {
-
-        event.preventDefault();
-
-
-        openAddMenu();
-
-
-        return;
-
-      }
-
-
-      if (
-        state.addMenuOpen &&
-        /^[1-9]$/.test(
-          event.key
-        )
-      ) {
-
-        const objects = [
-          "plane",
-          "cube",
-          "circle",
-          "sphere",
-          "icosphere",
-          "cylinder",
-          "cone",
-          "torus",
-          "monkey"
-        ];
-
-
-        spawnObject(
-          objects[
-            Number(
-              event.key
-            ) -
-            1
-          ]
-        );
-
-
-        return;
-
-      }
-
-
-      if (
-        event.key.toLowerCase() ===
-        "g"
-      ) {
-
-        tossSelected();
-
-      }
-
-
-      if (
-        event.key.toLowerCase() ===
-        "r"
-      ) {
-
-        spinSelected();
-
-      }
-
-
-      if (
-        event.key.toLowerCase() ===
-        "x"
-      ) {
-
-        deleteSelected();
-
-      }
-
-
-      if (
-        event.key ===
-        "Escape"
-      ) {
-
-        closeAddMenu();
-
-      }
-
+    if (
+      e.key.toLowerCase() ===
+      'g'
+    ) {
+      tossSelected();
     }
-  );
 
-
-/* =========================================================
-   CLICK OUTSIDE ADD MENU
-========================================================= */
-
-document
-  .addEventListener(
-    "pointerdown",
-    event => {
-
-      if (
-        !state.addMenuOpen
-      ) {
-        return;
-      }
-
-
-      if (
-        dom.addMenu.contains(
-          event.target
-        ) ||
-        dom.addObject.contains(
-          event.target
-        )
-      ) {
-
-        return;
-
-      }
-
-
-      closeAddMenu();
-
+    if (
+      e.key.toLowerCase() ===
+      'r'
+    ) {
+      spinSelected();
     }
-  );
 
+    if (
+      e.key.toLowerCase() ===
+      'x'
+    ) {
+      deleteSelected();
+    }
 
-/* =========================================================
-   HASH ROUTING
-========================================================= */
+    if (
+      e.key ===
+      'Escape'
+    ) {
+      closeAdd();
+    }
+  }
+);
+
+/* HASH */
 
 function readHash() {
+  const raw =
+    location.hash.replace(
+      /^#/,
+      ''
+    );
 
-  const value =
-    location.hash
-      .replace(
-        /^#/,
-        ""
-      );
-
-
-  if (
-    !value
-  ) {
-
+  if (!raw) {
     setSection(
-      "home",
-      "home",
+      'home',
+      'home',
       false
     );
 
-
     return;
-
   }
-
 
   const [
-    section,
-    itemId
+    s,
+    id
   ] =
-    value.split(
-      "/"
-    );
-
-
-  if (
-    !CONTENT[section]
-  ) {
-
-    setSection(
-      "home",
-      "home",
-      false
-    );
-
-
-    return;
-
-  }
-
+    raw.split('/');
 
   setSection(
-    section,
-    itemId,
+    CONTENT[s]
+      ? s
+      : 'home',
+
+    id || null,
+
     false
   );
-
 }
 
+/* RESIZE */
 
-window
-  .addEventListener(
-    "hashchange",
-    readHash
-  );
-
-
-/* =========================================================
-   CAMERA
-========================================================= */
-
-function resetView() {
-
-  camera.position.set(
-    7.8,
-    5.3,
-    9.9
-  );
-
-
-  controls.target.set(
-    0,
-    1.15,
-    0
-  );
-
-
-  controls.update();
-
-}
-
-
-/* =========================================================
-   RESIZE
-========================================================= */
-
-function resizeRenderer() {
-
-  const rect =
-    dom.viewport
-      .getBoundingClientRect();
-
-
-  const width =
-    Math.max(
-      1,
-      Math.floor(
-        rect.width
-      )
-    );
-
-
-  const height =
-    Math.max(
-      1,
-      Math.floor(
-        rect.height
-      )
-    );
-
-
+function resize() {
   renderer.setSize(
-    width,
-    height,
+    window.innerWidth,
+    window.innerHeight,
     false
   );
-
 
   camera.aspect =
-    width /
-    height;
-
+    window.innerWidth /
+    window.innerHeight;
 
   camera
     .updateProjectionMatrix();
-
 }
 
+/* ARM ANIMATION */
 
-window
-  .addEventListener(
-    "resize",
-    () => {
-
-      resizeRenderer();
-
-
-      if (
-        state.addMenuOpen
-      ) {
-
-        positionAddMenu();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   ANIMATION — KIT TRANSITION
-========================================================= */
-
-function updateKitAnimation(
-  now
-) {
-
-  if (
-    !state.kitAnimation
-  ) {
+function updateArmMotion(now) {
+  if (!state.armMotion) {
     return;
   }
 
-
-  const animation =
-    state.kitAnimation;
-
+  const m =
+    state.armMotion;
 
   const t =
     Math.min(
       1,
-
       (
         now -
-        animation.start
+        m.start
       ) /
-      animation.duration
+      m.duration
     );
 
-
-  const eased =
+  const e =
     1 -
     Math.pow(
-      1 -
-      t,
+      1 - t,
       3
     );
 
-
-  if (
-    state.activeKit
-  ) {
-
-    setGroupOpacity(
-      state.activeKit,
-      eased
+  arm.basePivot.rotation.y =
+    THREE.MathUtils.lerp(
+      m.from.base,
+      m.to.base,
+      e
     );
-
-
-    state.activeKit
-      .scale
-      .setScalar(
-        0.96 +
-        eased *
-        0.04
-      );
-
-  }
-
-
-  if (
-    state.previousKit
-  ) {
-
-    setGroupOpacity(
-      state.previousKit,
-      1 -
-      eased
-    );
-
-
-    state.previousKit
-      .scale
-      .setScalar(
-        1 -
-        eased *
-        0.04
-      );
-
-  }
-
-
-  if (
-    t >= 1
-  ) {
-
-    if (
-      state.previousKit
-    ) {
-
-      scene.remove(
-        state.previousKit
-      );
-
-
-      disposeGroup(
-        state.previousKit
-      );
-
-    }
-
-
-    state.previousKit =
-      null;
-
-
-    state.kitAnimation =
-      null;
-
-  }
-
-}
-
-
-/* =========================================================
-   ANIMATION — FEATURED OBJECT
-========================================================= */
-
-function updateFeaturedAnimation(
-  now
-) {
-
-  if (
-    !state.featuredAnimation
-  ) {
-    return;
-  }
-
-
-  const animation =
-    state.featuredAnimation;
-
-
-  const t =
-    Math.min(
-      1,
-
-      (
-        now -
-        animation.start
-      ) /
-      animation.duration
-    );
-
-
-  const eased =
-    1 -
-    Math.pow(
-      1 -
-      t,
-      3
-    );
-
-
-  if (
-    state.featuredModel
-  ) {
-
-    state.featuredModel
-      .scale
-      .setScalar(
-        Math.max(
-          0.02,
-          eased
-        )
-      );
-
-
-    state.featuredModel
-      .position.x =
-      (
-        1 -
-        eased
-      ) *
-      0.28;
-
-
-    state.featuredModel
-      .rotation.y =
-      (
-        1 -
-        eased
-      ) *
-      -0.38;
-
-  }
-
-
-  if (
-    state.previousFeatured
-  ) {
-
-    state.previousFeatured
-      .scale
-      .setScalar(
-        Math.max(
-          0.001,
-          1 -
-          eased
-        )
-      );
-
-
-    state.previousFeatured
-      .position.x =
-      -eased *
-      0.3;
-
-  }
-
-
-  if (
-    t >= 1
-  ) {
-
-    if (
-      state.previousFeatured
-    ) {
-
-      featuredRoot.remove(
-        state.previousFeatured
-      );
-
-
-      disposeGroup(
-        state.previousFeatured
-      );
-
-    }
-
-
-    state.previousFeatured =
-      null;
-
-
-    state.featuredModel
-      .scale
-      .setScalar(
-        1
-      );
-
-
-    state.featuredModel
-      .position
-      .set(
-        0,
-        0,
-        0
-      );
-
-
-    state.featuredAnimation =
-      null;
-
-  }
-
-}
-
-
-/* =========================================================
-   ANIMATION — ARM
-========================================================= */
-
-function updateArm(
-  dt
-) {
-
-  const smoothing =
-    1 -
-    Math.exp(
-      -dt *
-      6.5
-    );
-
-
-  for (
-    const key of [
-      "base",
-      "shoulder",
-      "elbow",
-      "forearm",
-      "wrist",
-      "wristY",
-      "grip"
-    ]
-  ) {
-
-    state.armPose[key] =
-      THREE.MathUtils.lerp(
-        state.armPose[key],
-        state.armTarget[key],
-        smoothing
-      );
-
-  }
-
-
-  arm.baseJoint.rotation.y =
-    state.armPose.base;
-
 
   arm.shoulder.rotation.z =
-    state.armPose.shoulder;
-
+    THREE.MathUtils.lerp(
+      m.from.shoulder,
+      m.to.shoulder,
+      e
+    );
 
   arm.elbow.rotation.z =
-    state.armPose.elbow;
+    THREE.MathUtils.lerp(
+      m.from.elbow,
+      m.to.elbow,
+      e
+    );
 
-
-  arm.forearm.rotation.z =
-    state.armPose.forearm;
-
-
-  arm.wrist.rotation.z =
-    state.armPose.wrist;
-
-
-  arm.wrist.rotation.y =
-    state.armPose.wristY;
-
-
-  arm.fingerL.position.x =
-    -state.armPose.grip;
-
-
-  arm.fingerR.position.x =
-    state.armPose.grip;
-
+  if (t >= 1) {
+    state.armMotion = null;
+  }
 }
 
-
-/* =========================================================
-   ANIMATION — PROP HIGHLIGHT
-========================================================= */
-
-function updateProps(
-  dt
-) {
-
-  if (
-    !state.activeKit
-  ) {
+function updateGrip(now) {
+  if (!state.gripMotion) {
     return;
   }
 
+  const m =
+    state.gripMotion;
 
-  const smoothing =
-    1 -
-    Math.exp(
-      -dt *
-      7
+  const t =
+    Math.min(
+      1,
+      (
+        now -
+        m.start
+      ) /
+      m.duration
     );
 
+  const e =
+    1 -
+    Math.pow(
+      1 - t,
+      3
+    );
 
-  const props =
-    state.activeKit
-      .userData
-      .props || [];
+  const x =
+    THREE.MathUtils.lerp(
+      m.from,
+      m.to,
+      e
+    );
 
+  arm.fingerL.position.x =
+    -x;
 
-  props.forEach(
-    prop => {
+  arm.fingerR.position.x =
+    x;
 
-      const current =
-        prop.scale.x;
-
-
-      const target =
-        prop.userData
-          .targetScale ||
-        prop.userData
-          .baseScale ||
-        1;
-
-
-      const next =
-        THREE.MathUtils.lerp(
-          current,
-          target,
-          smoothing
-        );
-
-
-      prop.scale.setScalar(
-        next
-      );
-
-    }
-  );
-
+  if (t >= 1) {
+    state.gripMotion = null;
+  }
 }
 
+function updateTweens(now) {
+  state.restoreTweens =
+    state.restoreTweens.filter(
+      tw => {
+        const t =
+          Math.min(
+            1,
+            (
+              now -
+              tw.start
+            ) /
+            tw.duration
+          );
 
-/* =========================================================
-   UTILITIES
-========================================================= */
+        const e =
+          1 -
+          Math.pow(
+            1 - t,
+            3
+          );
 
-function capitalize(
-  text
-) {
+        tw.object.position
+          .lerpVectors(
+            tw.fromPos,
+            tw.toPos,
+            e
+          );
 
-  return (
-    text
-      .charAt(0)
-      .toUpperCase() +
-    text.slice(1)
-  );
+        tw.object.quaternion
+          .slerpQuaternions(
+            tw.fromQuat,
+            tw.toQuat,
+            e
+          );
 
+        return t < 1;
+      }
+    );
 }
 
+/* MAIN LOOP */
 
-function sectionSceneName(
-  section
-) {
-
-  const names = {
-
-    home:
-      "Personal Lab",
-
-    about:
-      "About Bench",
-
-    projects:
-      "Project Lab",
-
-    experience:
-      "Experience Bench",
-
-    interests:
-      "Interests Bench",
-
-    contact:
-      "Contact Desk"
-
-  };
-
-
-  return names[
-    section
-  ] || "Personal Lab";
-
-}
-
-
-/* =========================================================
-   RENDER LOOP
-========================================================= */
-
-let previousTime =
+let last =
   performance.now();
 
-
-function animate(
-  now
-) {
-
+function animate(now) {
   requestAnimationFrame(
     animate
   );
 
-
   const dt =
     Math.min(
-      0.033,
-
+      .033,
       (
         now -
-        previousTime
+        last
       ) /
       1000
     );
 
-
-  previousTime =
-    now;
-
+  last = now;
 
   controls.update();
 
-
-  updatePhysics(
-    dt
-  );
-
-
-  updateArm(
-    dt
-  );
-
-
-  updateProps(
-    dt
-  );
-
-
-  updateKitAnimation(
-    now
-  );
-
-
-  updateFeaturedAnimation(
-    now
-  );
-
-
-  /* slowly rotate featured item */
-
-  if (
-    state.featuredModel
-  ) {
-
-    state.featuredModel
-      .rotation.y +=
-      dt *
-      0.12;
-
-  }
-
+  updateArmMotion(now);
+  updateGrip(now);
+  updateTweens(now);
+  updatePhysics(dt);
 
   renderer.render(
     scene,
     camera
   );
-
 }
 
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-resizeRenderer();
-
-
+resize();
 readHash();
-
 
 requestAnimationFrame(
   animate
