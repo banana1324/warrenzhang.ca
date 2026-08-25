@@ -3,128 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <meta
-    name="description"
-    content="Warren Zhang — software, embedded systems, robotics, and interactive 3D work."
-  />
-
-  <meta name="theme-color" content="#0d0f12" />
-
+  <meta name="description" content="Warren Zhang — software, embedded systems, robotics, and interactive 3D work." />
+  <meta name="theme-color" content="#0a0c0f" />
   <title>Warren Zhang</title>
-
-  <link
-    rel="stylesheet"
-    href="./styles.css?v=8"
-  />
+  <link rel="stylesheet" href="./styles.css?v=12" />
 </head>
-
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
-  <a class="skip-link" href="#content">
-    Skip to content
-  </a>
+  <canvas id="scene-canvas" aria-hidden="true"></canvas>
+  <div class="scene-vignette" aria-hidden="true"></div>
 
-  <!-- =====================================================
-       HEADER
-  ====================================================== -->
-
-  <header class="topbar">
-
-    <a
-      class="brand"
-      href="#home"
-      data-section-link="home"
-      aria-label="Warren Zhang home"
-    >
-      <span class="brand-icon" aria-hidden="true"></span>
-
-      <span class="brand-copy">
+  <header class="site-header">
+    <a class="identity" href="#home/home" data-section="home" aria-label="Warren Zhang home">
+      <span class="identity-mark" aria-hidden="true"></span>
+      <span>
         <strong>Warren Zhang</strong>
         <small>Software · Embedded · Robotics</small>
       </span>
     </a>
 
-    <nav class="desktop-nav" aria-label="Primary navigation">
-
-      <button
-        class="nav-button is-active"
-        type="button"
-        data-section="home"
-      >
-        Home
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        data-section="about"
-      >
-        About
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        data-section="projects"
-      >
-        Projects
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        data-section="experience"
-      >
-        Experience
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        data-section="interests"
-      >
-        Interests
-      </button>
-
-      <button
-        class="nav-button"
-        type="button"
-        data-section="contact"
-      >
-        Contact
-      </button>
-
-      <a
-        class="resume-button"
-        href="./assets/resume.pdf"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Resume ↗
-      </a>
-
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <button type="button" data-section="home" class="nav-link is-active">Home</button>
+      <button type="button" data-section="about" class="nav-link">About</button>
+      <button type="button" data-section="projects" class="nav-link">Projects</button>
+      <button type="button" data-section="experience" class="nav-link">Experience</button>
+      <button type="button" data-section="interests" class="nav-link">Interests</button>
+      <button type="button" data-section="contact" class="nav-link">Contact</button>
     </nav>
 
-    <button
-      id="mobile-menu-button"
-      class="mobile-menu-button"
-      type="button"
-      aria-expanded="false"
-      aria-controls="mobile-nav"
-    >
+    <div class="header-links" aria-label="External links">
+      <a href="https://github.com/banana1324" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/fuyuanzhang" target="_blank" rel="noreferrer">LinkedIn</a>
+      <a href="https://www.youtube.com/@goosehjonk918" target="_blank" rel="noreferrer">YouTube</a>
+      <a href="./assets/resume.pdf" target="_blank" rel="noreferrer">Resume</a>
+    </div>
+
+    <button id="menu-button" class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu">
       Menu
     </button>
-
   </header>
 
-  <nav
-    id="mobile-nav"
-    class="mobile-nav"
-    aria-label="Mobile navigation"
-    hidden
-  >
-
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
     <button type="button" data-section="home">Home</button>
     <button type="button" data-section="about">About</button>
     <button type="button" data-section="projects">Projects</button>
@@ -132,389 +52,122 @@
     <button type="button" data-section="interests">Interests</button>
     <button type="button" data-section="contact">Contact</button>
 
-    <a
-      href="./assets/resume.pdf"
-      target="_blank"
-      rel="noreferrer"
-    >
-      Resume ↗
-    </a>
-
+    <a href="https://github.com/banana1324" target="_blank" rel="noreferrer">GitHub ↗</a>
+    <a href="https://www.linkedin.com/in/fuyuanzhang" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+    <a href="https://www.youtube.com/@goosehjonk918" target="_blank" rel="noreferrer">YouTube ↗</a>
+    <a href="./assets/resume.pdf" target="_blank" rel="noreferrer">Resume ↗</a>
   </nav>
 
-  <!-- =====================================================
-       MAIN
-  ====================================================== -->
-
-  <main
-    id="content"
-    class="portfolio-grid"
-  >
-
-    <!-- ===================================================
-         3D LAB
-    ==================================================== -->
-
-    <section
-      class="scene-card"
-      aria-label="Interactive 3D lab bench"
-    >
-
-      <div
-        id="viewport"
-        class="viewport"
-        tabindex="0"
-      >
-
-        <canvas
-          id="scene-canvas"
-          aria-hidden="true"
-        ></canvas>
-
-        <div class="viewport-shade"></div>
-
-        <div class="scene-badge scene-badge-left">
-          <span class="status-light"></span>
-          <span>Interactive Lab</span>
-        </div>
-
-        <div class="scene-badge scene-badge-right">
-          <span id="scene-label">Home / Lab Bench</span>
-        </div>
-
-        <div class="scene-tip">
-          Click objects to explore them
-        </div>
-
-        <div class="viewport-actions">
-
-          <button
-            id="reset-view"
-            type="button"
-          >
-            Reset view
-          </button>
-
-          <button
-            id="add-object"
-            type="button"
-            aria-haspopup="menu"
-            aria-expanded="false"
-          >
-            Add object
-          </button>
-
-        </div>
-
-        <p class="viewport-help">
-          Drag to orbit · Shift+A add · G toss · R spin · X delete
-        </p>
-
-        <!-- =============================================
-             BLENDER-STYLE ADD MENU
-        ============================================== -->
-
-        <div
-          id="add-menu"
-          class="add-menu"
-          role="menu"
-          hidden
-        >
-
-          <div class="add-menu-title">
-            <span>Add</span>
-            <span>›</span>
-            <span>Mesh</span>
-          </div>
-
-          <button type="button" role="menuitem" data-add="plane">
-            <span>Plane</span>
-            <kbd>1</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="cube">
-            <span>Cube</span>
-            <kbd>2</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="circle">
-            <span>Circle</span>
-            <kbd>3</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="sphere">
-            <span>UV Sphere</span>
-            <kbd>4</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="icosphere">
-            <span>Icosphere</span>
-            <kbd>5</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="cylinder">
-            <span>Cylinder</span>
-            <kbd>6</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="cone">
-            <span>Cone</span>
-            <kbd>7</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="torus">
-            <span>Torus</span>
-            <kbd>8</kbd>
-          </button>
-
-          <button type="button" role="menuitem" data-add="monkey">
-            <span>Monkey</span>
-            <kbd>9</kbd>
-          </button>
-
-        </div>
-
+  <main id="main-content" class="content-layer">
+    <section class="info-panel" aria-live="polite" aria-atomic="true">
+      <div class="section-label-row">
+        <span id="content-kicker">INTRO</span>
+        <span id="content-count">01 / 01</span>
       </div>
 
-      <div class="scene-footer">
+      <h1 id="content-title">Software that reaches the physical world.</h1>
 
-        <div>
-          <span class="scene-footer-label">
-            Scene
-          </span>
+      <p id="content-meta" class="content-meta">
+        Waterloo Computer Science · Richmond, BC
+      </p>
 
-          <strong id="scene-footer-name">
-            Personal Lab
-          </strong>
-        </div>
+      <p id="content-description" class="content-description"></p>
 
-        <p>
-          The robotic arm changes what it presents as you explore.
-        </p>
+      <div id="metrics" class="metrics"></div>
 
+      <ul id="content-details" class="content-details"></ul>
+
+      <div id="item-nav" class="item-nav">
+        <button id="previous-item" type="button" aria-label="Previous item">←</button>
+
+        <div id="item-list" class="item-list"></div>
+
+        <button id="next-item" type="button" aria-label="Next item">→</button>
       </div>
 
+      <div id="content-actions" class="content-actions">
+        <a id="primary-action" href="#">View</a>
+        <a id="secondary-action" href="#">More</a>
+        <a id="tertiary-action" href="#">More</a>
+      </div>
     </section>
-
-    <!-- ===================================================
-         DESCRIPTION / MAIN INFORMATION
-    ==================================================== -->
-
-    <section
-      class="content-card"
-      aria-live="polite"
-    >
-
-      <!-- Section tabs -->
-
-      <div class="section-tabs">
-
-        <button
-          type="button"
-          class="section-tab is-active"
-          data-section="home"
-        >
-          Home
-        </button>
-
-        <button
-          type="button"
-          class="section-tab"
-          data-section="about"
-        >
-          About
-        </button>
-
-        <button
-          type="button"
-          class="section-tab"
-          data-section="projects"
-        >
-          Projects
-        </button>
-
-        <button
-          type="button"
-          class="section-tab"
-          data-section="experience"
-        >
-          Experience
-        </button>
-
-        <button
-          type="button"
-          class="section-tab"
-          data-section="interests"
-        >
-          Interests
-        </button>
-
-        <button
-          type="button"
-          class="section-tab"
-          data-section="contact"
-        >
-          Contact
-        </button>
-
-      </div>
-
-      <!-- Content header -->
-
-      <div class="content-header">
-
-        <div class="content-heading-row">
-
-          <p
-            id="content-kicker"
-            class="content-kicker"
-          >
-            HELLO
-          </p>
-
-          <span
-            id="content-count"
-            class="content-count"
-          >
-            01 / 01
-          </span>
-
-        </div>
-
-        <h1 id="content-title">
-          Building things that move, sense, and think.
-        </h1>
-
-        <p
-          id="content-meta"
-          class="content-meta"
-        >
-          Waterloo CS · Software · Embedded · Robotics
-        </p>
-
-      </div>
-
-      <!-- Main written description -->
-
-      <div class="description-area">
-
-        <p
-          id="content-description"
-          class="main-description"
-        >
-          I like projects where software eventually has to interact
-          with something real: a robot, a sensor, a radio, a physical
-          interface, or a person using it.
-        </p>
-
-        <div
-          id="fact-grid"
-          class="fact-grid"
-        ></div>
-
-        <div class="detail-section">
-
-          <h2>Details</h2>
-
-          <ul
-            id="content-details"
-            class="detail-list"
-          ></ul>
-
-        </div>
-
-      </div>
-
-      <!-- Item selector -->
-
-      <div
-        id="item-navigation"
-        class="item-navigation"
-      >
-
-        <button
-          id="previous-item"
-          class="item-arrow"
-          type="button"
-          aria-label="Previous item"
-        >
-          ←
-        </button>
-
-        <div
-          id="item-list"
-          class="item-list"
-        ></div>
-
-        <button
-          id="next-item"
-          class="item-arrow"
-          type="button"
-          aria-label="Next item"
-        >
-          →
-        </button>
-
-      </div>
-
-      <!-- Links -->
-
-      <div
-        id="content-actions"
-        class="content-actions"
-      >
-
-        <a
-          id="primary-link"
-          class="action-primary"
-          href="#"
-        >
-          View
-        </a>
-
-        <a
-          id="secondary-link"
-          class="action-secondary"
-          href="#"
-        >
-          GitHub ↗
-        </a>
-
-        <a
-          id="tertiary-link"
-          class="action-secondary"
-          href="#"
-        >
-          LinkedIn ↗
-        </a>
-
-      </div>
-
-      <div class="content-status">
-
-        <span>
-          Select a tab or click an object in the 3D lab.
-        </span>
-
-        <span>
-          Information updates immediately.
-        </span>
-
-      </div>
-
-    </section>
-
   </main>
+
+  <aside class="scene-status" aria-hidden="true">
+    <div>
+      <span class="status-dot"></span>
+      <span id="scene-label">Home · Personal Lab</span>
+    </div>
+
+    <span id="arm-status">Curator ready</span>
+  </aside>
+
+  <div class="scene-controls">
+    <button id="reset-view" type="button">Reset view</button>
+
+    <button
+      id="add-object"
+      type="button"
+      aria-haspopup="menu"
+      aria-expanded="false"
+    >
+      Add object
+    </button>
+  </div>
+
+  <p class="scene-help">
+    Drag to orbit · Shift+A add · G toss · R spin · X delete
+  </p>
+
+  <div id="add-menu" class="add-menu" role="menu" hidden>
+    <div class="add-menu-title">
+      <span>Add</span>
+      <span>›</span>
+      <span>Mesh</span>
+    </div>
+
+    <button type="button" role="menuitem" data-add="plane">
+      <span>Plane</span><kbd>1</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="cube">
+      <span>Cube</span><kbd>2</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="circle">
+      <span>Circle</span><kbd>3</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="sphere">
+      <span>UV Sphere</span><kbd>4</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="icosphere">
+      <span>Icosphere</span><kbd>5</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="cylinder">
+      <span>Cylinder</span><kbd>6</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="cone">
+      <span>Cone</span><kbd>7</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="torus">
+      <span>Torus</span><kbd>8</kbd>
+    </button>
+
+    <button type="button" role="menuitem" data-add="monkey">
+      <span>Monkey</span><kbd>9</kbd>
+    </button>
+  </div>
 
   <noscript>
     <div class="noscript">
-      This website requires JavaScript for its interactive 3D scene.
+      This site requires JavaScript for its interactive 3D scene.
     </div>
   </noscript>
-
-  <!-- =====================================================
-       THREE.JS
-  ====================================================== -->
 
   <script type="importmap">
     {
@@ -525,10 +178,6 @@
     }
   </script>
 
-  <script
-    type="module"
-    src="./script.js?v=8"
-  ></script>
-
+  <script type="module" src="./script.js?v=12"></script>
 </body>
 </html>
