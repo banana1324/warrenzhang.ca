@@ -265,9 +265,9 @@ renderer.setScissorTest(true);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x081018, 15, 31);
 
-const camera = new THREE.PerspectiveCamera(31, 1, 0.1, 100);
-camera.position.set(0, 5.55, 13.2);
-const CAMERA_TARGET = new THREE.Vector3(0, 1.95, 1.85);
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+camera.position.set(0, 4.65, 14.9);
+const CAMERA_TARGET = new THREE.Vector3(0, 1.45, 1.15);
 camera.lookAt(CAMERA_TARGET);
 
 scene.add(new THREE.HemisphereLight(0xf7fbff, 0x1b2430, 2.35));
@@ -340,9 +340,9 @@ scene.add(hoseA, hoseB);
 
 // ---------- arm ----------
 const ARM = {
-  base: new THREE.Vector3(0, .68, -1.15),
+  base: new THREE.Vector3(0, .64, -2.00),
   lengths: [1.35, 1.6, 1.45, 1.05],
-  rest: [1.10, -.82, .62, -.38],
+  rest: [1.00, -.58, .42, -.28],
   limits: [[.20, 2.1], [-1.45, .55], [-1.2, 1.25], [-1.25, .85]],
   radius: [.28, .23, .19, .16]
 };
@@ -466,7 +466,7 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width: 3.35, height: 4.35, thickness: .075, handleX: 1.44, handleY: 1.78 };
+const BOARD = { width: 3.35, height: 4.35, thickness: .075, handleX: 0.0, handleY: 2.02 };
 function createBoard(section, item, index) {
   const group = new THREE.Group();
   const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf6f7f9, .95, .01);
@@ -554,17 +554,17 @@ function roundRect(ctx, x, y, w, h, r, fill) {
 }
 
 // ---------- stations ----------
-const STATION_RADIUS = 5.4;
+const STATION_RADIUS = 4.45;
 const rayTargets = [];
 const gltfLoader = new GLTFLoader();
 const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/refs/heads/main/2.0/Suzanne/glTF/Suzanne.gltf';
 
 function createAllStations() {
-  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(150), THREE.MathUtils.degToRad(30));
+  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(160), THREE.MathUtils.degToRad(20));
   FLAT_ITEMS.forEach((entry, i) => {
     const theta = angles[i];
     const x = Math.cos(theta) * STATION_RADIUS;
-    const z = Math.sin(theta) * STATION_RADIUS + .85;
+    const z = Math.sin(theta) * STATION_RADIUS + 1.55;
     const root = new THREE.Group();
     root.position.set(x, 0, z);
     root.rotation.y = Math.atan2(camera.position.x - x, camera.position.z - z);
@@ -572,21 +572,21 @@ function createAllStations() {
     const pad = box(2.65, .12, 1.72, .09, 0x141d26, .84, .08); pad.position.y = .06; root.add(pad);
     const ring = mesh(new THREE.TorusGeometry(.86, .028, 12, 44), 0x465566, .44, .30); ring.rotation.x = Math.PI / 2; ring.position.y = .13; root.add(ring);
     const slotBase = box(.54, .12, 1.08, .04, 0x111821, .76, .08); slotBase.position.set(.82, .09, .10); root.add(slotBase);
-    const slotBack = box(.22, 1.72, .16, .03, 0x0d1219, .84, .06); slotBack.position.set(.82, .86, -.23); root.add(slotBack);
-    const slotMouth = box(.08, 1.56, .14, .02, 0x04070b, .86, .02); slotMouth.position.set(.82, .92, .27); root.add(slotMouth);
+    const slotBack = box(.22, 1.22, .16, .03, 0x0d1219, .84, .06); slotBack.position.set(.82, .61, -.23); root.add(slotBack);
+    const slotMouth = box(.08, 1.08, .14, .02, 0x04070b, .86, .02); slotMouth.position.set(.82, .66, .27); root.add(slotMouth);
 
     const model = createTopicModel(entry.item.model, entry.key); model.position.set(-.38, .16, .10); model.scale.setScalar(.72); root.add(model);
     const board = createBoard(entry.section, entry.item, entry.index); board.visible = false; root.add(board);
 
     const guide = new THREE.Group();
-    guide.position.set(.82, 1.12, -.02); guide.rotation.set(-.10, 0, 0); guide.scale.setScalar(.54); root.add(guide);
+    guide.position.set(.88, 1.16, .44); guide.rotation.set(-.06, 0, 0); guide.scale.setScalar(.58); root.add(guide);
     const guideHandle = new THREE.Object3D(); guideHandle.position.set(BOARD.handleX, BOARD.handleY, .045); guide.add(guideHandle);
 
-    board.position.set(.82, .26, -.05);
+    board.position.set(.82, .30, -.16);
     board.rotation.set(0, 0, 0);
     board.scale.setScalar(.54);
-    board.userData.hiddenLocal = { p: new THREE.Vector3(.82, .26, -.05), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)), s: new THREE.Vector3(.54, .54, .54) };
-    board.userData.shownLocal = { p: new THREE.Vector3(.82, 1.12, -.02), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(-.10, 0, 0)), s: new THREE.Vector3(.54, .54, .54) };
+    board.userData.hiddenLocal = { p: new THREE.Vector3(.82, .30, -.16), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)), s: new THREE.Vector3(.58, .58, .58) };
+    board.userData.shownLocal = { p: new THREE.Vector3(.88, 1.16, .44), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(-.06, 0, 0)), s: new THREE.Vector3(.58, .58, .58) };
 
     scene.add(root); root.updateMatrixWorld(true);
     const station = { ...entry, root, pad, ring, model, board, slotBase, slotBack, slotMouth, guide, guideHandle };
@@ -934,15 +934,16 @@ function heldBoardTargetPose(socket = socketWorld(), newSocket = socket, socketD
   const lift = new THREE.Quaternion().setFromEuler(new THREE.Euler(.05, 0, 0));
   q.multiply(lift);
   const localHandle = new THREE.Vector3(BOARD.handleX, BOARD.handleY, 0).applyQuaternion(q);
-  return { position: newSocket.clone().sub(localHandle), quaternion: q };
+  const hangOffset = new THREE.Vector3(0, -0.06, 0.02).applyQuaternion(q);
+  return { position: newSocket.clone().sub(localHandle).add(hangOffset), quaternion: q };
 }
 function updateHeldBoard(now, dt) {
   if (!state.heldBoard || !state.heldFollow) return;
   const socket = socketWorld();
   const delta = socket.clone().sub(state.heldFollow.targetPrev);
   state.heldFollow.targetPrev.copy(socket);
-  state.heldFollow.tiltX = THREE.MathUtils.lerp(state.heldFollow.tiltX, THREE.MathUtils.clamp(delta.z * .9, -.20, .20), .18);
-  state.heldFollow.tiltZ = THREE.MathUtils.lerp(state.heldFollow.tiltZ, THREE.MathUtils.clamp(-delta.x * .9, -.20, .20), .18);
+  state.heldFollow.tiltX = THREE.MathUtils.lerp(state.heldFollow.tiltX, THREE.MathUtils.clamp(delta.z * .45, -.10, .10), .16);
+  state.heldFollow.tiltZ = THREE.MathUtils.lerp(state.heldFollow.tiltZ, THREE.MathUtils.clamp(-delta.x * .45, -.10, .10), .16);
   const target = heldBoardTargetPose(undefined, socket, delta);
   const tilt = new THREE.Quaternion().setFromEuler(new THREE.Euler(state.heldFollow.tiltX, 0, state.heldFollow.tiltZ));
   target.quaternion.multiply(tilt);
@@ -950,8 +951,8 @@ function updateHeldBoard(now, dt) {
   state.heldBoard.quaternion.slerp(target.quaternion, state.reducedMotion ? 1 : .16);
 }
 
-const SAFE_PRESENT = new THREE.Vector3(0, 4.42, 2.85);
-const SAFE_UP = new THREE.Vector3(0, 4.85, -.35);
+const SAFE_PRESENT = new THREE.Vector3(0, 3.55, 2.10);
+const SAFE_UP = new THREE.Vector3(0, 4.15, -.60);
 const SAFE_ANGLES = [...ARM.rest];
 async function stowCurrentBoard() {
   if (!state.heldBoard || !state.heldStation) return;
@@ -989,7 +990,7 @@ async function pickupBoard(station) {
   await moveArmTo(SAFE_UP, 280);
   dom.status.textContent = 'Presenting page';
   await moveArmTo(SAFE_PRESENT, 440);
-  const settle = SAFE_PRESENT.clone().add(new THREE.Vector3(0, .04, .14));
+  const settle = SAFE_PRESENT.clone().add(new THREE.Vector3(0, .02, .10));
   await moveArmTo(settle, 110);
   await moveArmTo(SAFE_PRESENT, 140);
   dom.status.textContent = 'Page ready';
