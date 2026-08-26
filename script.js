@@ -265,14 +265,14 @@ renderer.setScissorTest(true);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x081018, 15, 31);
 
-const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-camera.position.set(0, 4.65, 14.9);
-const CAMERA_TARGET = new THREE.Vector3(0, 1.45, 1.15);
+const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+camera.position.set(0, 4.45, 13.35);
+const CAMERA_TARGET = new THREE.Vector3(0, 1.55, 1.35);
 camera.lookAt(CAMERA_TARGET);
 
 scene.add(new THREE.HemisphereLight(0xf7fbff, 0x1b2430, 2.35));
 const keyLight = new THREE.DirectionalLight(0xffffff, 3.3);
-keyLight.position.set(2.7, 10.5, 8.1);
+keyLight.position.set(0, 10.5, 7.2);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(2048, 2048);
 keyLight.shadow.camera.left = -10;
@@ -281,7 +281,7 @@ keyLight.shadow.camera.top = 10;
 keyLight.shadow.camera.bottom = -10;
 scene.add(keyLight);
 const fillLight = new THREE.PointLight(0x86b8eb, 14, 16);
-fillLight.position.set(0, 5.1, 5.0);
+fillLight.position.set(0, 5.4, 3.8);
 scene.add(fillLight);
 const rimLight = new THREE.DirectionalLight(0x78a8e8, 1.35);
 rimLight.position.set(-5, 4.5, -4.8);
@@ -340,13 +340,23 @@ scene.add(hoseA, hoseB);
 
 // ---------- arm ----------
 const ARM = {
-  base: new THREE.Vector3(0, .64, -2.00),
+  base: new THREE.Vector3(0, .64, -1.00),
   lengths: [1.35, 1.6, 1.45, 1.05],
-  rest: [1.00, -.58, .42, -.28],
-  limits: [[.20, 2.1], [-1.45, .55], [-1.2, 1.25], [-1.25, .85]],
   radius: [.28, .23, .19, .16]
 };
-const armState = { yaw: 0, angles: [...ARM.rest], grip: .26 };
+
+const ARM_POSES = {
+  // High, folded transport pose. All page changes pass through this pose.
+  safe: [1.45, -.80, .20, -.35],
+  // Exact pickup / deposit pose. Slots are positioned from this pose, not solved with IK.
+  pickup: [.84, -.10, .13, -.26],
+  // Slightly raised / retracted pose used immediately after the page is grabbed.
+  lift: [1.00, -.20, .15, -.25],
+  // Presentation pose toward the visitor. Same deterministic geometry every time.
+  present: [.84, -.10, .13, -.26]
+};
+
+const armState = { yaw: Math.PI / 2, angles: [...ARM_POSES.safe], grip: .26 };
 const armVisual = { root: null, links: [], joints: [], wrist: null, fl: null, fr: null, socket: null };
 
 function buildArm() {
@@ -396,45 +406,25 @@ function forward2D(angles) {
   }
   return pts;
 }
-function clamp(v, [lo, hi]) { return Math.max(lo, Math.min(hi, v)); }
-function nearestAngle(current, target) { return current + Math.atan2(Math.sin(target - current), Math.cos(target - current)); }
-function segDist2D(a, b, c, d) {
-  function pointSeg(p, a, b) {
-    const ab = b.clone().sub(a); const den = ab.lengthSq() || 1;
-    const t = THREE.MathUtils.clamp(p.clone().sub(a).dot(ab) / den, 0, 1);
-    return p.distanceTo(a.clone().addScaledVector(ab, t));
-  }
-  return Math.min(pointSeg(a, c, d), pointSeg(b, c, d), pointSeg(c, a, b), pointSeg(d, a, b));
-}
-function selfCollides(angles) {
-  const p = forward2D(angles);
-  return segDist2D(p[0], p[1], p[2], p[3]) < .42 || segDist2D(p[0], p[1], p[3], p[4]) < .45 || segDist2D(p[1], p[2], p[3], p[4]) < .36;
-}
-function solveIK(target) {
-  const dx = target.x - ARM.base.x, dz = target.z - ARM.base.z;
-  const goal = new THREE.Vector2(Math.hypot(dx, dz), target.y - ARM.base.y);
-  const yaw = nearestAngle(armState.yaw, Math.atan2(dz, dx));
-  let angles = [...ARM.rest];
-  for (let iter = 0; iter < 38; iter++) {
-    for (let j = angles.length - 1; j >= 0; j--) {
-      const p = forward2D(angles), joint = p[j], end = p[p.length - 1];
-      const a = end.clone().sub(joint), b = goal.clone().sub(joint);
-      const cross = a.x * b.y - a.y * b.x, dot = a.dot(b);
-      angles[j] -= .54 * Math.atan2(cross, dot);
-      angles[j] = clamp(angles[j], ARM.limits[j]);
-    }
-    angles = angles.map((a, i) => THREE.MathUtils.lerp(a, ARM.rest[i], .0022));
-  }
-  if (selfCollides(angles)) angles = angles.map((a, i) => THREE.MathUtils.lerp(a, ARM.rest[i], .55));
-  return { yaw, angles };
+function nearestAngle(current, target) {
+  return current + Math.atan2(Math.sin(target - current), Math.cos(target - current));
 }
 function armWorldPoints(yaw = armState.yaw, angles = armState.angles) {
-  const p = forward2D(angles); const dir = new THREE.Vector3(Math.cos(yaw), 0, Math.sin(yaw));
+  const p = forward2D(angles);
+  const dir = new THREE.Vector3(Math.cos(yaw), 0, Math.sin(yaw));
   return p.map(q => ARM.base.clone().addScaledVector(dir, q.x).add(new THREE.Vector3(0, q.y, 0)));
+}
+function armSocketForPose(yaw, angles) {
+  const end = armWorldPoints(yaw, angles).at(-1);
+  // Mirrors the wrist visual transform used in updateArmVisual().
+  const wristQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -yaw + Math.PI / 2, 0));
+  const socketOffset = new THREE.Vector3(0, -.44, .11).applyQuaternion(wristQ);
+  return end.clone().add(socketOffset);
 }
 function placeLink(o, a, b) {
   const d = b.clone().sub(a), len = d.length();
-  const mid = a.clone().add(b).multiplyScalar(.5); o.position.copy(mid);
+  const mid = a.clone().add(b).multiplyScalar(.5);
+  o.position.copy(mid);
   o.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
   o.scale.set(1, Math.max(.1, len - .20), 1);
 }
@@ -442,17 +432,28 @@ function updateArmVisual() {
   const p = armWorldPoints();
   armVisual.links.forEach((l, i) => placeLink(l, p[i], p[i + 1]));
   armVisual.joints.forEach((j, i) => { j.position.copy(p[i]); j.rotation.y = -armState.yaw; });
-  const end = p[p.length - 1]; armVisual.wrist.position.copy(end); armVisual.wrist.rotation.set(0, -armState.yaw + Math.PI / 2, 0);
-  armVisual.fl.position.x = -armState.grip; armVisual.fr.position.x = armState.grip;
+  const end = p[p.length - 1];
+  armVisual.wrist.position.copy(end);
+  armVisual.wrist.rotation.set(0, -armState.yaw + Math.PI / 2, 0);
+  armVisual.fl.position.x = -armState.grip;
+  armVisual.fr.position.x = armState.grip;
 }
 
 function ease(t) { return 1 - Math.pow(1 - t, 3); }
 function wait(ms) { return new Promise(r => setTimeout(r, state.reducedMotion ? 0 : ms)); }
-function moveArmTo(target, duration = 360) { const s = solveIK(target); return moveArmPose(s.yaw, s.angles, duration); }
 function moveArmPose(yaw, angles, duration = 320) {
   yaw = nearestAngle(armState.yaw, yaw);
-  if (state.reducedMotion) { armState.yaw = yaw; armState.angles = [...angles]; updateArmVisual(); return Promise.resolve(); }
-  state.armTween = { start: performance.now(), duration, fromYaw: armState.yaw, toYaw: yaw, fromAngles: [...armState.angles], toAngles: [...angles] };
+  if (state.reducedMotion) {
+    armState.yaw = yaw;
+    armState.angles = [...angles];
+    updateArmVisual();
+    return Promise.resolve();
+  }
+  state.armTween = {
+    start: performance.now(), duration,
+    fromYaw: armState.yaw, toYaw: yaw,
+    fromAngles: [...armState.angles], toAngles: [...angles]
+  };
   return wait(duration);
 }
 function setGrip(x, duration = 100) {
@@ -466,7 +467,7 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width: 3.35, height: 4.35, thickness: .075, handleX: 0.0, handleY: 2.02 };
+const BOARD = { width: 3.80, height: 4.35, thickness: .075, handleX: 0.0, handleY: 2.02, stationScale: .93 };
 function createBoard(section, item, index) {
   const group = new THREE.Group();
   const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf6f7f9, .95, .01);
@@ -560,37 +561,95 @@ const gltfLoader = new GLTFLoader();
 const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/refs/heads/main/2.0/Suzanne/glTF/Suzanne.gltf';
 
 function createAllStations() {
-  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(160), THREE.MathUtils.degToRad(20));
+  // Slots are on a precise inner circle matching the fixed pickup pose.
+  // Models sit farther out, alternating radii so the display objects do not overlap.
+  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(168), THREE.MathUtils.degToRad(12));
+
   FLAT_ITEMS.forEach((entry, i) => {
     const theta = angles[i];
-    const x = Math.cos(theta) * STATION_RADIUS;
-    const z = Math.sin(theta) * STATION_RADIUS + 1.55;
+    const dir = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
+    const pickupSocket = armSocketForPose(theta, ARM_POSES.pickup);
+    const slotCenter = new THREE.Vector3(pickupSocket.x, 0, pickupSocket.z);
+    const pickupRadius = Math.hypot(slotCenter.x - ARM.base.x, slotCenter.z - ARM.base.z);
+    const pickupHandleY = pickupSocket.y;
+    const modelRadius = pickupRadius + 1.65 + (i % 2) * .55;
+    const modelCenter = ARM.base.clone().addScaledVector(dir, modelRadius);
+    modelCenter.y = 0;
+
     const root = new THREE.Group();
-    root.position.set(x, 0, z);
-    root.rotation.y = Math.atan2(camera.position.x - x, camera.position.z - z);
+    scene.add(root);
 
-    const pad = box(2.65, .12, 1.72, .09, 0x141d26, .84, .08); pad.position.y = .06; root.add(pad);
-    const ring = mesh(new THREE.TorusGeometry(.86, .028, 12, 44), 0x465566, .44, .30); ring.rotation.x = Math.PI / 2; ring.position.y = .13; root.add(ring);
-    const slotBase = box(.54, .12, 1.08, .04, 0x111821, .76, .08); slotBase.position.set(.82, .09, .10); root.add(slotBase);
-    const slotBack = box(.22, 1.22, .16, .03, 0x0d1219, .84, .06); slotBack.position.set(.82, .61, -.23); root.add(slotBack);
-    const slotMouth = box(.08, 1.08, .14, .02, 0x04070b, .86, .02); slotMouth.position.set(.82, .66, .27); root.add(slotMouth);
+    // Object pedestal, farther away from the arm than the page slot.
+    const pad = box(2.30, .12, 1.62, .09, 0x141d26, .84, .08);
+    pad.position.set(modelCenter.x, .06, modelCenter.z);
+    pad.rotation.y = -theta + Math.PI / 2;
+    root.add(pad);
 
-    const model = createTopicModel(entry.item.model, entry.key); model.position.set(-.38, .16, .10); model.scale.setScalar(.72); root.add(model);
-    const board = createBoard(entry.section, entry.item, entry.index); board.visible = false; root.add(board);
+    const ring = mesh(new THREE.TorusGeometry(.74, .028, 12, 44), 0x465566, .44, .30);
+    ring.rotation.x = Math.PI / 2;
+    ring.position.set(modelCenter.x, .13, modelCenter.z);
+    root.add(ring);
 
-    const guide = new THREE.Group();
-    guide.position.set(.88, 1.16, .44); guide.rotation.set(-.06, 0, 0); guide.scale.setScalar(.58); root.add(guide);
-    const guideHandle = new THREE.Object3D(); guideHandle.position.set(BOARD.handleX, BOARD.handleY, .045); guide.add(guideHandle);
+    const model = createTopicModel(entry.item.model, entry.key);
+    model.position.set(modelCenter.x, .16, modelCenter.z);
+    model.rotation.y = Math.atan2(camera.position.x - modelCenter.x, camera.position.z - modelCenter.z);
+    model.scale.setScalar(.68);
+    root.add(model);
 
-    board.position.set(.82, .30, -.16);
-    board.rotation.set(0, 0, 0);
-    board.scale.setScalar(.54);
-    board.userData.hiddenLocal = { p: new THREE.Vector3(.82, .30, -.16), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0)), s: new THREE.Vector3(.58, .58, .58) };
-    board.userData.shownLocal = { p: new THREE.Vector3(.88, 1.16, .44), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(-.06, 0, 0)), s: new THREE.Vector3(.58, .58, .58) };
+    // A real table cassette in FRONT of the object. The panel is stored edge-on inside it,
+    // rises vertically as one rigid object, then rotates to face the visitor before pickup.
+    const slotYaw = Math.PI / 2 - theta;
+    const slotHousing = box(.56, .18, 3.72, .06, 0x0d141c, .78, .12);
+    slotHousing.position.set(slotCenter.x, .09, slotCenter.z);
+    slotHousing.rotation.y = slotYaw;
+    root.add(slotHousing);
 
-    scene.add(root); root.updateMatrixWorld(true);
-    const station = { ...entry, root, pad, ring, model, board, slotBase, slotBack, slotMouth, guide, guideHandle };
+    const slotMouth = box(.20, .026, 3.42, .012, 0x020508, .72, .06);
+    slotMouth.position.set(slotCenter.x, .19, slotCenter.z);
+    slotMouth.rotation.y = slotYaw;
+    root.add(slotMouth);
+
+    const lipA = box(.10, .055, 3.54, .015, 0x42515f, .45, .38);
+    lipA.position.set(slotCenter.x, .205, slotCenter.z);
+    lipA.rotation.y = slotYaw;
+    const tangent = new THREE.Vector3(Math.cos(theta + Math.PI / 2), 0, Math.sin(theta + Math.PI / 2));
+    lipA.position.addScaledVector(tangent, -.14);
+    root.add(lipA);
+    const lipB = lipA.clone();
+    lipB.position.addScaledVector(tangent, .28);
+    root.add(lipB);
+
+    const board = createBoard(entry.section, entry.item, entry.index);
+    board.scale.setScalar(BOARD.stationScale);
+    const shownCenterY = pickupHandleY - BOARD.handleY * BOARD.stationScale;
+    board.position.set(slotCenter.x, shownCenterY, slotCenter.z);
+    board.visible = false;
+    root.add(board);
+
+    // Stored edge-on: board width points radially. The top-center handle stays at the same x/z
+    // while it rotates, so the deterministic robot pickup coordinate remains exact.
+    const edgeQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -theta, 0));
+    const faceDummy = new THREE.Object3D();
+    faceDummy.position.copy(board.position);
+    faceDummy.lookAt(camera.position.x, board.position.y, camera.position.z);
+    const shownQ = faceDummy.quaternion.clone();
+    const shownS = new THREE.Vector3(BOARD.stationScale, BOARD.stationScale, BOARD.stationScale);
+    const shownP = board.position.clone();
+    const hiddenP = shownP.clone(); hiddenP.y = -BOARD.height * BOARD.stationScale * .55;
+    board.quaternion.copy(edgeQ);
+    board.userData.hiddenLocal = { p: hiddenP, q: edgeQ.clone(), s: shownS.clone() };
+    board.userData.emergedLocal = { p: shownP.clone(), q: edgeQ.clone(), s: shownS.clone() };
+    board.userData.shownLocal = { p: shownP, q: shownQ, s: shownS.clone() };
+
+    root.updateMatrixWorld(true);
+    const station = {
+      ...entry, root, pad, ring, model, board,
+      slotBase: slotHousing, slotBack: slotHousing, slotMouth,
+      slotCenter: slotCenter.clone(), modelCenter: modelCenter.clone(),
+      pickupYaw: theta, pickupHandleY
+    };
     state.stations.set(entry.key, station);
+
     root.traverse(child => {
       if (child.isMesh) child.userData.navKey = entry.key;
       if (child.isMesh) rayTargets.push(child);
@@ -602,21 +661,14 @@ function distributeAngles(count, start, end) {
   return Array.from({ length: count }, (_, i) => start + (end - start) * (i / (count - 1)));
 }
 function stationGuideWorld(station) {
-  station.guideHandle.updateMatrixWorld(true);
-  const v = new THREE.Vector3(); station.guideHandle.getWorldPosition(v); return v;
-}
-function stationShownWorldPose(station) {
-  station.guide.updateMatrixWorld(true);
-  const p = new THREE.Vector3(), q = new THREE.Quaternion(), s = new THREE.Vector3();
-  station.guide.matrixWorld.decompose(p, q, s);
-  return { position: p, quaternion: q, scale: s };
+  // By construction, the fixed pickup pose lands exactly on this handle.
+  return armSocketForPose(station.pickupYaw, ARM_POSES.pickup);
 }
 function setSelectedStation(key) {
   state.selectedKey = key;
   for (const [k, s] of state.stations) {
     const selected = k === key;
     s.ring.material.color.setHex(selected ? 0x8eb7de : 0x465566);
-    s.root.scale.setScalar(selected ? 1.05 : 1);
     s.slotMouth.material.color.setHex(selected ? 0x8eb7de : 0x04070b);
     s.slotMouth.material.emissive?.setHex?.(selected ? 0x214a72 : 0x000000);
     if (s.slotMouth.material.emissiveIntensity !== undefined) s.slotMouth.material.emissiveIntensity = selected ? .52 : 0;
@@ -905,11 +957,16 @@ async function slideBoardOut(station) {
   board.position.copy(board.userData.hiddenLocal.p);
   board.quaternion.copy(board.userData.hiddenLocal.q);
   board.scale.copy(board.userData.hiddenLocal.s);
-  await tweenLocalTransform(station.root, board, board.userData.shownLocal, 240);
+  // Vertical rigid-body translation out of the physical table cassette.
+  await tweenLocalTransform(station.root, board, board.userData.emergedLocal, 300);
+  // The cassette turns the rigid sheet toward the viewer before the robot closes its gripper.
+  await tweenLocalTransform(station.root, board, board.userData.shownLocal, 180);
 }
 async function slideBoardIn(station) {
   const board = station.board;
-  await tweenLocalTransform(station.root, board, board.userData.hiddenLocal, 240, () => { board.visible = false; });
+  // Rotate edge-on first, then lower the same rigid plate into the slot.
+  await tweenLocalTransform(station.root, board, board.userData.emergedLocal, 150);
+  await tweenLocalTransform(station.root, board, board.userData.hiddenLocal, 300, () => { board.visible = false; });
 }
 function beginHold(station) {
   const board = station.board;
@@ -917,84 +974,116 @@ function beginHold(station) {
   state.heldBoard = board;
   state.heldStation = station;
   const socket = socketWorld();
-  const target = heldBoardTargetPose(new THREE.Vector3(), socket, new THREE.Vector3());
   state.heldFollow = {
-    targetPrev: socket.clone(),
-    tiltX: 0,
-    tiltZ: 0
+    prevSocket: socket.clone(),
+    prevVelocity: new THREE.Vector3(),
+    swingX: 0,
+    swingZ: 0,
+    swingVX: 0,
+    swingVZ: 0
   };
-  board.position.copy(target.position);
-  board.quaternion.copy(target.quaternion);
+  updateHeldBoard(performance.now(), 1 / 60, true);
 }
-function heldBoardTargetPose(socket = socketWorld(), newSocket = socket, socketDelta = new THREE.Vector3()) {
+function heldBoardTargetPose(socket, swingX = 0, swingZ = 0) {
+  // The board is a rigid plate pinned at its top-center handle.
+  // Nominal orientation faces the visitor; swing is applied around that rigid orientation.
   const facing = new THREE.Object3D();
-  facing.position.copy(newSocket);
-  facing.lookAt(camera.position.x, camera.position.y - .1, camera.position.z);
+  facing.position.copy(socket);
+  facing.lookAt(camera.position.x, camera.position.y - .15, camera.position.z);
   const q = facing.quaternion.clone();
-  const lift = new THREE.Quaternion().setFromEuler(new THREE.Euler(.05, 0, 0));
-  q.multiply(lift);
-  const localHandle = new THREE.Vector3(BOARD.handleX, BOARD.handleY, 0).applyQuaternion(q);
-  const hangOffset = new THREE.Vector3(0, -0.06, 0.02).applyQuaternion(q);
-  return { position: newSocket.clone().sub(localHandle).add(hangOffset), quaternion: q };
+  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX, 0, swingZ)));
+  const localHandle = new THREE.Vector3(BOARD.handleX * BOARD.stationScale, BOARD.handleY * BOARD.stationScale, 0).applyQuaternion(q);
+  return { position: socket.clone().sub(localHandle), quaternion: q };
 }
-function updateHeldBoard(now, dt) {
+function updateHeldBoard(now, dt, snap = false) {
   if (!state.heldBoard || !state.heldFollow) return;
   const socket = socketWorld();
-  const delta = socket.clone().sub(state.heldFollow.targetPrev);
-  state.heldFollow.targetPrev.copy(socket);
-  state.heldFollow.tiltX = THREE.MathUtils.lerp(state.heldFollow.tiltX, THREE.MathUtils.clamp(delta.z * .45, -.10, .10), .16);
-  state.heldFollow.tiltZ = THREE.MathUtils.lerp(state.heldFollow.tiltZ, THREE.MathUtils.clamp(-delta.x * .45, -.10, .10), .16);
-  const target = heldBoardTargetPose(undefined, socket, delta);
-  const tilt = new THREE.Quaternion().setFromEuler(new THREE.Euler(state.heldFollow.tiltX, 0, state.heldFollow.tiltZ));
-  target.quaternion.multiply(tilt);
-  state.heldBoard.position.lerp(target.position, state.reducedMotion ? 1 : .18);
-  state.heldBoard.quaternion.slerp(target.quaternion, state.reducedMotion ? 1 : .16);
+  const f = state.heldFollow;
+  const safeDt = Math.max(1 / 120, Math.min(dt || 1 / 60, 1 / 20));
+  const velocity = socket.clone().sub(f.prevSocket).multiplyScalar(1 / safeDt);
+  const acceleration = velocity.clone().sub(f.prevVelocity).multiplyScalar(1 / safeDt);
+  f.prevSocket.copy(socket);
+  f.prevVelocity.lerp(velocity, .42);
+
+  // Damped pendulum response. This is not a visual lag: the top-center handle remains constrained to the gripper.
+  const stiffness = 13.5, damping = 5.4, drive = .011;
+  const ax = THREE.MathUtils.clamp(acceleration.z * drive, -.75, .75);
+  const az = THREE.MathUtils.clamp(-acceleration.x * drive, -.75, .75);
+  f.swingVX += (-stiffness * f.swingX - damping * f.swingVX + ax) * safeDt;
+  f.swingVZ += (-stiffness * f.swingZ - damping * f.swingVZ + az) * safeDt;
+  f.swingX = THREE.MathUtils.clamp(f.swingX + f.swingVX * safeDt, -.18, .18);
+  f.swingZ = THREE.MathUtils.clamp(f.swingZ + f.swingVZ * safeDt, -.18, .18);
+
+  const target = heldBoardTargetPose(socket, f.swingX, f.swingZ);
+  if (snap || state.reducedMotion) {
+    state.heldBoard.position.copy(target.position);
+    state.heldBoard.quaternion.copy(target.quaternion);
+  } else {
+    // Position is exact enough to preserve the rigid pin constraint; orientation is smoothly damped.
+    state.heldBoard.position.copy(target.position);
+    state.heldBoard.quaternion.slerp(target.quaternion, .36);
+  }
 }
 
-const SAFE_PRESENT = new THREE.Vector3(0, 3.55, 2.10);
-const SAFE_UP = new THREE.Vector3(0, 4.15, -.60);
-const SAFE_ANGLES = [...ARM.rest];
+const PRESENT_YAW = Math.PI / 2;
+const SAFE_YAW = Math.PI / 2;
+
+async function rotateSafelyTo(yaw, duration = 330) {
+  // Never rotate the base while the links are extended near the objects.
+  await moveArmPose(armState.yaw, ARM_POSES.safe, 190);
+  await moveArmPose(yaw, ARM_POSES.safe, duration);
+}
+
 async function stowCurrentBoard() {
   if (!state.heldBoard || !state.heldStation) return;
   const station = state.heldStation;
   dom.status.textContent = 'Returning page';
-  const guide = stationGuideWorld(station);
-  const above = guide.clone().add(new THREE.Vector3(0, .55, .22));
-  await moveArmTo(above, 340);
-  await moveArmTo(guide, 180);
+
+  // Fold first, rotate only while clear of the display ring, then extend to the exact slot handle.
+  await moveArmPose(armState.yaw, ARM_POSES.lift, 180);
+  await rotateSafelyTo(station.pickupYaw, 340);
+  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 200);
+  await moveArmPose(station.pickupYaw, ARM_POSES.pickup, 210);
+
   await setGrip(.26, 100);
   const board = state.heldBoard;
-  state.heldBoard = null; state.heldFollow = null;
+  state.heldBoard = null;
+  state.heldFollow = null;
   station.root.attach(board);
-  await tweenLocalTransform(station.root, board, station.board.userData.shownLocal, 120);
+  board.position.copy(board.userData.shownLocal.p);
+  board.quaternion.copy(board.userData.shownLocal.q);
+  board.scale.copy(board.userData.shownLocal.s);
   await slideBoardIn(station);
   state.heldStation = null;
-  await moveArmTo(SAFE_UP, 260);
-  await moveArmPose(0, SAFE_ANGLES, 240);
+
+  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 180);
+  await rotateSafelyTo(SAFE_YAW, 320);
 }
+
 async function pickupBoard(station) {
-  dom.status.textContent = 'Revealing page';
-  await slideBoardOut(station);
   setSelectedStation(station.key);
   updateNav();
-  const guide = stationGuideWorld(station);
-  const above = guide.clone().add(new THREE.Vector3(0, .55, .22));
-  dom.status.textContent = 'Reaching page';
-  await setGrip(.26, 80);
-  await moveArmTo(above, 360);
-  await moveArmTo(guide, 180);
+  dom.status.textContent = 'Opening slot';
+  await slideBoardOut(station);
+
+  await setGrip(.26, 70);
+  await rotateSafelyTo(station.pickupYaw, 340);
+  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 200);
   dom.status.textContent = 'Grabbing page';
+  await moveArmPose(station.pickupYaw, ARM_POSES.pickup, 220);
   await setGrip(.09, 120);
+
+  // At this instant the socket and top-center board handle are the same point by construction.
   beginHold(station);
-  await moveArmTo(above, 220);
-  await moveArmTo(SAFE_UP, 280);
+
+  dom.status.textContent = 'Lifting page';
+  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 220);
+  await rotateSafelyTo(PRESENT_YAW, 380);
   dom.status.textContent = 'Presenting page';
-  await moveArmTo(SAFE_PRESENT, 440);
-  const settle = SAFE_PRESENT.clone().add(new THREE.Vector3(0, .02, .10));
-  await moveArmTo(settle, 110);
-  await moveArmTo(SAFE_PRESENT, 140);
+  await moveArmPose(PRESENT_YAW, ARM_POSES.present, 360);
   dom.status.textContent = 'Page ready';
 }
+
 async function deliverBoard(section, index) {
   state.busy = true;
   await stowCurrentBoard();
@@ -1041,13 +1130,24 @@ dom.canvas.addEventListener('pointerup', e => {
 
 // ---------- physics ----------
 const boardOBB = new OBB(), tmpClosest = new THREE.Vector3(), tmpDelta = new THREE.Vector3();
-function resolveSphereOBB(object, obb, radius) {
+function resolveSphereOBB(object, obb, radius, onImpact = null) {
   obb.clampPoint(object.position, tmpClosest);
   tmpDelta.copy(object.position).sub(tmpClosest); let dist = tmpDelta.length();
   if (dist < radius) {
-    if (dist < 1e-5) { tmpDelta.copy(object.position).sub(obb.center); if (tmpDelta.lengthSq() < 1e-5) tmpDelta.set(0, 1, 0); dist = .001; }
-    tmpDelta.normalize(); object.position.copy(tmpClosest).addScaledVector(tmpDelta, radius + .002);
-    const v = object.userData.velocity; const vn = v.dot(tmpDelta); if (vn < 0) v.addScaledVector(tmpDelta, -1.55 * vn);
+    if (dist < 1e-5) {
+      tmpDelta.copy(object.position).sub(obb.center);
+      if (tmpDelta.lengthSq() < 1e-5) tmpDelta.set(0, 1, 0);
+      dist = .001;
+    }
+    tmpDelta.normalize();
+    object.position.copy(tmpClosest).addScaledVector(tmpDelta, radius + .002);
+    const v = object.userData.velocity;
+    const vn = v.dot(tmpDelta);
+    if (vn < 0) {
+      const impulse = -1.55 * vn;
+      v.addScaledVector(tmpDelta, impulse);
+      onImpact?.(tmpDelta.clone(), impulse, tmpClosest.clone());
+    }
   }
 }
 function resolveSphereBox(object, box3, radius) {
@@ -1095,7 +1195,14 @@ function updatePhysics(dt) {
     if (state.heldBoard) {
       state.heldBoard.updateMatrixWorld(true);
       boardOBB.center.set(0, 0, 0); boardOBB.halfSize.set(BOARD.width / 2, BOARD.height / 2, BOARD.thickness / 2 + .03); boardOBB.rotation.identity();
-      boardOBB.applyMatrix4(state.heldBoard.matrixWorld); resolveSphereOBB(o, boardOBB, r);
+      boardOBB.applyMatrix4(state.heldBoard.matrixWorld);
+      resolveSphereOBB(o, boardOBB, r, (normal, impulse) => {
+        // Two-way response: a thrown object can kick the constrained rigid page and make it swing.
+        if (state.heldFollow) {
+          state.heldFollow.swingVX += THREE.MathUtils.clamp(normal.z * impulse * .055, -.42, .42);
+          state.heldFollow.swingVZ += THREE.MathUtils.clamp(-normal.x * impulse * .055, -.42, .42);
+        }
+      });
     }
     resolveSphereArm(o, r);
     const limitX = 7.1, minZ = -3.0, maxZ = 6.6;
