@@ -13,83 +13,101 @@ const LINKS = {
 
 const CONTENT = {
   home: [{
-    id: 'home', label: 'Home', title: 'Software that reaches the physical world.',
-    meta: 'Computer Science · Software · Embedded · Robotics',
-    description: 'I build systems where code eventually has to interact with something real: a robot, a sensor, a radio, a circuit, or a person using it. This portfolio works the same way—the robot physically retrieves the page you choose.',
-    tags: ['Python', 'C/C++', 'Embedded', 'Robotics'],
-    metrics: [['$195K+', 'Kickstarter funding'], ['15', 'RP2040 apps + games'], ['200+', 'coaching hours']],
+    id: 'home',
+    label: 'Home',
+    title: 'Software, embedded systems & robotics.',
+    meta: 'Computer Science · University of Waterloo · Richmond, BC',
+    description: 'I am most interested in the point where software reaches the physical world—robots, sensors, radios, circuits, and the people who rely on them. My work combines embedded development, robotics, technical communication, and hands-on debugging.',
+    tags: ['Python', 'C/C++', 'Embedded', 'Robotics', 'Computer Vision'],
+    metrics: [['$195K+', 'Kickstarter funding contributed to'], ['446', 'campaign backers'], ['200+', 'badminton coaching hours']],
     details: [
-      'Built software across ESP32, RP2040, Arduino Uno, and Raspberry Pi platforms.',
-      'Connected software to computer vision, sensors, wireless networks, and robotics.',
-      'Interested in software engineering, embedded systems, robotics, applied AI, and interactive 3D.'
+      'Developed software across ESP32, RP2040, Arduino Uno, and Raspberry Pi platforms.',
+      'Built projects spanning LoRaWAN sensing, computer vision, robotics, circuit verification, and educational software.',
+      'Use a deliberate debugging process: measure, change one variable, test, document, and explain the result.',
+      'Also teach and mentor through Physics 11, badminton coaching, and technical learning materials.'
     ],
     model: 'home'
   }],
 
   about: [{
-    id: 'about', label: 'About', title: 'I like understanding the whole system.',
-    meta: 'Waterloo Computer Science · Richmond, BC',
-    description: 'My strongest projects cross boundaries. I like writing the software, connecting it to hardware, testing the system, and tracing failures across code, electronics, communication, timing, and mechanics rather than treating each layer separately.',
-    tags: ['Systems', 'Embedded', 'Robotics', '3D'],
-    metrics: [['Waterloo', 'Computer Science'], ['Hardware + code', 'preferred problem space'], ['Build → test', 'iteration over demos']],
+    id: 'about',
+    label: 'About',
+    title: 'Curious about the system behind the screen.',
+    meta: 'Computer Science · Systems · Teaching · Building',
+    description: 'I started by taking apart computers because I wanted to know what was happening inside them. That curiosity grew into embedded software, robotics, circuit analysis, teaching, and projects where the quality of an explanation matters almost as much as the code.',
+    tags: ['Systems Thinking', 'Debugging', 'Teaching', 'Hardware + Software'],
+    metrics: [['3 years', 'VEX robotics'], ['2 years', 'EIM Technology'], ['Physics 11', 'teaching assistant']],
     details: [
-      'Technical toolkit includes Python, MicroPython, Java, C/C++, JavaScript, ESP32, RP2040, Raspberry Pi, LoRaWAN, MQTT, Node-RED, PID, and odometry.',
-      'I enjoy Blender rigid-body simulations and armatures because they turn geometry into systems with behavior.',
-      'Outside technical work, I have coached badminton and performed trombone in school and orchestral settings.'
+      'As a Physics 11 teaching assistant, I learned to return to definitions, sketches, and multiple explanations until an idea clicks.',
+      'Worked with a small group on an Arduino-based accessibility project for blind and low-vision goalball athletes using sound and vibration feedback.',
+      'Enjoy projects that force me to move between code, electronics, communication, mechanics, and user needs.',
+      'Outside engineering, I coach badminton, perform trombone, and create 3D work in Blender.'
     ],
     model: 'about'
   }],
 
   projects: [
     {
-      id: 'wildfire', label: 'Wildfire Detection', title: 'Wildfire Detection System',
-      meta: 'C++ · LoRaWAN · Raspberry Pi · BME680 · MQTT · Node-RED',
-      description: 'An end-to-end IoT monitoring system built around environmental sensing, long-range radio, a Raspberry Pi gateway, and a software pipeline for processing and visualization.',
-      tags: ['C++', 'BME680', 'LoRaWAN', 'MQTT'],
-      metrics: [['BME680', 'environmental sensing'], ['LoRaWAN', 'long-range transport'], ['Node-RED', 'visualization']],
+      id: 'wildfire',
+      label: 'Wildfire Detection',
+      title: 'Wildfire Detection System',
+      meta: 'Personal Project · Nov 2025 – May 2026 · C++ · LoRaWAN · Raspberry Pi · BME680',
+      description: 'Developed an end-to-end IoT wildfire-monitoring system that captures environmental data, sends it over long-range radio, and processes it through a Raspberry Pi gateway into a dashboard.',
+      tags: ['C++', 'BME680', 'LoRaWAN', 'MQTT', 'Node-RED'],
+      metrics: [['BME680', 'environmental sensing'], ['LoRaWAN', 'long-range data link'], ['MQTT + Node-RED', 'processing + dashboard']],
       details: [
-        'Configured a sensor node and Raspberry Pi gateway for long-range LoRaWAN communication.',
-        'Integrated MQTT and Node-RED to process and visualize incoming environmental data.',
-        'Tested the complete sensor-to-network-to-dashboard path as one system.'
+        'Developed environmental monitoring around a BME680 sensor.',
+        'Configured a LoRaWAN sensor node and Raspberry Pi gateway for long-range data transmission.',
+        'Integrated MQTT and Node-RED to process and visualize sensor data.',
+        'Built the dashboard and tested the full sensor-to-network-to-visualization path end to end.'
       ],
       model: 'wildfire'
     },
     {
-      id: 'kc15', label: 'KC15', title: 'KC15 RP2040 Learning Platform',
-      meta: 'Python · MicroPython · RP2040 · Educational Software',
-      description: 'For EIM Technology’s KC15 microcontroller learning kit, I built and debugged 15 software applications and games and created tutorials so students could reproduce and understand each project.',
-      tags: ['RP2040', 'MicroPython', 'Python', 'Testing'],
-      metrics: [['15', 'apps + games'], ['RP2040', 'target platform'], ['Tutorials', 'learning material']],
+      id: 'kc15',
+      label: 'KC15',
+      title: 'KC15 RP2040 Learning Platform',
+      meta: 'EIM Technology · Embedded Software · RP2040 · Python / MicroPython',
+      description: 'Built software for an RP2040-based educational platform designed for students. The work had to be reliable on physical hardware and understandable enough for a learner to reproduce from the accompanying tutorial.',
+      tags: ['RP2040', 'MicroPython', 'Python', 'Testing', 'Technical Writing'],
+      metrics: [['15', 'apps + games built'], ['15', 'tutorials produced'], ['RP2040', 'hardware compatibility verified']],
       details: [
-        'Developed and debugged 15 applications and games for the KC15 platform.',
-        'Verified reliable execution on the Raspberry Pi Pico / RP2040 platform.',
-        'Produced technical tutorials and demonstrations intended for student use.'
+        'Built and debugged 15 applications and games for the KC15 learning kit.',
+        'Ensured Raspberry Pi Pico / RP2040 compatibility across the software projects.',
+        'Created a tutorial for each project so students could reproduce and understand the implementation.',
+        'Debugged timing, logic, and hardware interaction issues instead of treating the code as a desktop-only exercise.'
       ],
       model: 'kc15'
     },
     {
-      id: 'vision', label: 'Vision Robotics', title: 'Computer Vision Robotics',
-      meta: 'Python · Face Recognition · Finger Recognition · Robot Control',
-      description: 'Computer-vision projects that convert human visual input into physical robot actions, connecting recognition software to embedded and robotic systems.',
-      tags: ['Python', 'Computer Vision', 'Robotics'],
-      metrics: [['Vision', 'human input'], ['Robot', 'physical output'], ['2 modes', 'face + finger recognition']],
+      id: 'vision',
+      label: 'Vision Robotics',
+      title: 'Computer Vision Robotics',
+      meta: 'AI Exploration · Hand Landmark Tracking · Face Recognition · Facial Expression Classification',
+      description: 'Built an early AI and computer-vision project to become more familiar with perception systems, then connected the visual output to robotic behavior rather than stopping at classification.',
+      tags: ['Computer Vision', 'Hand Tracking', 'Face Recognition', 'Emotion Classification', 'Robotics'],
+      metrics: [['Finger count', 'gesture interpretation'], ['Face ID', 'identity recognition'], ['Emotion', 'facial-expression classification']],
       details: [
-        'Built face-recognition and finger-recognition interactions.',
-        'Converted visual classifications into commands for robotic systems.',
-        'Combined perception software with embedded hardware rather than keeping vision as a desktop-only demo.'
+        'Detected hand landmarks and inferred how many fingers a user was holding up.',
+        'Recognized the identity of the person presenting the gesture.',
+        'Classified facial expressions to estimate the visible emotional state of the user.',
+        'Mapped perception results into commands for robotic systems, turning vision output into physical behavior.'
       ],
       model: 'vision'
     },
     {
-      id: 'analog', label: 'Analog Circuits', title: 'Analog Circuit II',
-      meta: 'Op-Amps · MOSFETs · BJTs · Diodes · Laplace · Fourier',
-      description: 'Technical verification work for an analog-circuit learning project, checking diagrams, explanations, and teaching material while reasoning about semiconductor devices and circuit behavior.',
-      tags: ['Op-Amps', 'MOSFETs', 'BJTs', 'Transforms'],
-      metrics: [['Op-Amps', 'active circuits'], ['MOSFET / BJT', 'semiconductors'], ['Laplace / Fourier', 'analysis']],
+      id: 'analog',
+      label: 'Analog Circuits',
+      title: 'Analog Circuit II: Signals, Systems & Filters',
+      meta: 'EVO-IN-MOTION · Technical Verification / Student Reviewer · Kickstarter Project',
+      description: 'Supported the technical verification of an analog electronics learning project, checking both engineering accuracy and whether the material would make sense to a student encountering the concepts for the first time.',
+      tags: ['Op-Amps', 'MOSFETs', 'BJTs', 'Diodes', 'Laplace + Fourier'],
+      metrics: [['Circuit verification', 'diagrams + teaching points'], ['Oscilloscope', 'results + screenshots'], ['Transforms', 'Laplace + Fourier analysis']],
       details: [
-        'Verified diagrams, technical text, and teaching points for correctness.',
-        'Worked with operational amplifiers, MOSFETs, BJTs, and diode behavior.',
-        'Used mathematical analysis to reason about circuit response and verification.'
+        'Verified circuit diagrams, teaching points, labels, and technical text for accuracy and presentation.',
+        'Recorded numerical results and oscilloscope screenshots to confirm circuit behavior.',
+        'Worked with operational amplifiers, MOSFETs, BJTs, and multiple diode types.',
+        'Applied Laplace and Fourier transforms and elements of complex analysis, while communicating errors and possible improvements to the team.'
       ],
       model: 'analog'
     }
@@ -97,54 +115,66 @@ const CONTENT = {
 
   experience: [
     {
-      id: 'eim', label: 'EIM Technology', title: 'Technical Support Intern · EIM Technology',
-      meta: 'Nov 2024 – Jun 2026 · Richmond, BC',
-      description: 'Worked across embedded software, hardware integration, product testing, technical verification, and learning materials—moving repeatedly between code, electronics, debugging tools, and real users.',
-      tags: ['Embedded', 'MicroPython', 'LoRaWAN', 'Debugging'],
+      id: 'eim',
+      label: 'EIM Technology',
+      title: 'Technical Support Intern · EIM Technology',
+      meta: 'Richmond, BC · Nov 2024 – Jun 2026 · 4–5 hrs/week during Grades 11–12',
+      description: 'Worked across embedded software, hardware integration, technical verification, educational content, AI experimentation, and product media for a hands-on technology education company.',
+      tags: ['Embedded Software', 'RP2040', 'ESP32', 'LoRaWAN', 'Hardware Debugging'],
       metrics: [['$195K+', 'Kickstarter funding'], ['446', 'campaign backers'], ['3', 'campaigns contributed to']],
       details: [
-        'Developed embedded software for ESP32, Raspberry Pi Pico, Arduino Uno, and Raspberry Pi.',
-        'Integrated sensors and LoRaWAN systems and used oscilloscopes and logic analyzers for diagnosis.',
-        'Contributed software development and promotional photography to three Kickstarter campaigns.'
+        'Developed embedded software for ESP32, Raspberry Pi Pico (RP2040), Arduino Uno, and Raspberry Pi using Python, MicroPython, and Arduino C/C++.',
+        'Built and debugged 15 KC15 apps and games, created tutorials for each, and verified RP2040 compatibility.',
+        'Integrated sensors and LoRaWAN systems and diagnosed hardware / communication issues with oscilloscopes and logic analyzers.',
+        'Debugged AI software, reviewed instructional content, and contributed product-demo filming and promotional photography.'
       ],
       model: 'eim'
     },
     {
-      id: 'vex', label: 'VEX V5 Robotics Competition', title: 'VEX V5 Robotics Competition',
-      meta: 'Robotics Team 4471A · CAD · PID · Odometry',
-      description: 'Competition robotics work where mechanical design, control software, autonomous behavior, and repeated testing had to function together under real match constraints.',
-      tags: ['VEX V5', 'CAD', 'PID Control', 'Odometry'],
-      metrics: [['4471A', 'competition team'], ['PID', 'motion control'], ['Odometry', 'position tracking']],
+      id: 'vex',
+      label: 'VEX V5 Robotics Competition',
+      title: 'VEX V5 Robotics Competition · 4471A Eagles',
+      meta: '3 years · Control Software · CAD · PID · Odometry · Autonomous',
+      description: 'Our five-person team began in a friend’s garage with no coach and finished our first tournament 59th out of 59. We rebuilt repeatedly, became our school’s official robotics team, and later won tournament and skills championships along with design and judges awards.',
+      tags: ['VEX V5', 'PID', 'Odometry', 'CAD', 'Autonomous'],
+      metrics: [['59 / 59', 'first tournament'], ['Tournament Champion', 'later competition result'], ['Skills + Design', 'championship / award recognition']],
       details: [
-        'Worked on CAD and mechanical robot systems alongside programming and control.',
-        'Applied PID control and odometry to improve repeatability and autonomous movement.',
-        'Iterated through testing, mechanical changes, and software tuning in a competition environment.'
+        'Wrote major parts of the robot control system, including PID motion control and odometry for reliable autonomous positioning.',
+        'Served as a primary CAD designer and pushed the team toward proper CAD planning instead of relying only on rough sketches.',
+        'Debugged failures across software, sensors, motors, and mechanics using build logs and one-variable-at-a-time testing.',
+        'Helped keep a small, mentor-less team working together through repeated tournament failures until we became an official school team and tournament champion.'
       ],
       model: 'vex'
     },
     {
-      id: 'coaching', label: 'Badminton Coach', title: 'Badminton Coach · Stage18',
-      meta: 'May 2024 – May 2026 · Richmond, BC',
-      description: 'Coached young athletes in group lessons, turning technical corrections into clear instructions while keeping sessions organized, focused, and supportive.',
-      tags: ['Coaching', 'Communication', 'Leadership'],
-      metrics: [['200+', 'coaching hours'], ['40+', 'students coached'], ['7–15', 'student ages']],
+      id: 'coaching',
+      label: 'Badminton Coach',
+      title: 'Badminton Coach · Stage18 Badminton Center',
+      meta: 'Richmond, BC · May 2024 – May 2026 · Intermediate Group',
+      description: 'Coached young athletes in group lessons, adapting explanations to different confidence levels and using competition moments to teach sportsmanship, self-control, and resilience as well as technique.',
+      tags: ['Coaching', 'Communication', 'Leadership', 'Sportsmanship'],
+      metrics: [['200+', 'coaching hours'], ['40+', 'students coached'], ['Ages 7–15', 'student range']],
       details: [
-        'Coached more than 40 students across over 200 hours.',
-        'Helped students strengthen badminton technique and confidence.',
-        'Set clear expectations for conduct and sportsmanship while keeping group lessons focused.'
+        'Coached 40+ students across more than 200 hours of group instruction.',
+        'Adjusted demonstrations and explanations for competitive, hesitant, energetic, and less-confident athletes.',
+        'Used disagreements and line-call disputes as opportunities to reinforce sportsmanship and respectful resets.',
+        'Helped students grow in confidence and character, including a player who progressed from reacting poorly to losses to shaking an opponent’s hand and focusing on what he learned.'
       ],
       model: 'coaching'
     },
     {
-      id: 'orchestra', label: 'Orchestra', title: 'Second Trombone · Vancouver Chinese Philharmonic Orchestra',
-      meta: 'Orchestral Performance · Trombone',
-      description: 'Performed as second trombone with the Vancouver Chinese Philharmonic Orchestra, including a performance for the Consulate-General of the People’s Republic of China in Vancouver.',
-      tags: ['Trombone', 'Orchestra', 'Performance'],
-      metrics: [['2nd', 'trombone part'], ['Orchestra', 'ensemble performance'], ['Vancouver', 'Chinese Philharmonic']],
+      id: 'orchestra',
+      label: 'Orchestra',
+      title: 'Trombone · School Band & Vancouver Chinese Philharmonic Orchestra',
+      meta: '6 years · First Trombone (school) · Second Trombone (VCPO)',
+      description: 'Started trombone in Grade 6 with no idea how to play and developed largely through self-directed practice. I now perform as first trombone at school and second trombone with the Vancouver Chinese Philharmonic Orchestra.',
+      tags: ['Trombone', 'Orchestra', 'Performance', 'Mentoring'],
+      metrics: [['6 years', 'playing trombone'], ['2 musicals', 'Into the Woods + The Sound of Music'], ['Disney + Sun Peaks', 'concert performances']],
       details: [
-        'Performed as second trombone with the Vancouver Chinese Philharmonic Orchestra.',
-        'Played at an event for the Chinese Consulate-General in Vancouver.',
-        'Worked in a large ensemble where timing, balance, preparation, and reliability all matter.'
+        'Perform as first trombone in my school band and mentor younger players on tone, breath control, and confidence.',
+        'Perform as second trombone with the Vancouver Chinese Philharmonic Orchestra.',
+        'Performed with the orchestra at an event for the Consulate-General of the People’s Republic of China in Vancouver.',
+        'Additional performances include Disney Anaheim, Sun Peaks, Into the Woods, and The Sound of Music; I continue to practice daily.'
       ],
       model: 'orchestra'
     }
@@ -152,48 +182,59 @@ const CONTENT = {
 
   interests: [
     {
-      id: 'blender', label: 'Blender', title: 'Blender · Physics · Armatures',
-      meta: 'Rigid Bodies · Rigging · Mechanical Motion',
-      description: 'I enjoy Blender most when a scene behaves like a system rather than a static render. Rigid-body simulations, collisions, armatures, and mechanical motion are the parts I keep returning to.',
-      tags: ['Rigid Bodies', 'Armatures', '3D', 'Simulation'],
-      metrics: [['Physics', 'rigid-body behavior'], ['Rigging', 'armatures + joints'], ['Three.js', 'interactive web 3D']],
+      id: 'blender',
+      label: 'Blender',
+      title: 'Blender · Physics · Armatures',
+      meta: 'Personal 3D Work · Rigid Bodies · Rigging · Mechanical Motion',
+      description: 'I started Blender for fun and became especially interested in scenes that behave like systems: rigid-body collisions, armatures, constraints, and mechanical motion rather than static renders.',
+      tags: ['Rigid Bodies', 'Armatures', 'Constraints', '3D Animation'],
+      metrics: [['2K+', 'views on one Blender video'], ['Physics', 'rigid-body simulation'], ['Rigging', 'armatures + motion']],
       details: [
-        'Rigid-body simulations and collision behavior.',
-        'Armatures and mechanical motion.',
-        'Interactive 3D used as interface behavior rather than background decoration.'
+        'Experiment with rigid-body simulations, collision behavior, and physically driven scenes.',
+        'Use armatures and constraints to build controlled mechanical motion.',
+        'One of my Blender videos has received more than 2,000 views.',
+        'The robotic page-switching concept on this portfolio grew directly from this interest in physical interface behavior.'
       ],
       model: 'blender'
     },
     {
-      id: 'hardware', label: 'Hardware', title: 'Hardware gives software consequences.',
-      meta: 'Sensors · Microcontrollers · Physical Debugging',
-      description: 'I like the point where software stops being abstract and has to interact with a real sensor, motor, radio, or circuit—where a bug may live in timing, wiring, signal integrity, or the environment.',
-      tags: ['ESP32', 'RP2040', 'Sensors', 'Oscilloscope'],
-      metrics: [['ESP32', 'wireless MCU'], ['RP2040', 'embedded platform'], ['Scope', 'physical debugging']],
+      id: 'hardware',
+      label: 'Hardware',
+      title: 'Hardware gives software consequences.',
+      meta: 'ESP32 · RP2040 · Arduino · Raspberry Pi · Sensors · Debugging Tools',
+      description: 'I enjoy the point where code has to survive contact with real electronics. A bug may come from firmware, timing, wiring, communication, signal quality, or the environment—not just one line of code.',
+      tags: ['ESP32', 'RP2040', 'Arduino', 'Oscilloscope', 'Logic Analyzer'],
+      metrics: [['4 platforms', 'ESP32 / RP2040 / Arduino / Pi'], ['LoRaWAN', 'wireless integration'], ['Scope + analyzer', 'physical debugging']],
       details: [
-        'Embedded systems and microcontrollers.',
-        'Sensor and wireless communication integration.',
-        'Oscilloscopes and logic analyzers for physical debugging.'
+        'Develop embedded software in Python, MicroPython, and C/C++ across multiple microcontroller platforms.',
+        'Integrate sensors and long-range communication systems such as LoRaWAN.',
+        'Use oscilloscopes and logic analyzers to diagnose hardware and communication issues.',
+        'Enjoy tracing a failure across software and hardware until the underlying cause is understood.'
       ],
       model: 'hardware'
     },
     {
-      id: 'music', label: 'Music', title: 'Trombone & live audio.',
-      meta: 'Orchestral Performance · Live Sound',
-      description: 'Music is another place where systems and timing matter. I have played trombone in school and orchestral settings and helped with live audio setup, teardown, and troubleshooting.',
-      tags: ['Trombone', 'Orchestra', 'Live Audio'],
-      metrics: [['Trombone', 'performance'], ['2nd', 'orchestral part'], ['Audio', 'live systems']],
+      id: 'music',
+      label: 'Music',
+      title: 'Music, teaching & live audio.',
+      meta: 'Trombone · Ensemble Performance · Mentoring · Worship Audio',
+      description: 'Music has taught me the same habits I value in engineering: listening carefully, practicing deliberately, adjusting in real time, and understanding how one part fits into a larger system.',
+      tags: ['Trombone', 'Orchestra', 'Live Audio', 'Mentoring'],
+      metrics: [['1st Trombone', 'school band'], ['2nd Trombone', 'VCPO'], ['Live sound', 'setup + troubleshooting']],
       details: [
-        'Second trombone with the Vancouver Chinese Philharmonic Orchestra.',
-        'School ensemble and trombone experience.',
-        'Live audio setup, teardown, and troubleshooting.'
+        'Mentor younger trombone players on tone, breath support, and difficult passages.',
+        'Perform in school and orchestral settings across multiple musical styles.',
+        'Help with worship / live-audio setup, microphone levels, equipment order, teardown, and troubleshooting.',
+        'Maintain a personal folder of trombone music and practice regularly outside scheduled rehearsals.'
       ],
       model: 'music'
     }
   ],
 
   contact: [{
-    id: 'contact', label: 'Contact', title: 'Build something interesting with me.',
+    id: 'contact',
+    label: 'Contact',
+    title: 'Build something interesting with me.',
     meta: 'Software · Embedded · Robotics · AI',
     description: 'For software, embedded, robotics, or AI-related opportunities, email is the easiest way to reach me. GitHub, LinkedIn, YouTube, and my résumé are linked from the navigation.',
     tags: ['Email', 'GitHub', 'LinkedIn', 'YouTube'],
@@ -201,7 +242,8 @@ const CONTENT = {
     details: [
       'Email: warrenz7980@gmail.com',
       'GitHub: github.com/banana1324',
-      'LinkedIn: linkedin.com/in/fuyuanzhang'
+      'LinkedIn: linkedin.com/in/fuyuanzhang',
+      'YouTube: @goosehjonk918'
     ],
     model: 'contact'
   }]
@@ -470,49 +512,116 @@ function socketWorld() {
 const BOARD = { width: 3.80, height: 4.35, thickness: .075, handleX: 0.0, handleY: 2.02, stationScale: .93 };
 function createBoard(section, item, index) {
   const group = new THREE.Group();
-  const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf6f7f9, .95, .01);
+  const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf7f7f5, .96, .01);
   group.add(base);
-  const clip = box(.48, .18, .14, .04, 0xc9ced6, .50, .34); clip.position.set(0, BOARD.height / 2 - .07, .03); group.add(clip);
-  const handleAnchor = new THREE.Object3D(); handleAnchor.position.set(BOARD.handleX, BOARD.handleY, .045); group.add(handleAnchor);
+
+  const clip = box(.50, .18, .14, .04, 0xc9ced6, .50, .34);
+  clip.position.set(0, BOARD.height / 2 - .07, .03);
+  group.add(clip);
+
+  const handleAnchor = new THREE.Object3D();
+  handleAnchor.position.set(BOARD.handleX, BOARD.handleY, .045);
+  group.add(handleAnchor);
   group.userData.handleAnchor = handleAnchor;
 
-  const canvas = document.createElement('canvas'); canvas.width = 1500; canvas.height = 1850;
+  const canvas = document.createElement('canvas');
+  canvas.width = 1600;
+  canvas.height = 1900;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#f6f7f9'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#4f8fd7'; ctx.fillRect(82, 96, 52, 5);
-  ctx.fillStyle = '#8b96a3'; ctx.font = '600 28px Inter, Arial'; ctx.fillText(section.toUpperCase(), 84, 150);
-  ctx.fillStyle = '#0d1117'; ctx.font = '700 76px Inter, Arial';
-  wrapText(ctx, item.title, 84, 235, 1325, 86);
-  ctx.fillStyle = '#66707d'; ctx.font = '500 34px Inter, Arial';
-  wrapText(ctx, item.meta, 84, 430, 1300, 44);
 
-  drawPills(ctx, item.tags.slice(0, 4), 84, 496);
+  // Apple / modern resume-sheet palette.
+  ctx.fillStyle = '#f7f7f5';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = '#202833'; ctx.font = '500 37px Inter, Arial';
-  wrapText(ctx, item.description, 84, 610, 1310, 54);
+  ctx.fillStyle = '#111318';
+  ctx.font = '700 27px Inter, Arial';
+  ctx.fillText('WARREN ZHANG', 92, 105);
 
-  const metricY = 860;
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#7c858f';
+  ctx.font = '600 25px Inter, Arial';
+  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index + 1).padStart(2, '0')}`, 1502, 105);
+  ctx.textAlign = 'left';
+
+  ctx.fillStyle = '#4f8fd7';
+  ctx.fillRect(92, 142, 54, 5);
+
+  ctx.fillStyle = '#111318';
+  ctx.font = '700 78px Inter, Arial';
+  const titleEnd = wrapText(ctx, item.title, 92, 245, 1408, 84);
+
+  ctx.fillStyle = '#68717c';
+  ctx.font = '500 31px Inter, Arial';
+  const metaEnd = wrapText(ctx, item.meta, 92, titleEnd + 62, 1400, 42);
+
+  ctx.fillStyle = '#d5d9de';
+  ctx.fillRect(92, metaEnd + 52, 1408, 2);
+
+  ctx.fillStyle = '#8a929c';
+  ctx.font = '700 24px Inter, Arial';
+  ctx.fillText('PROFILE', 92, metaEnd + 108);
+
+  ctx.fillStyle = '#272d35';
+  ctx.font = '500 34px Inter, Arial';
+  const summaryEnd = wrapText(ctx, item.description, 92, metaEnd + 166, 1400, 49);
+
+  // Impact row: resume style, no cards around cards.
+  const metricTop = Math.max(summaryEnd + 76, 760);
+  ctx.fillStyle = '#d5d9de';
+  ctx.fillRect(92, metricTop - 34, 1408, 2);
+
   item.metrics.slice(0, 3).forEach((m, i) => {
-    const x = 84 + i * 432;
-    ctx.fillStyle = '#0e1319'; ctx.font = '700 58px Inter, Arial'; ctx.fillText(m[0], x, metricY);
-    ctx.fillStyle = '#7b8692'; ctx.font = '600 28px Inter, Arial'; ctx.fillText(m[1], x, metricY + 52);
-    if (i < 2) { ctx.fillStyle = '#d8dde3'; ctx.fillRect(x + 365, metricY - 34, 2, 92); }
+    const x = 92 + i * 470;
+    if (i > 0) {
+      ctx.fillStyle = '#dfe3e7';
+      ctx.fillRect(x - 28, metricTop + 2, 2, 100);
+    }
+    ctx.fillStyle = '#111318';
+    ctx.font = '700 49px Inter, Arial';
+    wrapText(ctx, m[0], x, metricTop + 40, 400, 50);
+    ctx.fillStyle = '#7b848e';
+    ctx.font = '600 24px Inter, Arial';
+    wrapText(ctx, m[1], x, metricTop + 87, 400, 31);
   });
 
-  ctx.fillStyle = '#cfd5dc'; ctx.fillRect(84, 1000, 1330, 2);
-  ctx.fillStyle = '#8b96a3'; ctx.font = '700 26px Inter, Arial'; ctx.fillText('KEY HIGHLIGHTS', 84, 1060);
-  ctx.fillStyle = '#1c232d'; ctx.font = '500 34px Inter, Arial';
-  let y = 1140;
-  item.details.slice(0, 3).forEach(line => {
-    ctx.fillStyle = '#4f8fd7'; ctx.fillRect(86, y - 19, 14, 14);
-    ctx.fillStyle = '#1c232d';
-    y = wrapText(ctx, line, 124, y, 1288, 46) + 34;
+  const contribTop = metricTop + 190;
+  ctx.fillStyle = '#d5d9de';
+  ctx.fillRect(92, contribTop - 32, 1408, 2);
+  ctx.fillStyle = '#8a929c';
+  ctx.font = '700 24px Inter, Arial';
+  ctx.fillText('SELECTED CONTRIBUTIONS', 92, contribTop + 24);
+
+  let y = contribTop + 92;
+  ctx.font = '500 30px Inter, Arial';
+  item.details.slice(0, 4).forEach(line => {
+    ctx.fillStyle = '#4f8fd7';
+    ctx.beginPath();
+    ctx.arc(102, y - 10, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#252c34';
+    y = wrapText(ctx, line, 132, y, 1365, 39) + 24;
   });
-  ctx.fillStyle = '#9ca5af'; ctx.font = '500 24px Inter, Arial';
-  ctx.fillText(`Warren Zhang · ${item.label}`, 84, 1768);
+
+  // Skills line at bottom keeps the page looking like a resume rather than a dashboard.
+  const skillsY = 1660;
+  ctx.fillStyle = '#d5d9de';
+  ctx.fillRect(92, skillsY - 38, 1408, 2);
+  ctx.fillStyle = '#8a929c';
+  ctx.font = '700 23px Inter, Arial';
+  ctx.fillText('TOOLS / FOCUS', 92, skillsY + 8);
+
+  ctx.fillStyle = '#2f5f96';
+  ctx.font = '600 27px Inter, Arial';
+  wrapText(ctx, item.tags.slice(0, 6).join('   ·   '), 92, skillsY + 64, 1400, 38);
+
+  ctx.fillStyle = '#a0a7af';
+  ctx.font = '500 22px Inter, Arial';
+  ctx.fillText('warrenz7980@gmail.com  ·  github.com/banana1324  ·  linkedin.com/in/fuyuanzhang', 92, 1818);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+
   const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(BOARD.width - .18, BOARD.height - .18),
     new THREE.MeshBasicMaterial({ map: texture, toneMapped: false })
@@ -521,6 +630,7 @@ function createBoard(section, item, index) {
   group.add(plane);
   return group;
 }
+
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   const words = text.split(/\s+/); let line = '';
   for (let i = 0; i < words.length; i++) {
@@ -563,7 +673,7 @@ const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-
 function createAllStations() {
   // Slots are on a precise inner circle matching the fixed pickup pose.
   // Models sit farther out, alternating radii so the display objects do not overlap.
-  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(168), THREE.MathUtils.degToRad(12));
+  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(176), THREE.MathUtils.degToRad(4));
 
   FLAT_ITEMS.forEach((entry, i) => {
     const theta = angles[i];
@@ -572,7 +682,7 @@ function createAllStations() {
     const slotCenter = new THREE.Vector3(pickupSocket.x, 0, pickupSocket.z);
     const pickupRadius = Math.hypot(slotCenter.x - ARM.base.x, slotCenter.z - ARM.base.z);
     const pickupHandleY = pickupSocket.y;
-    const modelRadius = pickupRadius + 1.65 + (i % 2) * .55;
+    const modelRadius = pickupRadius + 2.20 + (i % 3) * .92;
     const modelCenter = ARM.base.clone().addScaledVector(dir, modelRadius);
     modelCenter.y = 0;
 
@@ -580,12 +690,12 @@ function createAllStations() {
     scene.add(root);
 
     // Object pedestal, farther away from the arm than the page slot.
-    const pad = box(2.30, .12, 1.62, .09, 0x141d26, .84, .08);
+    const pad = box(1.82, .12, 1.38, .09, 0x141d26, .84, .08);
     pad.position.set(modelCenter.x, .06, modelCenter.z);
     pad.rotation.y = -theta + Math.PI / 2;
     root.add(pad);
 
-    const ring = mesh(new THREE.TorusGeometry(.74, .028, 12, 44), 0x465566, .44, .30);
+    const ring = mesh(new THREE.TorusGeometry(.62, .025, 12, 44), 0x465566, .44, .30);
     ring.rotation.x = Math.PI / 2;
     ring.position.set(modelCenter.x, .13, modelCenter.z);
     root.add(ring);
@@ -593,8 +703,15 @@ function createAllStations() {
     const model = createTopicModel(entry.item.model, entry.key);
     model.position.set(modelCenter.x, .16, modelCenter.z);
     model.rotation.y = Math.atan2(camera.position.x - modelCenter.x, camera.position.z - modelCenter.z);
-    model.scale.setScalar(.68);
+    model.scale.setScalar(.58);
     root.add(model);
+
+    const stationLabel = createStationLabel(entry.item.label);
+    const toCamera = new THREE.Vector3(camera.position.x - modelCenter.x, 0, camera.position.z - modelCenter.z).normalize();
+    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .82);
+    stationLabel.position.y = .30;
+    stationLabel.lookAt(camera.position.x, .30, camera.position.z);
+    root.add(stationLabel);
 
     // A real table cassette in FRONT of the object. The panel is stored edge-on inside it,
     // rises vertically as one rigid object, then rotates to face the visitor before pickup.
@@ -669,10 +786,39 @@ function setSelectedStation(key) {
   for (const [k, s] of state.stations) {
     const selected = k === key;
     s.ring.material.color.setHex(selected ? 0x8eb7de : 0x465566);
+    s.model.scale.setScalar(selected ? .70 : .54);
     s.slotMouth.material.color.setHex(selected ? 0x8eb7de : 0x04070b);
     s.slotMouth.material.emissive?.setHex?.(selected ? 0x214a72 : 0x000000);
     if (s.slotMouth.material.emissiveIntensity !== undefined) s.slotMouth.material.emissiveIntensity = selected ? .52 : 0;
   }
+}
+
+function createStationLabel(text) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 760;
+  canvas.height = 150;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  roundRect(ctx, 8, 8, 744, 134, 34, 'rgba(10,15,22,0.86)');
+  ctx.strokeStyle = 'rgba(143,184,222,0.26)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  ctx.fillStyle = '#eef3f7';
+  ctx.font = '600 42px Inter, Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  let label = text;
+  while (ctx.measureText(label).width > 660 && label.length > 12) label = label.slice(0, -2);
+  if (label !== text) label += '…';
+  ctx.fillText(label, 380, 75);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.55, .31),
+    new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, toneMapped: false })
+  );
+  plane.renderOrder = 3;
+  return plane;
 }
 
 // ---------- models ----------
