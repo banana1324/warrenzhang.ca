@@ -3,75 +3,308 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Warren Zhang — software, embedded systems, robotics, and interactive 3D work." />
-  <meta name="theme-color" content="#080d12" />
+  <meta
+    name="description"
+    content="Warren Zhang — software, embedded systems, robotics, and interactive 3D work."
+  />
+  <meta name="theme-color" content="#0a0d12" />
+
   <title>Warren Zhang</title>
-  <link rel="stylesheet" href="./styles.css?v=30" />
+
+  <link
+    rel="stylesheet"
+    href="./styles.css?v=30"
+  />
 </head>
+
 <body>
-  <a class="skip-link" href="#portfolio-nav">Skip to navigation</a>
 
-  <canvas id="scene-canvas" aria-hidden="true"></canvas>
-  <div class="cinematic-vignette" aria-hidden="true"></div>
+  <a
+    class="skip-link"
+    href="#portfolio-nav"
+  >
+    Skip to navigation
+  </a>
 
-  <aside id="portfolio-nav" class="sidebar" aria-label="Portfolio navigation">
-    <a class="monogram" href="#home/home" data-home-link>WZ</a>
-    <div class="monogram-rule"></div>
-    <nav id="sidebar-nav" class="sidebar-nav"></nav>
+  <canvas
+    id="scene-canvas"
+    aria-hidden="true"
+  ></canvas>
+
+  <div
+    class="scene-fade"
+    aria-hidden="true"
+  ></div>
+
+  <aside
+    id="portfolio-nav"
+    class="sidebar"
+    aria-label="Portfolio navigation"
+  >
+
+    <div class="sidebar-brand">
+
+      <a
+        href="#home/home"
+        class="brand-link"
+        data-section="home"
+        data-index="0"
+      >
+
+        <span class="brand-mark">
+          WZ
+        </span>
+
+        <span class="brand-copy">
+
+          <strong>
+            Warren Zhang
+          </strong>
+
+          <small>
+            CS · Waterloo
+          </small>
+
+        </span>
+
+      </a>
+
+    </div>
+
+    <nav
+      id="nav-groups"
+      class="nav-groups"
+    ></nav>
 
     <div class="sidebar-bottom">
-      <div class="social-links">
-        <a href="https://github.com/banana1324" target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
-        <a href="https://www.linkedin.com/in/fuyuanzhang" target="_blank" rel="noreferrer" aria-label="LinkedIn">in</a>
-        <a href="https://www.youtube.com/@goosehjonk918" target="_blank" rel="noreferrer" aria-label="YouTube">▶</a>
+
+      <div class="sidebar-socials">
+
+        <a
+          href="https://github.com/banana1324"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub
+        </a>
+
+        <a
+          href="https://www.linkedin.com/in/fuyuanzhang"
+          target="_blank"
+          rel="noreferrer"
+        >
+          LinkedIn
+        </a>
+
+        <a
+          href="https://www.youtube.com/@goosehjonk918"
+          target="_blank"
+          rel="noreferrer"
+        >
+          YouTube
+        </a>
+
       </div>
-      <a class="sidebar-resume" href="./assets/resume.pdf" target="_blank" rel="noreferrer">Resume ↗</a>
-      <small>© Warren Zhang</small>
+
+      <a
+        class="resume-button"
+        href="./assets/resume.pdf"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Resume
+        <span>↗</span>
+      </a>
+
     </div>
+
   </aside>
 
-  <button id="help-button" class="help-button" type="button" aria-expanded="false">
-    Press <kbd>H</kbd> for help
+  <header class="topbar">
+
+    <div class="topbar-copy">
+
+      <span class="eyebrow">
+        Interactive portfolio
+      </span>
+
+      <span id="topbar-title">
+        Software that reaches the physical world.
+      </span>
+
+    </div>
+
+    <div class="topbar-links">
+
+      <a
+        href="https://github.com/banana1324"
+        target="_blank"
+        rel="noreferrer"
+      >
+        GitHub
+      </a>
+
+      <a
+        href="https://www.linkedin.com/in/fuyuanzhang"
+        target="_blank"
+        rel="noreferrer"
+      >
+        LinkedIn
+      </a>
+
+      <a
+        href="https://www.youtube.com/@goosehjonk918"
+        target="_blank"
+        rel="noreferrer"
+      >
+        YouTube
+      </a>
+
+      <a
+        class="top-resume"
+        href="./assets/resume.pdf"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Resume ↗
+      </a>
+
+    </div>
+
+  </header>
+
+  <div
+    class="scene-status"
+    aria-live="polite"
+  >
+
+    <span class="status-dot"></span>
+
+    <span id="scene-status-text">
+      Preparing page
+    </span>
+
+  </div>
+
+  <button
+    id="add-object"
+    class="add-object-button"
+    type="button"
+    aria-haspopup="menu"
+    aria-expanded="false"
+  >
+    Add object
   </button>
 
-  <section id="help-panel" class="help-panel" hidden>
-    <strong>Navigate lab</strong>
-    <span>Drag to rotate</span>
-    <span>Click objects to inspect</span>
-    <span>Shift+A adds Blender-style meshes</span>
-    <span>G toss · R spin · X delete</span>
-  </section>
+  <div
+    id="add-menu"
+    class="add-menu"
+    role="menu"
+    hidden
+  >
 
-  <div class="scene-status">
-    <span class="live-dot"></span>
-    <span id="scene-label">HOME · PERSONAL LAB</span>
+    <div class="add-menu-heading">
+      <span>Add</span>
+      <span>›</span>
+      <span>Mesh</span>
+    </div>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="plane"
+    >
+      <span>Plane</span>
+      <kbd>1</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="cube"
+    >
+      <span>Cube</span>
+      <kbd>2</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="circle"
+    >
+      <span>Circle</span>
+      <kbd>3</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="sphere"
+    >
+      <span>UV Sphere</span>
+      <kbd>4</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="icosphere"
+    >
+      <span>Icosphere</span>
+      <kbd>5</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="cylinder"
+    >
+      <span>Cylinder</span>
+      <kbd>6</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="cone"
+    >
+      <span>Cone</span>
+      <kbd>7</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="torus"
+    >
+      <span>Torus</span>
+      <kbd>8</kbd>
+    </button>
+
+    <button
+      type="button"
+      role="menuitem"
+      data-add="monkey"
+    >
+      <span>Monkey</span>
+      <kbd>9</kbd>
+    </button>
+
   </div>
 
-  <div class="arm-status">
-    <span id="arm-status">Curator ready</span>
-  </div>
+  <div
+    id="screen-reader-live"
+    class="sr-only"
+    aria-live="polite"
+  ></div>
 
-  <div class="scene-controls">
-    <button id="reset-view" type="button">Reset view</button>
-    <button id="add-object" type="button" aria-haspopup="menu" aria-expanded="false">Add object</button>
-  </div>
+  <noscript>
 
-  <div id="add-menu" class="add-menu" role="menu" hidden>
-    <div class="add-menu-title"><span>Add</span><span>›</span><span>Mesh</span></div>
-    <button type="button" data-add="plane"><span>Plane</span><kbd>1</kbd></button>
-    <button type="button" data-add="cube"><span>Cube</span><kbd>2</kbd></button>
-    <button type="button" data-add="circle"><span>Circle</span><kbd>3</kbd></button>
-    <button type="button" data-add="sphere"><span>UV Sphere</span><kbd>4</kbd></button>
-    <button type="button" data-add="icosphere"><span>Icosphere</span><kbd>5</kbd></button>
-    <button type="button" data-add="cylinder"><span>Cylinder</span><kbd>6</kbd></button>
-    <button type="button" data-add="cone"><span>Cone</span><kbd>7</kbd></button>
-    <button type="button" data-add="torus"><span>Torus</span><kbd>8</kbd></button>
-    <button type="button" data-add="monkey"><span>Monkey</span><kbd>9</kbd></button>
-  </div>
+    <div class="noscript">
+      This portfolio requires JavaScript for the robotic page transitions.
+    </div>
 
-  <div id="screen-reader-live" class="sr-only" aria-live="polite"></div>
-
-  <noscript><div class="noscript">This portfolio requires JavaScript.</div></noscript>
+  </noscript>
 
   <script type="importmap">
     {
@@ -81,6 +314,11 @@
       }
     }
   </script>
-  <script type="module" src="./script.js?v=30"></script>
+
+  <script
+    type="module"
+    src="./script.js?v=30"
+  ></script>
+
 </body>
 </html>
