@@ -307,9 +307,9 @@ renderer.setScissorTest(true);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x081018, 15, 31);
 
-const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
-camera.position.set(0, 4.45, 13.35);
-const CAMERA_TARGET = new THREE.Vector3(0, 1.55, 1.35);
+const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+camera.position.set(0, 4.65, 14.85);
+const CAMERA_TARGET = new THREE.Vector3(0, 1.72, 1.35);
 camera.lookAt(CAMERA_TARGET);
 
 scene.add(new THREE.HemisphereLight(0xf7fbff, 0x1b2430, 2.35));
@@ -509,7 +509,7 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width: 3.80, height: 4.35, thickness: .075, handleX: 0.0, handleY: 2.02, stationScale: .93 };
+const BOARD = { width: 4.26, height: 5.05, thickness: .075, handleX: 0.0, handleY: 2.34, stationScale: .98 };
 function createBoard(section, item, index) {
   const group = new THREE.Group();
   const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf7f7f5, .96, .01);
@@ -525,8 +525,8 @@ function createBoard(section, item, index) {
   group.userData.handleAnchor = handleAnchor;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 1600;
-  canvas.height = 1900;
+  canvas.width = 2000;
+  canvas.height = 2500;
   const ctx = canvas.getContext('2d');
 
   // Apple / modern resume-sheet palette.
@@ -534,89 +534,101 @@ function createBoard(section, item, index) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = '#111318';
-  ctx.font = '700 27px Inter, Arial';
-  ctx.fillText('WARREN ZHANG', 92, 105);
+  ctx.font = '700 34px Inter, Arial';
+  ctx.fillText('WARREN ZHANG', 110, 126);
 
   ctx.textAlign = 'right';
   ctx.fillStyle = '#7c858f';
-  ctx.font = '600 25px Inter, Arial';
-  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index + 1).padStart(2, '0')}`, 1502, 105);
+  ctx.font = '600 30px Inter, Arial';
+  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index + 1).padStart(2, '0')}`, 1874, 126);
   ctx.textAlign = 'left';
 
   ctx.fillStyle = '#4f8fd7';
-  ctx.fillRect(92, 142, 54, 5);
+  ctx.fillRect(110, 156, 62, 6);
 
   ctx.fillStyle = '#111318';
   ctx.font = '700 78px Inter, Arial';
-  const titleEnd = wrapText(ctx, item.title, 92, 245, 1408, 84);
+  const titleEnd = wrapText(ctx, item.title, 110, 295, 1760, 98);
 
   ctx.fillStyle = '#68717c';
-  ctx.font = '500 31px Inter, Arial';
-  const metaEnd = wrapText(ctx, item.meta, 92, titleEnd + 62, 1400, 42);
+  ctx.font = '500 38px Inter, Arial';
+  const metaEnd = wrapText(ctx, item.meta, 110, titleEnd + 72, 1760, 52);
 
   ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(92, metaEnd + 52, 1408, 2);
+  ctx.fillRect(110, metaEnd + 58, 1760, 2);
 
   ctx.fillStyle = '#8a929c';
-  ctx.font = '700 24px Inter, Arial';
-  ctx.fillText('PROFILE', 92, metaEnd + 108);
+  ctx.font = '700 29px Inter, Arial';
+  ctx.fillText('PROFILE', 110, metaEnd + 122);
 
   ctx.fillStyle = '#272d35';
-  ctx.font = '500 34px Inter, Arial';
-  const summaryEnd = wrapText(ctx, item.description, 92, metaEnd + 166, 1400, 49);
+  ctx.font = '500 40px Inter, Arial';
+  const summaryEnd = wrapText(ctx, item.description, 110, metaEnd + 190, 1760, 58);
 
   // Impact row: resume style, no cards around cards.
-  const metricTop = Math.max(summaryEnd + 76, 760);
+  const metricTop = Math.max(summaryEnd + 92, 930);
   ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(92, metricTop - 34, 1408, 2);
+  ctx.fillRect(110, metricTop - 40, 1760, 2);
 
   item.metrics.slice(0, 3).forEach((m, i) => {
-    const x = 92 + i * 470;
+    const x = 110 + i * 588;
     if (i > 0) {
       ctx.fillStyle = '#dfe3e7';
-      ctx.fillRect(x - 28, metricTop + 2, 2, 100);
+      ctx.fillRect(x - 34, metricTop + 2, 2, 122);
     }
     ctx.fillStyle = '#111318';
-    ctx.font = '700 49px Inter, Arial';
-    wrapText(ctx, m[0], x, metricTop + 40, 400, 50);
+    ctx.font = '700 60px Inter, Arial';
+    wrapText(ctx, m[0], x, metricTop + 48, 520, 62);
     ctx.fillStyle = '#7b848e';
-    ctx.font = '600 24px Inter, Arial';
-    wrapText(ctx, m[1], x, metricTop + 87, 400, 31);
+    ctx.font = '600 28px Inter, Arial';
+    wrapText(ctx, m[1], x, metricTop + 104, 520, 38);
   });
 
-  const contribTop = metricTop + 190;
+  const contribTop = metricTop + 218;
   ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(92, contribTop - 32, 1408, 2);
+  ctx.fillRect(110, contribTop - 38, 1760, 2);
   ctx.fillStyle = '#8a929c';
-  ctx.font = '700 24px Inter, Arial';
-  ctx.fillText('SELECTED CONTRIBUTIONS', 92, contribTop + 24);
+  ctx.font = '700 29px Inter, Arial';
+  ctx.fillText('SELECTED CONTRIBUTIONS', 110, contribTop + 30);
 
-  let y = contribTop + 92;
-  ctx.font = '500 30px Inter, Arial';
-  item.details.slice(0, 4).forEach(line => {
+  let y = contribTop + 102;
+  ctx.font = '500 36px Inter, Arial';
+  item.details.slice(0, 5).forEach(line => {
     ctx.fillStyle = '#4f8fd7';
     ctx.beginPath();
-    ctx.arc(102, y - 10, 5, 0, Math.PI * 2);
+    ctx.arc(120, y - 12, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#252c34';
-    y = wrapText(ctx, line, 132, y, 1365, 39) + 24;
+    y = wrapText(ctx, line, 152, y, 1690, 46) + 26;
   });
 
-  // Skills line at bottom keeps the page looking like a resume rather than a dashboard.
-  const skillsY = 1660;
+  const scopeTop = y + 34;
   ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(92, skillsY - 38, 1408, 2);
+  ctx.fillRect(110, scopeTop, 1760, 2);
+  ctx.fillStyle = '#8a929c';
+  ctx.font = '700 29px Inter, Arial';
+  ctx.fillText('ROLE / SCOPE', 110, scopeTop + 56);
+
+  ctx.fillStyle = '#252c34';
+  ctx.font = '500 35px Inter, Arial';
+  const scopeText = getScopeText(section, item);
+  const scopeEnd = wrapText(ctx, scopeText, 110, scopeTop + 118, 1760, 46);
+
+  // Skills line at bottom keeps the page looking like a resume rather than a dashboard.
+  const skillsY = Math.max(scopeEnd + 140, 2140);
+  ctx.fillStyle = '#d5d9de';
+  ctx.fillRect(110, skillsY - 90, 1760, 2);
   ctx.fillStyle = '#8a929c';
   ctx.font = '700 23px Inter, Arial';
-  ctx.fillText('TOOLS / FOCUS', 92, skillsY + 8);
+  ctx.fillText('TOOLS / FOCUS', 110, skillsY + 8);
 
   ctx.fillStyle = '#2f5f96';
-  ctx.font = '600 27px Inter, Arial';
-  wrapText(ctx, item.tags.slice(0, 6).join('   ·   '), 92, skillsY + 64, 1400, 38);
+  ctx.font = '600 32px Inter, Arial';
+  wrapText(ctx, item.tags.slice(0, 6).join('   ·   '), 110, skillsY + 66, 1760, 42);
 
   ctx.fillStyle = '#a0a7af';
-  ctx.font = '500 22px Inter, Arial';
-  ctx.fillText('warrenz7980@gmail.com  ·  github.com/banana1324  ·  linkedin.com/in/fuyuanzhang', 92, 1818);
+  ctx.font = '500 26px Inter, Arial';
+  ctx.fillText('warrenz7980@gmail.com  ·  github.com/banana1324  ·  linkedin.com/in/fuyuanzhang', 110, 2390);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -629,6 +641,15 @@ function createBoard(section, item, index) {
   plane.position.z = BOARD.thickness / 2 + .002;
   group.add(plane);
   return group;
+}
+
+function getScopeText(section, item) {
+  const toolText = item.tags.slice(0, 4).join(', ');
+  if (section === 'projects') return `This project combined implementation, verification, and explanation. Beyond building the technical system itself, I aimed to make the work reliable enough to test on real hardware and clear enough that another student or teammate could understand the design decisions behind it. Focus areas included ${toolText}.`;
+  if (section === 'experience') return `This role combined technical execution with communication and support. I was responsible not only for building or debugging systems, but also for explaining issues clearly, coordinating with others, and helping turn complex work into something more understandable and dependable for a team, a learner, or a user.`;
+  if (section === 'interests') return `This interest shapes how I approach technical work more broadly. I tend to be drawn to systems that have visible behavior, constraints, and feedback, and I often bring ideas from this area back into my robotics, hardware, and interface projects.`;
+  if (section === 'about' || section === 'home') return `What ties these experiences together is the same working style: test deliberately, change one variable at a time, keep notes, and explain the result clearly enough that someone else can build on it. That is the mindset I try to bring into both technical projects and team environments.`;
+  return `The main thread here is building things carefully, communicating them clearly, and learning enough from each project that the next one starts from a stronger foundation.`;
 }
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -682,7 +703,7 @@ function createAllStations() {
     const slotCenter = new THREE.Vector3(pickupSocket.x, 0, pickupSocket.z);
     const pickupRadius = Math.hypot(slotCenter.x - ARM.base.x, slotCenter.z - ARM.base.z);
     const pickupHandleY = pickupSocket.y;
-    const modelRadius = pickupRadius + 2.20 + (i % 3) * .92;
+    const modelRadius = pickupRadius + 2.65 + (i % 3) * 1.18;
     const modelCenter = ARM.base.clone().addScaledVector(dir, modelRadius);
     modelCenter.y = 0;
 
@@ -690,12 +711,12 @@ function createAllStations() {
     scene.add(root);
 
     // Object pedestal, farther away from the arm than the page slot.
-    const pad = box(1.82, .12, 1.38, .09, 0x141d26, .84, .08);
+    const pad = box(1.72, .12, 1.28, .09, 0x141d26, .84, .08);
     pad.position.set(modelCenter.x, .06, modelCenter.z);
     pad.rotation.y = -theta + Math.PI / 2;
     root.add(pad);
 
-    const ring = mesh(new THREE.TorusGeometry(.62, .025, 12, 44), 0x465566, .44, .30);
+    const ring = mesh(new THREE.TorusGeometry(.56, .025, 12, 44), 0x465566, .44, .30);
     ring.rotation.x = Math.PI / 2;
     ring.position.set(modelCenter.x, .13, modelCenter.z);
     root.add(ring);
@@ -708,7 +729,7 @@ function createAllStations() {
 
     const stationLabel = createStationLabel(entry.item.label);
     const toCamera = new THREE.Vector3(camera.position.x - modelCenter.x, 0, camera.position.z - modelCenter.z).normalize();
-    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .82);
+    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .70);
     stationLabel.position.y = .30;
     stationLabel.lookAt(camera.position.x, .30, camera.position.z);
     root.add(stationLabel);
@@ -716,17 +737,17 @@ function createAllStations() {
     // A real table cassette in FRONT of the object. The panel is stored edge-on inside it,
     // rises vertically as one rigid object, then rotates to face the visitor before pickup.
     const slotYaw = Math.PI / 2 - theta;
-    const slotHousing = box(.56, .18, 3.72, .06, 0x0d141c, .78, .12);
+    const slotHousing = box(.64, .18, 4.18, .06, 0x0d141c, .78, .12);
     slotHousing.position.set(slotCenter.x, .09, slotCenter.z);
     slotHousing.rotation.y = slotYaw;
     root.add(slotHousing);
 
-    const slotMouth = box(.20, .026, 3.42, .012, 0x020508, .72, .06);
+    const slotMouth = box(.24, .026, 3.90, .012, 0x020508, .72, .06);
     slotMouth.position.set(slotCenter.x, .19, slotCenter.z);
     slotMouth.rotation.y = slotYaw;
     root.add(slotMouth);
 
-    const lipA = box(.10, .055, 3.54, .015, 0x42515f, .45, .38);
+    const lipA = box(.10, .055, 4.02, .015, 0x42515f, .45, .38);
     lipA.position.set(slotCenter.x, .205, slotCenter.z);
     lipA.rotation.y = slotYaw;
     const tangent = new THREE.Vector3(Math.cos(theta + Math.PI / 2), 0, Math.sin(theta + Math.PI / 2));
