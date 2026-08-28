@@ -307,9 +307,9 @@ renderer.setScissorTest(true);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x0c1215, 18, 38);
 
-const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-camera.position.set(0, 5.05, 17.2);
-const CAMERA_TARGET = new THREE.Vector3(0, 1.70, 1.05);
+const camera = new THREE.PerspectiveCamera(39, 1, 0.1, 100);
+camera.position.set(0, 4.95, 16.1);
+const CAMERA_TARGET = new THREE.Vector3(0, 1.82, 1.05);
 camera.lookAt(CAMERA_TARGET);
 
 scene.add(new THREE.HemisphereLight(0xf9fbff, 0x262117, 2.2));
@@ -404,7 +404,7 @@ const ARM_POSES = {
   // Slightly raised / retracted pose used immediately after the page is grabbed.
   lift: [1.28, -.18, .03, -.12],
   // Presentation pose toward the visitor. Same deterministic geometry every time.
-  present: [1.20, -.10, .03, -.10]
+  present: [1.12, -.04, .02, -.08]
 };
 
 const armState = { yaw: Math.PI / 2, angles: [...ARM_POSES.safe], grip: .26 };
@@ -733,12 +733,12 @@ function createAllStations() {
     const model = createTopicModel(entry.item.model, entry.key);
     model.position.set(modelCenter.x, .16, modelCenter.z);
     model.rotation.y = Math.atan2(camera.position.x - modelCenter.x, camera.position.z - modelCenter.z);
-    model.scale.setScalar(.55);
+    model.scale.setScalar(.57);
     root.add(model);
 
     const stationLabel = createStationLabel(entry.item.label);
     const toCamera = new THREE.Vector3(camera.position.x - modelCenter.x, 0, camera.position.z - modelCenter.z).normalize();
-    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .58);
+    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .72);
     stationLabel.position.y = .25;
     stationLabel.lookAt(camera.position.x, .25, camera.position.z);
     root.add(stationLabel);
@@ -843,26 +843,43 @@ function setSelectedStation(key) {
 
 function createStationLabel(text) {
   const canvas = document.createElement('canvas');
-  canvas.width = 760;
-  canvas.height = 150;
+  canvas.width = 980;
+  canvas.height = 196;
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  roundRect(ctx, 8, 8, 744, 134, 34, 'rgba(10,15,22,0.86)');
-  ctx.strokeStyle = 'rgba(143,184,222,0.26)';
-  ctx.lineWidth = 3;
+  roundRect(ctx, 10, 10, 960, 176, 40, 'rgba(10,15,22,0.90)');
+  ctx.strokeStyle = 'rgba(143,184,222,0.24)';
+  ctx.lineWidth = 4;
   ctx.stroke();
-  ctx.fillStyle = '#eef3f7';
-  ctx.font = '600 42px Inter, Arial';
+  ctx.fillStyle = '#f3f6f9';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  let label = text;
-  while (ctx.measureText(label).width > 660 && label.length > 12) label = label.slice(0, -2);
-  if (label !== text) label += '…';
-  ctx.fillText(label, 380, 75);
+
+  const words = text.split(/\s+/);
+  let line1 = '', line2 = '';
+  ctx.font = '700 54px Inter, Arial';
+  for (const word of words) {
+    const try1 = line1 ? `${line1} ${word}` : word;
+    if (ctx.measureText(try1).width <= 840 || !line1) line1 = try1;
+    else line2 = line2 ? `${line2} ${word}` : word;
+  }
+  while (ctx.measureText(line2).width > 840 && line2.length > 14) line2 = line2.slice(0, -2);
+  if (line2 && line2 !== text.split(/\s+/).slice(line1.split(/\s+/).length).join(' ')) line2 += '…';
+
+  if (line2) {
+    ctx.fillText(line1, 490, 72);
+    ctx.font = '700 48px Inter, Arial';
+    ctx.fillText(line2, 490, 132);
+  } else {
+    while (ctx.measureText(line1).width > 850 && line1.length > 14) line1 = line1.slice(0, -2);
+    if (line1 !== text) line1 += '…';
+    ctx.fillText(line1, 490, 98);
+  }
+
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.55, .31),
+    new THREE.PlaneGeometry(2.06, .42),
     new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, toneMapped: false })
   );
   plane.renderOrder = 3;
@@ -1165,6 +1182,7 @@ async function slideBoardIn(station) {
 function beginHold(station) {
   const board = station.board;
   scene.attach(board);
+  board.scale.setScalar(1.05);
   state.heldBoard = board;
   state.heldStation = station;
   const socket = socketWorld();
@@ -1187,7 +1205,7 @@ function heldBoardTargetPose(socket, swingX = 0, swingZ = 0) {
   const q = facing.quaternion.clone();
   q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX, 0, swingZ)));
   const viewDir = new THREE.Vector3(camera.position.x - socket.x, camera.position.y - socket.y, camera.position.z - socket.z).normalize();
-  const presentationOffset = viewDir.multiplyScalar(.36);
+  const presentationOffset = viewDir.multiplyScalar(1.18);
   const localHandle = new THREE.Vector3(BOARD.handleX * BOARD.stationScale, BOARD.handleY * BOARD.stationScale, 0).applyQuaternion(q);
   return { position: socket.clone().add(presentationOffset).sub(localHandle), quaternion: q };
 }
