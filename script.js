@@ -305,15 +305,15 @@ renderer.setClearColor(0x090c11, 1);
 renderer.setScissorTest(true);
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x081018, 15, 31);
+scene.fog = new THREE.Fog(0x0c1215, 18, 38);
 
-const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-camera.position.set(0, 4.65, 14.85);
-const CAMERA_TARGET = new THREE.Vector3(0, 1.72, 1.35);
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+camera.position.set(0, 5.05, 17.2);
+const CAMERA_TARGET = new THREE.Vector3(0, 1.70, 1.05);
 camera.lookAt(CAMERA_TARGET);
 
-scene.add(new THREE.HemisphereLight(0xf7fbff, 0x1b2430, 2.35));
-const keyLight = new THREE.DirectionalLight(0xffffff, 3.3);
+scene.add(new THREE.HemisphereLight(0xf9fbff, 0x262117, 2.2));
+const keyLight = new THREE.DirectionalLight(0xffefd8, 3.75);
 keyLight.position.set(0, 10.5, 7.2);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(2048, 2048);
@@ -322,11 +322,11 @@ keyLight.shadow.camera.right = 10;
 keyLight.shadow.camera.top = 10;
 keyLight.shadow.camera.bottom = -10;
 scene.add(keyLight);
-const fillLight = new THREE.PointLight(0x86b8eb, 14, 16);
+const fillLight = new THREE.PointLight(0x6eb4aa, 8.2, 20);
 fillLight.position.set(0, 5.4, 3.8);
 scene.add(fillLight);
-const rimLight = new THREE.DirectionalLight(0x78a8e8, 1.35);
-rimLight.position.set(-5, 4.5, -4.8);
+const rimLight = new THREE.DirectionalLight(0xe2c79d, .72);
+rimLight.position.set(5.5, 5.2, -3.5);
 scene.add(rimLight);
 
 function mat(color, roughness = .55, metalness = .15) {
@@ -362,23 +362,32 @@ function disposeObject(object) {
 }
 
 // ---------- environment ----------
-const floor = box(16.8, .24, 11.4, .08, 0x1b2530, .96, .03);
-floor.position.set(0, -.12, 1.4);
+const floor = box(18.8, .24, 13.2, .08, 0x273237, .90, .04);
+floor.position.set(0, -.12, 1.35);
 scene.add(floor);
-const grid = new THREE.GridHelper(16.2, 24, 0x465667, 0x2e3947);
+const grid = new THREE.GridHelper(18.2, 28, 0x56636a, 0x364147);
 grid.position.set(0, .012, 1.4);
 grid.scale.z = .70;
+grid.material.opacity = .30;
+grid.material.transparent = true;
 scene.add(grid);
-const rear = box(15.0, 5.1, .14, .05, 0x10161d, .94, .02);
-rear.position.set(0, 2.45, -2.5);
+const rear = box(17.0, 5.6, .14, .05, 0x20272a, .88, .03);
+rear.position.set(0, 2.70, -3.1);
 scene.add(rear);
-const sideL = box(.14, 5.1, 8.8, .05, 0x0e1319, .94, .02); sideL.position.set(-7.5, 2.45, 1.4); scene.add(sideL);
-const sideR = sideL.clone(); sideR.position.x = 7.5; scene.add(sideR);
-const glow = mesh(new THREE.CircleGeometry(1.2, 40), 0x2f4f7c, .4, .05);
-glow.material.transparent = true; glow.material.opacity = .22; glow.position.set(0, 2.8, -2.36); scene.add(glow);
-const hoseA = tubePath([new THREE.Vector3(-1.6,4.6,-2.36), new THREE.Vector3(-1.6,3.7,-1.5), new THREE.Vector3(-.8,3.05,-1.0), new THREE.Vector3(-.2,2.2,-.6)], .09);
-const hoseB = tubePath([new THREE.Vector3(1.6,4.6,-2.36), new THREE.Vector3(1.6,3.8,-1.55), new THREE.Vector3(.9,3.1,-1.0), new THREE.Vector3(.28,2.25,-.68)], .09);
+const sideL = box(.14, 5.6, 10.0, .05, 0x171d20, .90, .02); sideL.position.set(-8.5, 2.70, 1.4); scene.add(sideL);
+const sideR = sideL.clone(); sideR.position.x = 8.5; scene.add(sideR);
+const glow = mesh(new THREE.CircleGeometry(1.1, 40), 0x72a899, .4, .05);
+glow.material.transparent = true; glow.material.opacity = .075; glow.position.set(0, 3.0, -2.96); scene.add(glow);
+const hoseA = tubePath([new THREE.Vector3(-2.2,5.0,-2.96), new THREE.Vector3(-2.0,4.0,-2.0), new THREE.Vector3(-1.2,3.4,-1.4), new THREE.Vector3(-.45,2.5,-.82)], .065, 0x1b2225, .62, .08);
+const hoseB = tubePath([new THREE.Vector3(2.2,5.0,-2.96), new THREE.Vector3(2.0,4.0,-2.0), new THREE.Vector3(1.2,3.4,-1.4), new THREE.Vector3(.45,2.5,-.82)], .065, 0x1b2225, .62, .08);
 scene.add(hoseA, hoseB);
+
+const warmPool = new THREE.PointLight(0xe4b873, 4.8, 9);
+warmPool.position.set(4.2, 2.4, 3.8);
+scene.add(warmPool);
+const coolPool = new THREE.PointLight(0x77a999, 3.8, 8);
+coolPool.position.set(-4.8, 2.1, 4.2);
+scene.add(coolPool);
 
 // ---------- arm ----------
 const ARM = {
@@ -389,13 +398,13 @@ const ARM = {
 
 const ARM_POSES = {
   // High, folded transport pose. All page changes pass through this pose.
-  safe: [1.45, -.80, .20, -.35],
+  safe: [1.35, -.25, -.05, -.10],
   // Exact pickup / deposit pose. Slots are positioned from this pose, not solved with IK.
-  pickup: [.84, -.10, .13, -.26],
+  pickup: [1.15, -.05, .00, -.10],
   // Slightly raised / retracted pose used immediately after the page is grabbed.
-  lift: [1.00, -.20, .15, -.25],
+  lift: [1.28, -.18, .03, -.12],
   // Presentation pose toward the visitor. Same deterministic geometry every time.
-  present: [.84, -.10, .13, -.26]
+  present: [1.20, -.10, .03, -.10]
 };
 
 const armState = { yaw: Math.PI / 2, angles: [...ARM_POSES.safe], grip: .26 };
@@ -406,33 +415,33 @@ function buildArm() {
   const plinth = mesh(new THREE.CylinderGeometry(.95, 1.18, .42, 46), 0x080a0e, .58, .28);
   plinth.position.copy(ARM.base).setY(.18);
   root.add(plinth);
-  const column = mesh(new THREE.CylinderGeometry(.72, .62, 1.12, 38), 0x3a4653, .38, .72);
+  const column = mesh(new THREE.CylinderGeometry(.72, .62, 1.12, 38), 0x48575a, .48, .54);
   column.position.copy(ARM.base).setY(.62);
   root.add(column);
-  const collar = mesh(new THREE.TorusGeometry(.75, .08, 20, 48), 0x8eb7de, .22, .72);
+  const collar = mesh(new THREE.TorusGeometry(.75, .08, 20, 48), 0x8bb8aa, .28, .58);
   collar.position.copy(ARM.base).setY(1.14); collar.rotation.x = Math.PI / 2;
   root.add(collar);
 
   for (let i = 0; i < ARM.lengths.length; i++) {
-    const link = mesh(new THREE.CylinderGeometry(ARM.radius[i], ARM.radius[i], 1, 34), 0x788390, .34, .82);
+    const link = mesh(new THREE.CylinderGeometry(ARM.radius[i], ARM.radius[i], 1, 34), 0x7f8c8c, .40, .62);
     root.add(link); armVisual.links.push(link);
     const joint = new THREE.Group();
     const shell = mesh(new THREE.SphereGeometry(ARM.radius[i] + .08, 28, 22), 0x060a10, .36, .36);
     joint.add(shell);
-    const ring = mesh(new THREE.TorusGeometry(ARM.radius[i] + .075, .028, 18, 42), 0x8ec0ee, .18, .82);
+    const ring = mesh(new THREE.TorusGeometry(ARM.radius[i] + .075, .028, 18, 42), 0x9bc9bb, .24, .62);
     ring.rotation.x = Math.PI / 2; joint.add(ring);
     root.add(joint); armVisual.joints.push(joint);
   }
 
   const wrist = new THREE.Group();
   const wristBody = box(.38, .24, .58, .05, 0x090e15, .44, .32); wrist.add(wristBody);
-  const wristCollar = mesh(new THREE.CylinderGeometry(.16, .16, .22, 24), 0x8ec0ee, .18, .82);
+  const wristCollar = mesh(new THREE.CylinderGeometry(.16, .16, .22, 24), 0x9bc9bb, .24, .62);
   wristCollar.rotation.z = Math.PI / 2; wristCollar.position.z = -.08; wrist.add(wristCollar);
   const fl = box(.10, .58, .10, .02, 0xcbd6df, .22, .6); fl.position.set(-.15, -.24, .12); wrist.add(fl);
   const fr = box(.10, .58, .10, .02, 0xcbd6df, .22, .6); fr.position.set(.15, -.24, .12); wrist.add(fr);
   const tipL = box(.08, .16, .16, .02, 0x0c1118, .46, .18); tipL.position.set(0, -.34, .10); fl.add(tipL);
   const tipR = box(.08, .16, .16, .02, 0x0c1118, .46, .18); tipR.position.set(0, -.34, .10); fr.add(tipR);
-  const socket = new THREE.Object3D(); socket.position.set(0, -.44, .11); wrist.add(socket);
+  const socket = new THREE.Object3D(); socket.position.set(0, -.47, .24); wrist.add(socket);
   root.add(wrist);
   armVisual.root = root; armVisual.wrist = wrist; armVisual.fl = fl; armVisual.fr = fr; armVisual.socket = socket;
   scene.add(root);
@@ -460,7 +469,7 @@ function armSocketForPose(yaw, angles) {
   const end = armWorldPoints(yaw, angles).at(-1);
   // Mirrors the wrist visual transform used in updateArmVisual().
   const wristQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -yaw + Math.PI / 2, 0));
-  const socketOffset = new THREE.Vector3(0, -.44, .11).applyQuaternion(wristQ);
+  const socketOffset = new THREE.Vector3(0, -.47, .24).applyQuaternion(wristQ);
   return end.clone().add(socketOffset);
 }
 function placeLink(o, a, b) {
@@ -515,8 +524,8 @@ function createBoard(section, item, index) {
   const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf7f7f5, .96, .01);
   group.add(base);
 
-  const clip = box(.50, .18, .14, .04, 0xc9ced6, .50, .34);
-  clip.position.set(0, BOARD.height / 2 - .07, .03);
+  const clip = box(.52, .19, .28, .04, 0xc5cbd0, .48, .30);
+  clip.position.set(0, BOARD.height / 2 - .06, .12);
   group.add(clip);
 
   const handleAnchor = new THREE.Object3D();
@@ -543,7 +552,7 @@ function createBoard(section, item, index) {
   ctx.fillText(`${section.toUpperCase()}  ·  ${String(index + 1).padStart(2, '0')}`, 1874, 126);
   ctx.textAlign = 'left';
 
-  ctx.fillStyle = '#4f8fd7';
+  ctx.fillStyle = '#5a8e83';
   ctx.fillRect(110, 156, 62, 6);
 
   ctx.fillStyle = '#111318';
@@ -594,7 +603,7 @@ function createBoard(section, item, index) {
   let y = contribTop + 102;
   ctx.font = '500 36px Inter, Arial';
   item.details.slice(0, 5).forEach(line => {
-    ctx.fillStyle = '#4f8fd7';
+    ctx.fillStyle = '#5a8e83';
     ctx.beginPath();
     ctx.arc(120, y - 12, 6, 0, Math.PI * 2);
     ctx.fill();
@@ -669,7 +678,7 @@ function drawPills(ctx, pills, x, y) {
   pills.forEach(label => {
     const w = ctx.measureText(label).width + 42;
     roundRect(ctx, cursor, y, w, 42, 18, '#e9edf2');
-    ctx.fillStyle = '#4f8fd7'; ctx.fillText(label, cursor + 21, y + 29);
+    ctx.fillStyle = '#5a8e83'; ctx.fillText(label, cursor + 21, y + 29);
     cursor += w + 12;
   });
 }
@@ -694,7 +703,7 @@ const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-
 function createAllStations() {
   // Slots are on a precise inner circle matching the fixed pickup pose.
   // Models sit farther out, alternating radii so the display objects do not overlap.
-  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(176), THREE.MathUtils.degToRad(4));
+  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(170), THREE.MathUtils.degToRad(10));
 
   FLAT_ITEMS.forEach((entry, i) => {
     const theta = angles[i];
@@ -703,7 +712,7 @@ function createAllStations() {
     const slotCenter = new THREE.Vector3(pickupSocket.x, 0, pickupSocket.z);
     const pickupRadius = Math.hypot(slotCenter.x - ARM.base.x, slotCenter.z - ARM.base.z);
     const pickupHandleY = pickupSocket.y;
-    const modelRadius = pickupRadius + 2.65 + (i % 3) * 1.18;
+    const modelRadius = pickupRadius + 4.15 + (i % 2) * 1.05;
     const modelCenter = ARM.base.clone().addScaledVector(dir, modelRadius);
     modelCenter.y = 0;
 
@@ -711,12 +720,12 @@ function createAllStations() {
     scene.add(root);
 
     // Object pedestal, farther away from the arm than the page slot.
-    const pad = box(1.72, .12, 1.28, .09, 0x141d26, .84, .08);
+    const pad = box(1.52, .10, 1.12, .12, 0x273238, .80, .08);
     pad.position.set(modelCenter.x, .06, modelCenter.z);
     pad.rotation.y = -theta + Math.PI / 2;
     root.add(pad);
 
-    const ring = mesh(new THREE.TorusGeometry(.56, .025, 12, 44), 0x465566, .44, .30);
+    const ring = mesh(new THREE.TorusGeometry(.50, .022, 12, 44), 0x74857c, .48, .20);
     ring.rotation.x = Math.PI / 2;
     ring.position.set(modelCenter.x, .13, modelCenter.z);
     root.add(ring);
@@ -724,37 +733,37 @@ function createAllStations() {
     const model = createTopicModel(entry.item.model, entry.key);
     model.position.set(modelCenter.x, .16, modelCenter.z);
     model.rotation.y = Math.atan2(camera.position.x - modelCenter.x, camera.position.z - modelCenter.z);
-    model.scale.setScalar(.58);
+    model.scale.setScalar(.55);
     root.add(model);
 
     const stationLabel = createStationLabel(entry.item.label);
     const toCamera = new THREE.Vector3(camera.position.x - modelCenter.x, 0, camera.position.z - modelCenter.z).normalize();
-    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .70);
-    stationLabel.position.y = .30;
-    stationLabel.lookAt(camera.position.x, .30, camera.position.z);
+    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .58);
+    stationLabel.position.y = .25;
+    stationLabel.lookAt(camera.position.x, .25, camera.position.z);
     root.add(stationLabel);
 
     // A real table cassette in FRONT of the object. The panel is stored edge-on inside it,
     // rises vertically as one rigid object, then rotates to face the visitor before pickup.
     const slotYaw = Math.PI / 2 - theta;
-    const slotHousing = box(.64, .18, 4.18, .06, 0x0d141c, .78, .12);
-    slotHousing.position.set(slotCenter.x, .09, slotCenter.z);
+    const slotHousing = box(.50, .10, 4.22, .05, 0x101517, .84, .05);
+    slotHousing.position.set(slotCenter.x, -.035, slotCenter.z);
     slotHousing.rotation.y = slotYaw;
     root.add(slotHousing);
 
-    const slotMouth = box(.24, .026, 3.90, .012, 0x020508, .72, .06);
-    slotMouth.position.set(slotCenter.x, .19, slotCenter.z);
+    const slotMouth = box(.16, .014, 4.00, .008, 0x05090a, .75, .02);
+    slotMouth.position.set(slotCenter.x, .016, slotCenter.z);
     slotMouth.rotation.y = slotYaw;
     root.add(slotMouth);
 
-    const lipA = box(.10, .055, 4.02, .015, 0x42515f, .45, .38);
-    lipA.position.set(slotCenter.x, .205, slotCenter.z);
+    const lipA = box(.035, .020, 4.04, .008, 0x7a8981, .55, .14);
+    lipA.position.set(slotCenter.x, .025, slotCenter.z);
     lipA.rotation.y = slotYaw;
     const tangent = new THREE.Vector3(Math.cos(theta + Math.PI / 2), 0, Math.sin(theta + Math.PI / 2));
-    lipA.position.addScaledVector(tangent, -.14);
+    lipA.position.addScaledVector(tangent, -.09);
     root.add(lipA);
     const lipB = lipA.clone();
-    lipB.position.addScaledVector(tangent, .28);
+    lipB.position.addScaledVector(tangent, .18);
     root.add(lipB);
 
     const board = createBoard(entry.section, entry.item, entry.index);
@@ -772,14 +781,21 @@ function createAllStations() {
     faceDummy.lookAt(camera.position.x, board.position.y, camera.position.z);
     const shownQ = faceDummy.quaternion.clone();
     const shownS = new THREE.Vector3(BOARD.stationScale, BOARD.stationScale, BOARD.stationScale);
-    const shownP = board.position.clone();
-    const hiddenP = shownP.clone(); hiddenP.y = -BOARD.height * BOARD.stationScale * .55;
+    const pickupP = board.position.clone();
+    const viewOffset = new THREE.Vector3(camera.position.x - slotCenter.x, 0, camera.position.z - slotCenter.z).normalize().multiplyScalar(.24);
+    const shownP = pickupP.clone().add(viewOffset); shownP.y += .12;
+    const hiddenP = pickupP.clone(); hiddenP.y = -BOARD.height * BOARD.stationScale * .55;
     board.quaternion.copy(edgeQ);
     board.userData.hiddenLocal = { p: hiddenP, q: edgeQ.clone(), s: shownS.clone() };
-    board.userData.emergedLocal = { p: shownP.clone(), q: edgeQ.clone(), s: shownS.clone() };
+    board.userData.emergedLocal = { p: pickupP.clone(), q: edgeQ.clone(), s: shownS.clone() };
+    board.userData.pickupLocal = { p: pickupP.clone(), q: shownQ.clone(), s: shownS.clone() };
     board.userData.shownLocal = { p: shownP, q: shownQ, s: shownS.clone() };
 
     root.updateMatrixWorld(true);
+    ring.material.color.setHex(sectionAccent(entry.section));
+    ring.material.opacity = .76;
+    ring.material.transparent = true;
+
     const station = {
       ...entry, root, pad, ring, model, board,
       slotBase: slotHousing, slotBack: slotHousing, slotMouth,
@@ -802,15 +818,26 @@ function stationGuideWorld(station) {
   // By construction, the fixed pickup pose lands exactly on this handle.
   return armSocketForPose(station.pickupYaw, ARM_POSES.pickup);
 }
+function sectionAccent(section) {
+  return ({
+    home: 0x7aa9a0,
+    about: 0xc5a77b,
+    projects: 0x6faaa4,
+    experience: 0xd2a56f,
+    interests: 0x86a86f,
+    contact: 0xc48672
+  })[section] || 0x7aa9a0;
+}
+
 function setSelectedStation(key) {
   state.selectedKey = key;
   for (const [k, s] of state.stations) {
     const selected = k === key;
-    s.ring.material.color.setHex(selected ? 0x8eb7de : 0x465566);
-    s.model.scale.setScalar(selected ? .70 : .54);
-    s.slotMouth.material.color.setHex(selected ? 0x8eb7de : 0x04070b);
-    s.slotMouth.material.emissive?.setHex?.(selected ? 0x214a72 : 0x000000);
-    if (s.slotMouth.material.emissiveIntensity !== undefined) s.slotMouth.material.emissiveIntensity = selected ? .52 : 0;
+    s.ring.material.color.setHex(selected ? sectionAccent(s.section) : 0x64736c);
+    s.model.scale.setScalar(selected ? .72 : .50);
+    s.slotMouth.material.color.setHex(selected ? sectionAccent(s.section) : 0x05090a);
+    s.slotMouth.material.emissive?.setHex?.(selected ? sectionAccent(s.section) : 0x000000);
+    if (s.slotMouth.material.emissiveIntensity !== undefined) s.slotMouth.material.emissiveIntensity = selected ? .22 : 0;
   }
 }
 
@@ -1159,8 +1186,10 @@ function heldBoardTargetPose(socket, swingX = 0, swingZ = 0) {
   facing.lookAt(camera.position.x, camera.position.y - .15, camera.position.z);
   const q = facing.quaternion.clone();
   q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX, 0, swingZ)));
+  const viewDir = new THREE.Vector3(camera.position.x - socket.x, camera.position.y - socket.y, camera.position.z - socket.z).normalize();
+  const presentationOffset = viewDir.multiplyScalar(.36);
   const localHandle = new THREE.Vector3(BOARD.handleX * BOARD.stationScale, BOARD.handleY * BOARD.stationScale, 0).applyQuaternion(q);
-  return { position: socket.clone().sub(localHandle), quaternion: q };
+  return { position: socket.clone().add(presentationOffset).sub(localHandle), quaternion: q };
 }
 function updateHeldBoard(now, dt, snap = false) {
   if (!state.heldBoard || !state.heldFollow) return;
@@ -1236,6 +1265,8 @@ async function pickupBoard(station) {
   await setGrip(.26, 70);
   await rotateSafelyTo(station.pickupYaw, 340);
   await moveArmPose(station.pickupYaw, ARM_POSES.lift, 200);
+  dom.status.textContent = 'Aligning page';
+  await tweenLocalTransform(station.root, station.board, station.board.userData.pickupLocal, 110);
   dom.status.textContent = 'Grabbing page';
   await moveArmPose(station.pickupYaw, ARM_POSES.pickup, 220);
   await setGrip(.09, 120);
@@ -1355,13 +1386,13 @@ function updatePhysics(dt) {
       const slotBox = new THREE.Box3().setFromObject(st.slotBack); resolveSphereBox(o, slotBox, r);
       if (st.board.visible || st === state.heldStation) {
         st.board.updateMatrixWorld(true);
-        boardOBB.center.set(0, 0, 0); boardOBB.halfSize.set(BOARD.width / 2, BOARD.height / 2, BOARD.thickness / 2 + .03); boardOBB.rotation.identity();
+        boardOBB.center.set(0, 0, 0); boardOBB.halfSize.set(BOARD.width / 2, BOARD.height / 2, BOARD.thickness / 2 + .14); boardOBB.rotation.identity();
         boardOBB.applyMatrix4(st.board.matrixWorld); resolveSphereOBB(o, boardOBB, r);
       }
     }
     if (state.heldBoard) {
       state.heldBoard.updateMatrixWorld(true);
-      boardOBB.center.set(0, 0, 0); boardOBB.halfSize.set(BOARD.width / 2, BOARD.height / 2, BOARD.thickness / 2 + .03); boardOBB.rotation.identity();
+      boardOBB.center.set(0, 0, 0); boardOBB.halfSize.set(BOARD.width / 2, BOARD.height / 2, BOARD.thickness / 2 + .14); boardOBB.rotation.identity();
       boardOBB.applyMatrix4(state.heldBoard.matrixWorld);
       resolveSphereOBB(o, boardOBB, r, (normal, impulse) => {
         // Two-way response: a thrown object can kick the constrained rigid page and make it swing.
