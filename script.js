@@ -249,6 +249,223 @@ const CONTENT = {
   }]
 };
 
+
+// Board copy is intentionally written for a senior software-engineering hiring audience.
+// It preserves the underlying facts while foregrounding ownership, debugging, reliability,
+// systems thinking, measurable output, and communication.
+const SWE_BOARD_COPY = {
+  'home/home': {
+    title: 'Software Engineer · Systems, Embedded & Robotics',
+    meta: 'University of Waterloo CS · Python · C/C++ · Embedded Systems',
+    summary: 'I build software that has to work under real constraints: hardware timing, sensor data, networks, robotics, and users. The common thread across my projects is end-to-end ownership, disciplined debugging, and making systems understandable enough for other people to rely on.',
+    metrics: [['15', 'embedded apps + games'], ['$195K+', 'Kickstarter funding tied to products contributed to'], ['3 years', 'competition robotics']],
+    contributions: [
+      'Developed software across ESP32, RP2040, Arduino, and Raspberry Pi environments.',
+      'Built systems spanning sensing, networking, computer vision, robotics, and data visualization.',
+      'Debug by measuring first, changing one variable at a time, retesting, and documenting the result.',
+      'Comfortable explaining technical decisions to teammates, learners, and non-specialists.'
+    ],
+    scope: 'Best fit: software-engineering roles where implementation, testing, integration, and ownership matter more than isolated coding exercises.',
+    impact: 'Evidence of execution includes 15 shipped learning projects, contribution to three Kickstarter-backed products, and three years of iterative robotics development.',
+    tags: ['Python', 'C/C++', 'Embedded', 'Robotics', 'Systems Debugging']
+  },
+  'about/about': {
+    title: 'How I Work as an Engineer',
+    meta: 'Systems Thinking · Debugging · Communication · Continuous Learning',
+    summary: 'My strongest engineering habit is refusing to stop at “it works.” I want to understand why it works, what can fail, how to reproduce the result, and how to explain the system clearly enough that another person can build on it.',
+    metrics: [['2 years', 'EIM Technology'], ['3 years', 'VEX robotics'], ['Physics 11', 'teaching assistant']],
+    contributions: [
+      'Trace failures across code, electronics, communication, timing, and mechanics instead of assuming the bug lives in one layer.',
+      'Use logs, measurements, diagrams, and small controlled changes to narrow problems efficiently.',
+      'Turn technical understanding into documentation, tutorials, and explanations for other learners.',
+      'Bring the same collaborative mindset to robotics, teaching, coaching, and technical product work.'
+    ],
+    scope: 'For a software team, this translates to strong debugging discipline, clear written and verbal communication, and comfort working across system boundaries.',
+    impact: 'The result is a working style centered on reliability, reproducibility, and making the next engineer’s job easier.',
+    tags: ['Debugging', 'Systems Thinking', 'Documentation', 'Collaboration']
+  },
+  'projects/wildfire': {
+    title: 'Wildfire Detection System',
+    meta: 'Software Engineering Project · C++ · LoRaWAN · Raspberry Pi · MQTT',
+    summary: 'Built an end-to-end environmental-monitoring pipeline from sensor acquisition to long-range transport, gateway processing, messaging, and dashboard visualization. The project required reasoning across interfaces rather than treating each component as an isolated demo.',
+    metrics: [['End-to-end', 'sensor → network → dashboard'], ['LoRaWAN', 'long-range transport'], ['MQTT + Node-RED', 'processing + visualization']],
+    contributions: [
+      'Owned the complete data path from BME680 sensing through a LoRaWAN node and Raspberry Pi gateway.',
+      'Integrated MQTT and Node-RED so incoming device data could be processed and visualized reliably.',
+      'Tested the full pipeline as one system and debugged failures across hardware, networking, and software boundaries.',
+      'Designed the project around observable data flow instead of a single successful component test.'
+    ],
+    scope: 'Strong SWE signal: system decomposition, interface design, integration testing, networked data flow, and end-to-end ownership.',
+    impact: 'Demonstrates the ability to build and debug a multi-stage system where correctness depends on several technologies working together.',
+    tags: ['C++', 'LoRaWAN', 'MQTT', 'Raspberry Pi', 'BME680', 'Node-RED']
+  },
+  'projects/kc15': {
+    title: 'KC15 RP2040 Learning Platform',
+    meta: 'Embedded Software · RP2040 · Python / MicroPython · Product Reliability',
+    summary: 'Built and debugged 15 applications and games for a physical RP2040 learning platform. The software had to run reliably on the target hardware and be clear enough that students could reproduce each project from documentation.',
+    metrics: [['15', 'apps + games'], ['15', 'project tutorials'], ['RP2040', 'target hardware verified']],
+    contributions: [
+      'Implemented and debugged 15 embedded applications and games on the KC15 platform.',
+      'Verified Raspberry Pi Pico / RP2040 behavior rather than assuming desktop logic would transfer cleanly to hardware.',
+      'Diagnosed timing, state, and hardware-interaction issues until projects behaved consistently.',
+      'Produced a tutorial for each project, turning implementation knowledge into reproducible engineering documentation.'
+    ],
+    scope: 'Strong SWE signal: repeated delivery, test/debug cycles, platform constraints, documentation, and maintaining quality across a family of related programs.',
+    impact: 'Shows that I can move beyond one-off prototypes and deliver a set of usable, documented software experiences on real hardware.',
+    tags: ['RP2040', 'MicroPython', 'Python', 'Testing', 'Technical Writing']
+  },
+  'projects/vision': {
+    title: 'Computer Vision Robotics',
+    meta: 'Python · Perception Pipeline · Recognition · Robot-Control Integration',
+    summary: 'Built computer-vision experiments that convert visual input into structured signals and then use those signals to drive robotic behavior. The important engineering challenge was connecting perception output to a physical system, not stopping at classification.',
+    metrics: [['Hand landmarks', 'gesture input'], ['Face ID', 'identity recognition'], ['Robot control', 'physical output']],
+    contributions: [
+      'Detected hand landmarks and inferred finger-count gestures from camera input.',
+      'Added face identity recognition and facial-expression classification as additional perception signals.',
+      'Mapped vision results into commands for robotic systems, connecting software inference to physical behavior.',
+      'Used the project to learn how perception errors propagate into downstream control decisions.'
+    ],
+    scope: 'Relevant SWE skills: data pipelines, API boundaries between subsystems, handling imperfect inputs, and integrating multiple modules into one working behavior.',
+    impact: 'Demonstrates curiosity about applied AI while keeping the focus on integration and system behavior rather than model demos alone.',
+    tags: ['Python', 'Computer Vision', 'Recognition', 'Robotics', 'Integration']
+  },
+  'projects/analog': {
+    title: 'Analog Circuit II · Technical Verification',
+    meta: 'Validation · Numerical Results · Oscilloscope Evidence · Technical Review',
+    summary: 'Supported verification of an analog-electronics learning project by checking formulas, diagrams, labels, code examples, numerical results, and oscilloscope evidence. The software-engineering relevance is the same discipline used in code review and QA: verify assumptions, reproduce results, and communicate defects precisely.',
+    metrics: [['Verification', 'diagrams + technical text'], ['Oscilloscope', 'measured evidence'], ['Laplace / Fourier', 'analysis reviewed']],
+    contributions: [
+      'Checked technical material for correctness rather than accepting documentation at face value.',
+      'Recorded numerical results and oscilloscope screenshots to compare expected and observed behavior.',
+      'Reviewed content involving op-amps, MOSFETs, BJTs, diodes, and signal transforms.',
+      'Reported errors and possible improvements clearly to the technical team.'
+    ],
+    scope: 'Strong SWE signal: verification mindset, attention to edge cases, reproducible evidence, technical review, and concise defect communication.',
+    impact: 'Shows that I care about correctness and can validate technical work created by other people, not only code I wrote myself.',
+    tags: ['Verification', 'Testing', 'Technical Review', 'Signals', 'Documentation']
+  },
+  'experience/eim': {
+    title: 'Technical Support Intern · EIM Technology',
+    meta: 'Embedded / Product Engineering · Nov 2024 – Jun 2026 · Richmond, BC',
+    summary: 'Worked across embedded software, hardware integration, product testing, technical verification, AI experimentation, and documentation for real educational technology products. The role required switching quickly between implementation, debugging, validation, and communication.',
+    metrics: [['$195K+', 'Kickstarter funding'], ['446', 'campaign backers'], ['15', 'KC15 apps + games']],
+    contributions: [
+      'Developed software for ESP32, RP2040, Arduino, and Raspberry Pi using Python, MicroPython, and C/C++.',
+      'Built and debugged 15 KC15 applications and games and documented each project for student use.',
+      'Integrated sensors and LoRaWAN systems and used oscilloscopes / logic analyzers to diagnose failures.',
+      'Reviewed instructional material, debugged AI software, and contributed to products launched through Kickstarter.'
+    ],
+    scope: 'Strong SWE signal: broad technical ownership, debugging across layers, repeated delivery, product context, and communication with people outside a single engineering specialty.',
+    impact: 'Contributed to three Kickstarter campaigns reaching 446 backers and more than $195K in funding while building practical engineering judgment in a real team environment.',
+    tags: ['Python', 'C/C++', 'RP2040', 'ESP32', 'LoRaWAN', 'Debugging']
+  },
+  'experience/vex': {
+    title: 'Robotics Software & Controls · 4471A Eagles',
+    meta: 'VEX V5 · PID · Odometry · Autonomous · CAD · 3 years',
+    summary: 'Helped turn a five-student, mentor-less team that finished 59th of 59 at its first tournament into a tournament-winning school robotics team. My contribution centered on control software, odometry, CAD, debugging, and keeping the team methodical when the robot failed under competition pressure.',
+    metrics: [['59 / 59', 'first tournament'], ['Tournament Champion', 'later result'], ['PID + Odometry', 'core control software']],
+    contributions: [
+      'Wrote major portions of the robot control stack, including PID motion control and odometry for autonomous positioning.',
+      'Debugged failures across sensors, motors, software, and mechanics using logs and controlled changes instead of random tuning.',
+      'Served as a primary CAD designer and pushed the team toward more deliberate design planning.',
+      'Helped a small team continue iterating through repeated failures until it became an official school team and tournament champion.'
+    ],
+    scope: 'Strong SWE signal: control systems, state estimation, debugging under pressure, collaboration with mechanical teammates, and learning from repeated production-like failures.',
+    impact: 'The strongest signal is trajectory: measurable improvement came from better engineering process, not a single lucky redesign.',
+    tags: ['C++', 'PID', 'Odometry', 'Autonomous', 'VEX V5', 'CAD']
+  },
+  'experience/coaching': {
+    title: 'Badminton Coach · Technical Communication & Leadership',
+    meta: 'Stage18 Badminton Center · 200+ hours · 40+ students',
+    summary: 'Coaching is the clearest evidence that I can adapt communication to the person in front of me. Different students needed different explanations, levels of structure, and feedback—similar to working with teammates who have different technical backgrounds.',
+    metrics: [['200+', 'coaching hours'], ['40+', 'students coached'], ['7–15', 'student ages']],
+    contributions: [
+      'Explained technique in multiple ways until students could apply the idea, not merely repeat it back.',
+      'Managed group dynamics while keeping sessions organized, focused, and supportive.',
+      'Used disagreements and losses to teach constructive resets instead of blame.',
+      'Learned to give specific feedback without removing ownership from the person doing the work.'
+    ],
+    scope: 'SWE relevance: mentoring, code-review style feedback, conflict de-escalation, communicating across experience levels, and helping a team improve without dominating it.',
+    impact: 'Shows leadership through patience and clarity rather than authority—useful on teams where strong engineers also need to make other people more effective.',
+    tags: ['Communication', 'Mentoring', 'Leadership', 'Feedback']
+  },
+  'experience/orchestra': {
+    title: 'Trombone · Ensemble Reliability & Team Execution',
+    meta: 'School Band · Vancouver Chinese Philharmonic Orchestra · 6 years',
+    summary: 'Orchestral performance rewards preparation, listening, precision, and knowing when your part should lead versus support. Those habits transfer directly to collaborative engineering work where individual execution has to fit a larger system.',
+    metrics: [['6 years', 'trombone'], ['1st / 2nd', 'section roles'], ['Live performance', 'high-consequence execution']],
+    contributions: [
+      'Perform as first trombone at school and second trombone with the Vancouver Chinese Philharmonic Orchestra.',
+      'Mentor younger players on tone, breath control, and difficult passages.',
+      'Performed in large ensembles and public events where preparation and timing have immediate consequences.',
+      'Practice consistently outside scheduled rehearsals rather than relying on last-minute preparation.'
+    ],
+    scope: 'SWE relevance: preparation, listening, dependable execution, mentoring, and contributing to a system where success depends on every participant meeting a shared standard.',
+    impact: 'Adds evidence of discipline and team reliability beyond technical projects alone.',
+    tags: ['Teamwork', 'Preparation', 'Mentoring', 'Performance']
+  },
+  'interests/blender': {
+    title: 'Blender · Simulation, Rigging & Interactive Systems',
+    meta: 'Rigid Bodies · Constraints · Armatures · 3D Interaction',
+    summary: 'Blender is where I explore how geometry becomes behavior. I am most interested in rigid-body systems, constraints, armatures, and mechanical motion—the same interest that led to this portfolio’s physical page-switching interface.',
+    metrics: [['2K+', 'views on one Blender video'], ['Rigid bodies', 'simulation'], ['Armatures', 'controlled motion']],
+    contributions: [
+      'Build scenes around collision, constraint, and motion rather than static rendering alone.',
+      'Use armatures and mechanical relationships to create predictable movement.',
+      'Experiment with how physical behavior can become part of an interface instead of decoration.',
+      'Translate 3D ideas into browser-based interaction through Three.js.'
+    ],
+    scope: 'SWE relevance: simulation thinking, stateful interaction, geometry, real-time rendering, and designing user-facing behavior with technical constraints.',
+    impact: 'Demonstrates technical curiosity outside coursework and a willingness to learn unfamiliar systems deeply enough to build with them.',
+    tags: ['Three.js', 'Blender', 'Simulation', 'Rigging', '3D Interaction']
+  },
+  'interests/hardware': {
+    title: 'Low-Level Systems & Hardware Debugging',
+    meta: 'ESP32 · RP2040 · Arduino · Raspberry Pi · Oscilloscope · Logic Analyzer',
+    summary: 'Hardware work made me a better software debugger because it removes the assumption that every failure comes from code. Timing, wiring, communication, voltage, sensors, and environment can all change software behavior.',
+    metrics: [['4 platforms', 'MCUs / SBCs'], ['LoRaWAN', 'wireless systems'], ['Scope + analyzer', 'debugging tools']],
+    contributions: [
+      'Develop embedded software across ESP32, RP2040, Arduino, and Raspberry Pi environments.',
+      'Integrate sensors and wireless communication rather than testing firmware in isolation.',
+      'Use oscilloscopes and logic analyzers when logs alone cannot explain a failure.',
+      'Trace problems across boundaries until the actual root cause is understood.'
+    ],
+    scope: 'SWE relevance: low-level debugging, concurrency/timing intuition, interfaces, observability, and comfort working close to the system boundary.',
+    impact: 'Gives me a broader failure model than software-only experience and improves how I reason about systems under real constraints.',
+    tags: ['Embedded', 'C/C++', 'Debugging', 'Sensors', 'Observability']
+  },
+  'interests/music': {
+    title: 'Music & Live Audio · Operating Real-Time Systems',
+    meta: 'Trombone · Live Sound · Troubleshooting · Mentoring',
+    summary: 'Live music and audio reinforce habits that matter in engineering: prepare before the event, monitor the system while it runs, make small corrections under pressure, and understand how one component affects the whole experience.',
+    metrics: [['1st Trombone', 'school band'], ['2nd Trombone', 'VCPO'], ['Live audio', 'setup + troubleshooting']],
+    contributions: [
+      'Perform in school and orchestral environments where timing and reliability are immediately visible.',
+      'Help with live-audio setup, signal levels, equipment order, teardown, and troubleshooting.',
+      'Mentor younger musicians and explain technique in practical, actionable language.',
+      'Practice deliberately outside formal sessions to improve weak points before performance.'
+    ],
+    scope: 'SWE relevance: operational awareness, calm troubleshooting, preparation, monitoring, and communication in a live environment.',
+    impact: 'Shows that I am comfortable being accountable when a system has to work in real time rather than only in development.',
+    tags: ['Live Systems', 'Troubleshooting', 'Mentoring', 'Team Execution']
+  },
+  'contact/contact': {
+    title: 'Software Engineering Opportunities',
+    meta: 'SWE · Embedded · Robotics · Systems',
+    summary: 'I am interested in software-engineering opportunities where I can own meaningful pieces of a system, learn from strong engineers, and work close enough to real users or hardware that correctness and reliability matter.',
+    metrics: [['GitHub', 'banana1324'], ['LinkedIn', 'fuyuanzhang'], ['Email', 'warrenz7980@gmail.com']],
+    contributions: [
+      'Strongest experience: embedded software, robotics controls, end-to-end IoT systems, and technical debugging.',
+      'Comfortable moving between implementation, testing, documentation, and cross-functional problem solving.',
+      'Interested in teams with high engineering standards, thoughtful code review, and meaningful ownership.',
+      'Portfolio links include GitHub, LinkedIn, YouTube, and résumé.'
+    ],
+    scope: 'Target roles: software engineering, embedded software, robotics software, systems, or related internships where strong debugging and learning speed are valued.',
+    impact: 'I would bring curiosity, technical range, careful debugging, and a track record of sticking with difficult systems until they work reliably.',
+    tags: ['Software Engineering', 'Embedded', 'Robotics', 'Systems']
+  }
+};
+
 const NAV = [
   ['home', '⌂', 'Home'],
   ['about', '●', 'About'],
@@ -453,8 +670,8 @@ coolPool.position.set(-3.7, 2.5, 3.4); scene.add(coolPool);
 
 // ---------- arm ----------
 const ARM = {
-  base: new THREE.Vector3(-4.72, .68, -.98),
-  lengths: [2.55, 3.15, 2.95, 2.28],
+  base: new THREE.Vector3(-4.90, .68, -.98),
+  lengths: [2.75, 3.45, 3.20, 2.45],
   radius: [.37, .31, .26, .22]
 };
 
@@ -462,15 +679,15 @@ const ARM_POSES = {
   // Entire arm and page are beyond the left edge in this pose.
   offscreen: [.98, -.40, .12, -.05],
   // Heavy, high carry pose used when moving a sheet away from the visitor.
-  carry: [1.00, -.30, .10, -.05],
+  carry: [.94, -.34, .11, -.05],
   // Close presentation: the gripper itself is close enough that the panel fills the viewport.
-  present: [.96, -.24, .09, -.04]
+  present: [.88, -.36, .14, -.04]
 };
 
-const ARM_MOTION_SCALE = 2.35;
+const ARM_MOTION_SCALE = 2.82;
 const GRIP_MOTION_SCALE = 1.55;
 const BOARD_MOTION_SCALE = 1.0;
-const PRESENT_YAW = .56;
+const PRESENT_YAW = .78;
 const OFFSCREEN_YAW = Math.PI;
 const HELD_BOARD_SCALE = 1.15;
 
@@ -609,78 +826,89 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width:6.20, height:5.00, thickness:.095, handleX:0, handleY:2.62, stationScale:1 };
+const BOARD = { width:5.18, height:5.48, thickness:.095, handleX:0, handleY:2.90, stationScale:1 };
 function createBoard(section,item,index) {
+  const key=`${section}/${item.id}`;
+  const copy=SWE_BOARD_COPY[key]||{
+    title:item.title, meta:item.meta, summary:item.description, metrics:item.metrics,
+    contributions:item.details, scope:getScopeText(section,item), impact:'Built through repeated testing, debugging, documentation, and iteration.', tags:item.tags
+  };
+
   const group=new THREE.Group();
   const back=box(BOARD.width,BOARD.height,BOARD.thickness,.075,0xe8e4dd,.78,.02); group.add(back);
   const rim=box(BOARD.width+.12,BOARD.height+.12,.055,.085,0xd1cec8,.58,.05); rim.position.z=-.055; group.add(rim);
 
-  const clampBase=box(.76,.20,.24,.045,0x8b9297,.28,.72); clampBase.position.set(0,BOARD.height/2-.08,.10); group.add(clampBase);
+  const clampBase=box(.72,.20,.24,.045,0x8b9297,.28,.72); clampBase.position.set(0,BOARD.height/2-.08,.10); group.add(clampBase);
   const gripTab=box(.055,.34,.19,.018,0x34393e,.22,.90); gripTab.position.set(0,BOARD.handleY,.145); group.add(gripTab);
-  const cap=box(.36,.09,.27,.025,0x70777d,.24,.82); cap.position.set(0,BOARD.height/2+.18,.12); group.add(cap);
-  for(const x of [-.24,.24]) addBolt(clampBase,x,0,.14,.035);
+  const cap=box(.34,.09,.27,.025,0x70777d,.24,.82); cap.position.set(0,BOARD.height/2+.18,.12); group.add(cap);
+  for(const x of [-.22,.22]) addBolt(clampBase,x,0,.14,.035);
   const handleAnchor=new THREE.Object3D(); handleAnchor.position.set(BOARD.handleX,BOARD.handleY,.145); group.add(handleAnchor); group.userData.handleAnchor=handleAnchor;
 
-  const canvas=document.createElement('canvas'); canvas.width=3000; canvas.height=2400;
+  const canvas=document.createElement('canvas'); canvas.width=2500; canvas.height=3200;
   const ctx=canvas.getContext('2d');
   ctx.fillStyle='#f3f0ea'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  for(let i=0;i<4200;i++){ const a=Math.random()*.015; ctx.fillStyle=`rgba(55,48,42,${a})`; ctx.fillRect(Math.random()*canvas.width,Math.random()*canvas.height,1,1); }
+  for(let i=0;i<4200;i++){ const a=Math.random()*.014; ctx.fillStyle=`rgba(55,48,42,${a})`; ctx.fillRect(Math.random()*2500,Math.random()*3200,1,1); }
 
-  ctx.fillStyle='#194777'; ctx.font='700 38px Inter, Arial';
-  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,125,135);
+  ctx.fillStyle='#194777'; ctx.font='700 42px Inter, Arial'; ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,130,160);
+  ctx.fillStyle='#101820'; ctx.font='800 146px Inter, Arial';
+  const titleEnd=wrapText(ctx,copy.title,130,345,2240,150);
+  ctx.fillStyle='#50565d'; ctx.font='500 58px Inter, Arial';
+  const metaEnd=wrapText(ctx,copy.meta,130,titleEnd+82,2240,72);
+  drawOutlinePills(ctx,copy.tags.slice(0,5),130,metaEnd+62,2240);
 
-  ctx.fillStyle='#111820'; ctx.font='800 126px Inter, Arial';
-  const titleEnd=wrapText(ctx,item.title,125,300,2740,132);
-  ctx.fillStyle='#4d535a'; ctx.font='500 48px Inter, Arial';
-  const metaEnd=wrapText(ctx,item.meta,125,titleEnd+64,2740,60);
-  drawOutlinePills(ctx,item.tags.slice(0,5),125,metaEnd+42,2740);
+  const profileTop=metaEnd+180;
+  ctx.strokeStyle='#c8c2bb'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(130,profileTop); ctx.lineTo(2370,profileTop); ctx.stroke();
+  ctx.fillStyle='#194777'; ctx.font='800 48px Inter, Arial'; ctx.fillText('SOFTWARE ENGINEERING PROFILE',130,profileTop+76);
+  ctx.fillStyle='#20262c'; ctx.font='500 60px Inter, Arial';
+  const summaryEnd=wrapText(ctx,copy.summary,130,profileTop+168,2240,78);
 
-  const profileTop=metaEnd+142;
-  ctx.strokeStyle='#c9c5bf'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(125,profileTop); ctx.lineTo(2875,profileTop); ctx.stroke();
-  ctx.fillStyle='#194777'; ctx.font='800 34px Inter, Arial'; ctx.fillText('PROFILE',125,profileTop+58);
-  ctx.fillStyle='#22272d'; ctx.font='500 50px Inter, Arial';
-  const descEnd=wrapText(ctx,item.description,125,profileTop+132,2740,64);
-
-  const metrics=[...item.metrics.slice(0,3)];
-  while(metrics.length<3) metrics.push([item.tags[metrics.length]||'Build','focus']);
-  const metricY=Math.max(descEnd+78,860),gap=34,cardW=(2750-gap*2)/3,cardH=205;
-  metrics.slice(0,3).forEach((m,i)=>{
-    const x=125+i*(cardW+gap);
-    strokeRoundRect(ctx,x,metricY,cardW,cardH,28,'#cbc8c2',3);
-    ctx.fillStyle='#123f74'; ctx.font='800 58px Inter, Arial';
-    wrapText(ctx,String(m[0]),x+32,metricY+72,cardW-64,62);
-    ctx.fillStyle='#4f555c'; ctx.font='600 31px Inter, Arial';
-    wrapText(ctx,String(m[1]),x+32,metricY+145,cardW-64,38);
+  const metricY=summaryEnd+110, gap=34, cardW=(2240-gap*2)/3, cardH=280;
+  copy.metrics.slice(0,3).forEach((m,i)=>{
+    const x=130+i*(cardW+gap);
+    strokeRoundRect(ctx,x,metricY,cardW,cardH,30,'#cbc8c2',3);
+    ctx.fillStyle='#123f74'; ctx.font='800 68px Inter, Arial';
+    wrapText(ctx,String(m[0]),x+36,metricY+94,cardW-72,72);
+    ctx.fillStyle='#4f555c'; ctx.font='600 36px Inter, Arial';
+    wrapText(ctx,String(m[1]),x+36,metricY+186,cardW-72,44);
   });
 
-  const lowerTop=metricY+cardH+82;
-  const colGap=88,colW=(2750-colGap)/2,leftX=125,rightX=125+colW+colGap;
-  ctx.fillStyle='#194777'; ctx.font='800 34px Inter, Arial';
+  const lowerTop=metricY+cardH+120;
+  const colGap=92, colW=(2240-colGap)/2;
+  const leftX=130, rightX=130+colW+colGap;
+
+  // These sections intentionally use roughly 2x the previous text size.
+  ctx.fillStyle='#194777'; ctx.font='800 62px Inter, Arial';
   ctx.fillText('SELECTED CONTRIBUTIONS',leftX,lowerTop);
   ctx.fillText('ROLE · SCOPE · IMPACT',rightX,lowerTop);
 
-  let y=lowerTop+66; ctx.font='500 38px Inter, Arial';
-  item.details.slice(0,4).forEach(line=>{
-    ctx.fillStyle='#194777'; ctx.beginPath(); ctx.arc(leftX+10,y-13,6,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#22272d'; y=wrapText(ctx,line,leftX+34,y,colW-34,48)+25;
+  let y=lowerTop+104; ctx.font='500 56px Inter, Arial';
+  copy.contributions.slice(0,4).forEach(line=>{
+    ctx.fillStyle='#194777'; ctx.beginPath(); ctx.arc(leftX+12,y-18,7,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#20262c'; y=wrapText(ctx,line,leftX+42,y,colW-42,70)+36;
   });
 
-  ctx.fillStyle='#262b31'; ctx.font='500 38px Inter, Arial';
-  const scopeEnd=wrapText(ctx,getScopeText(section,item),rightX,lowerTop+66,colW,48);
-  ctx.fillStyle='#194777'; ctx.font='800 30px Inter, Arial'; ctx.fillText('CORE STACK',rightX,scopeEnd+55);
-  ctx.fillStyle='#252a31'; ctx.font='500 33px Inter, Arial';
-  let sy=scopeEnd+101; item.tags.slice(0,4).forEach(tag=>{ctx.fillText(`• ${tag}`,rightX,sy);sy+=42;});
+  ctx.fillStyle='#20262c'; ctx.font='500 56px Inter, Arial';
+  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+104,colW,70);
+  ctx.fillStyle='#194777'; ctx.font='800 48px Inter, Arial'; ctx.fillText('WHY THIS MATTERS FOR SWE',rightX,scopeEnd+88);
+  ctx.fillStyle='#20262c'; ctx.font='500 56px Inter, Arial';
+  const impactEnd=wrapText(ctx,copy.impact,rightX,scopeEnd+176,colW,70);
 
-  const footerY=2150;
-  ctx.strokeStyle='#c9c5bf';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(125,footerY);ctx.lineTo(2875,footerY);ctx.stroke();
-  ctx.fillStyle='#194777';ctx.font='800 30px Inter, Arial';ctx.fillText('LINKS',125,footerY+58);
-  ctx.fillStyle='#252a31';ctx.font='500 30px Inter, Arial';
-  ctx.fillText('github.com/banana1324   ·   linkedin.com/in/fuyuanzhang   ·   youtube.com/@goosehjonk918',125,footerY+112);
-  ctx.fillStyle='#777d84';ctx.font='500 26px Inter, Arial';ctx.fillText('warrenz7980@gmail.com   ·   Waterloo / Richmond, BC',125,2320);
+  const footerY=2860;
+  ctx.strokeStyle='#c9c5bf'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(130,footerY); ctx.lineTo(2370,footerY); ctx.stroke();
+  ctx.fillStyle='#194777'; ctx.font='800 42px Inter, Arial'; ctx.fillText('CORE STACK',130,footerY+76); ctx.fillText('CONTACT',1360,footerY+76);
+  ctx.fillStyle='#252a31'; ctx.font='600 42px Inter, Arial';
+  wrapText(ctx,copy.tags.slice(0,6).join('   ·   '),130,footerY+142,1080,54);
+  ctx.fillStyle='#252a31'; ctx.font='500 38px Inter, Arial';
+  ctx.fillText('github.com/banana1324',1360,footerY+142);
+  ctx.fillText('linkedin.com/in/fuyuanzhang',1360,footerY+198);
+  ctx.fillStyle='#777d84'; ctx.font='500 30px Inter, Arial';
+  ctx.fillText('warrenz7980@gmail.com',130,3130);
+  ctx.textAlign='right'; ctx.fillText('Software · Systems · Embedded · Robotics',2370,3130); ctx.textAlign='left';
 
   const texture=new THREE.CanvasTexture(canvas); texture.colorSpace=THREE.SRGBColorSpace; texture.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),16);
-  const plane=new THREE.Mesh(new THREE.PlaneGeometry(BOARD.width-.18,BOARD.height-.18),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
-  plane.position.z=BOARD.thickness/2+.006;group.add(plane);group.userData.texture=texture;
+  const plane=new THREE.Mesh(new THREE.PlaneGeometry(BOARD.width-.20,BOARD.height-.20),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
+  plane.position.z=BOARD.thickness/2+.006; group.add(plane);
+  group.userData.texture=texture;
   return group;
 }
 
@@ -755,23 +983,23 @@ const PODIUM_SCALE={
   'contact/contact':.40
 };
 const PODIUM_LAYOUT={
-  // Front row — strongest recruiter-facing work
-  'projects/wildfire':[-3.80,.12,5.50],
-  'projects/kc15':[-1.70,.12,5.56],
-  'experience/vex':[.40,.12,5.60],
-  'experience/eim':[2.50,.12,5.60],
-  'experience/coaching':[4.60,.12,5.56],
-  'experience/orchestra':[6.70,.12,5.48],
-  'interests/blender':[8.78,.12,5.34],
+  // Front row — shifted farther away from the camera
+  'projects/wildfire':[-3.80,.12,4.82],
+  'projects/kc15':[-1.70,.12,4.90],
+  'experience/vex':[.40,.12,4.96],
+  'experience/eim':[2.50,.12,4.96],
+  'experience/coaching':[4.60,.12,4.90],
+  'experience/orchestra':[6.70,.12,4.80],
+  'interests/blender':[8.78,.12,4.66],
 
-  // Back row — staggered so the front row does not hide them
-  'home/home':[-4.55,.12,3.22],
-  'about/about':[-2.45,.12,3.18],
-  'projects/vision':[-.35,.12,3.16],
-  'projects/analog':[1.75,.12,3.16],
-  'interests/hardware':[3.85,.12,3.18],
-  'interests/music':[5.95,.12,3.22],
-  'contact/contact':[8.05,.12,3.28]
+  // Back row — also shifted deeper into the scene
+  'home/home':[-4.55,.12,2.48],
+  'about/about':[-2.45,.12,2.44],
+  'projects/vision':[-.35,.12,2.42],
+  'projects/analog':[1.75,.12,2.42],
+  'interests/hardware':[3.85,.12,2.44],
+  'interests/music':[5.95,.12,2.48],
+  'contact/contact':[8.05,.12,2.54]
 };
 function sectionAccent(section){ return ({home:0x64b7ee,about:0x66c3f2,projects:0x53b6ff,experience:0x61c9f1,interests:0x63bde6,contact:0x64b7ee})[section]||0x5ab9f1; }
 function createPodiumLabel(text){
@@ -1097,9 +1325,10 @@ function beginHold(station,board){
   updateHeldBoard(performance.now(),1/60,true);
 }
 function heldBoardTargetPose(socket,swingX=0,swingZ=0){
-  // Critical physical constraint: the board's actual clamp point and the gripper socket are identical.
-  const facing=new THREE.Object3D();facing.position.copy(socket);facing.lookAt(camera.position.x,camera.position.y-.05,camera.position.z);
-  const q=facing.quaternion.clone();q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX,0,swingZ)));
+  // Keep the sheet parallel to the viewer's image plane instead of pitching it downward.
+  // The board clamp point remains exactly coincident with the gripper socket.
+  const q=camera.quaternion.clone();
+  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX*.35,0,swingZ*.35)));
   const scale=state.heldBoard?.scale.x||HELD_BOARD_SCALE;
   const localHandle=new THREE.Vector3(BOARD.handleX*scale,BOARD.handleY*scale,.145*scale).applyQuaternion(q);
   return {position:socket.clone().sub(localHandle),quaternion:q};
@@ -1109,10 +1338,10 @@ function updateHeldBoard(now,dt,snap=false){
   const socket=socketWorld(),f=state.heldFollow,safeDt=Math.max(1/120,Math.min(dt||1/60,1/20));
   const velocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);const acceleration=velocity.clone().sub(f.prevVelocity).multiplyScalar(1/safeDt);
   f.prevSocket.copy(socket);f.prevVelocity.lerp(velocity,.38);
-  const stiffness=18.5,damping=7.2,drive=.0055;
+  const stiffness=22.0,damping=9.0,drive=.0030;
   const ax=THREE.MathUtils.clamp(acceleration.z*drive,-.42,.42),az=THREE.MathUtils.clamp(-acceleration.x*drive,-.42,.42);
   f.swingVX+=(-stiffness*f.swingX-damping*f.swingVX+ax)*safeDt;f.swingVZ+=(-stiffness*f.swingZ-damping*f.swingVZ+az)*safeDt;
-  f.swingX=THREE.MathUtils.clamp(f.swingX+f.swingVX*safeDt,-.09,.09);f.swingZ=THREE.MathUtils.clamp(f.swingZ+f.swingVZ*safeDt,-.09,.09);
+  f.swingX=THREE.MathUtils.clamp(f.swingX+f.swingVX*safeDt,-.045,.045);f.swingZ=THREE.MathUtils.clamp(f.swingZ+f.swingVZ*safeDt,-.045,.045);
   const target=heldBoardTargetPose(socket,f.swingX,f.swingZ);state.heldBoard.position.copy(target.position);if(snap||state.reducedMotion)state.heldBoard.quaternion.copy(target.quaternion);else state.heldBoard.quaternion.slerp(target.quaternion,.46);
 }
 async function carryCurrentCompletelyOffscreen(){
