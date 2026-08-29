@@ -307,9 +307,9 @@ renderer.setScissorTest(true);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x0c1215, 18, 38);
 
-const camera = new THREE.PerspectiveCamera(39, 1, 0.1, 100);
-camera.position.set(0, 4.95, 16.1);
-const CAMERA_TARGET = new THREE.Vector3(0, 1.82, 1.05);
+const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+camera.position.set(0, 5.05, 15.0);
+const CAMERA_TARGET = new THREE.Vector3(0, 1.94, 1.12);
 camera.lookAt(CAMERA_TARGET);
 
 scene.add(new THREE.HemisphereLight(0xf9fbff, 0x262117, 2.2));
@@ -391,21 +391,25 @@ scene.add(coolPool);
 
 // ---------- arm ----------
 const ARM = {
-  base: new THREE.Vector3(0, .64, -1.00),
-  lengths: [1.35, 1.6, 1.45, 1.05],
-  radius: [.28, .23, .19, .16]
+  base: new THREE.Vector3(0, .64, -1.34),
+  lengths: [1.62, 2.02, 1.84, 1.24],
+  radius: [.31, .26, .22, .18]
 };
 
 const ARM_POSES = {
   // High, folded transport pose. All page changes pass through this pose.
-  safe: [1.35, -.25, -.05, -.10],
+  safe: [1.38, -.22, -.06, -.08],
   // Exact pickup / deposit pose. Slots are positioned from this pose, not solved with IK.
-  pickup: [1.15, -.05, .00, -.10],
+  pickup: [1.18, -.06, -.01, -.08],
   // Slightly raised / retracted pose used immediately after the page is grabbed.
-  lift: [1.28, -.18, .03, -.12],
+  lift: [1.30, -.15, .02, -.10],
   // Presentation pose toward the visitor. Same deterministic geometry every time.
-  present: [1.12, -.04, .02, -.08]
+  present: [1.02, -.03, .00, -.06]
 };
+
+const ARM_MOTION_SCALE = 1.85;
+const GRIP_MOTION_SCALE = 1.55;
+const BOARD_MOTION_SCALE = 1.2;
 
 const armState = { yaw: Math.PI / 2, angles: [...ARM_POSES.safe], grip: .26 };
 const armVisual = { root: null, links: [], joints: [], wrist: null, fl: null, fr: null, socket: null };
@@ -493,6 +497,7 @@ function updateArmVisual() {
 function ease(t) { return 1 - Math.pow(1 - t, 3); }
 function wait(ms) { return new Promise(r => setTimeout(r, state.reducedMotion ? 0 : ms)); }
 function moveArmPose(yaw, angles, duration = 320) {
+  duration = Math.round(duration * ARM_MOTION_SCALE);
   yaw = nearestAngle(armState.yaw, yaw);
   if (state.reducedMotion) {
     armState.yaw = yaw;
@@ -508,6 +513,7 @@ function moveArmPose(yaw, angles, duration = 320) {
   return wait(duration);
 }
 function setGrip(x, duration = 100) {
+  duration = Math.round(duration * GRIP_MOTION_SCALE);
   if (state.reducedMotion) { armState.grip = x; return Promise.resolve(); }
   state.gripTween = { start: performance.now(), duration, from: armState.grip, to: x };
   return wait(duration);
@@ -548,7 +554,7 @@ function createBoard(section, item, index) {
 
   ctx.textAlign = 'right';
   ctx.fillStyle = '#7c858f';
-  ctx.font = '600 30px Inter, Arial';
+  ctx.font = '600 34px Inter, Arial';
   ctx.fillText(`${section.toUpperCase()}  ·  ${String(index + 1).padStart(2, '0')}`, 1874, 126);
   ctx.textAlign = 'left';
 
@@ -601,7 +607,7 @@ function createBoard(section, item, index) {
   ctx.fillText('SELECTED CONTRIBUTIONS', 110, contribTop + 30);
 
   let y = contribTop + 102;
-  ctx.font = '500 36px Inter, Arial';
+  ctx.font = '500 40px Inter, Arial';
   item.details.slice(0, 5).forEach(line => {
     ctx.fillStyle = '#5a8e83';
     ctx.beginPath();
@@ -641,7 +647,7 @@ function createBoard(section, item, index) {
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+  texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 16);
 
   const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(BOARD.width - .18, BOARD.height - .18),
@@ -703,16 +709,36 @@ const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-
 function createAllStations() {
   // Slots are on a precise inner circle matching the fixed pickup pose.
   // Models sit farther out, alternating radii so the display objects do not overlap.
-  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(170), THREE.MathUtils.degToRad(10));
+  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(168), THREE.MathUtils.degToRad(12));
+  const displayOrder = [
+    'contact/contact',
+    'interests/music',
+    'experience/orchestra',
+    'projects/analog',
+    'interests/hardware',
+    'projects/vision',
+    'experience/coaching',
+    'experience/vex',
+    'experience/eim',
+    'projects/kc15',
+    'projects/wildfire',
+    'interests/blender',
+    'about/about',
+    'home/home'
+  ];
+  const orderedEntries = [
+    ...displayOrder.map(key => FLAT_ITEMS.find(entry => entry.key === key)).filter(Boolean),
+    ...FLAT_ITEMS.filter(entry => !displayOrder.includes(entry.key))
+  ];
 
-  FLAT_ITEMS.forEach((entry, i) => {
+  orderedEntries.forEach((entry, i) => {
     const theta = angles[i];
     const dir = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
     const pickupSocket = armSocketForPose(theta, ARM_POSES.pickup);
     const slotCenter = new THREE.Vector3(pickupSocket.x, 0, pickupSocket.z);
     const pickupRadius = Math.hypot(slotCenter.x - ARM.base.x, slotCenter.z - ARM.base.z);
     const pickupHandleY = pickupSocket.y;
-    const modelRadius = pickupRadius + 4.15 + (i % 2) * 1.05;
+    const modelRadius = pickupRadius + 5.1 + (i % 2) * 1.55;
     const modelCenter = ARM.base.clone().addScaledVector(dir, modelRadius);
     modelCenter.y = 0;
 
@@ -721,25 +747,25 @@ function createAllStations() {
 
     // Object pedestal, farther away from the arm than the page slot.
     const pad = box(1.52, .10, 1.12, .12, 0x273238, .80, .08);
-    pad.position.set(modelCenter.x, .06, modelCenter.z);
+    pad.position.set(modelCenter.x, .05, modelCenter.z);
     pad.rotation.y = -theta + Math.PI / 2;
     root.add(pad);
 
-    const ring = mesh(new THREE.TorusGeometry(.50, .022, 12, 44), 0x74857c, .48, .20);
+    const ring = mesh(new THREE.TorusGeometry(.53, .022, 12, 44), 0x74857c, .48, .20);
     ring.rotation.x = Math.PI / 2;
     ring.position.set(modelCenter.x, .13, modelCenter.z);
     root.add(ring);
 
     const model = createTopicModel(entry.item.model, entry.key);
-    model.position.set(modelCenter.x, .16, modelCenter.z);
+    model.position.set(modelCenter.x, .18, modelCenter.z);
     model.rotation.y = Math.atan2(camera.position.x - modelCenter.x, camera.position.z - modelCenter.z);
-    model.scale.setScalar(.57);
+    model.scale.setScalar(.58);
     root.add(model);
 
     const stationLabel = createStationLabel(entry.item.label);
     const toCamera = new THREE.Vector3(camera.position.x - modelCenter.x, 0, camera.position.z - modelCenter.z).normalize();
-    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .72);
-    stationLabel.position.y = .25;
+    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .84);
+    stationLabel.position.y = .28;
     stationLabel.lookAt(camera.position.x, .25, camera.position.z);
     root.add(stationLabel);
 
@@ -857,7 +883,7 @@ function createStationLabel(text) {
 
   const words = text.split(/\s+/);
   let line1 = '', line2 = '';
-  ctx.font = '700 54px Inter, Arial';
+  ctx.font = '700 58px Inter, Arial';
   for (const word of words) {
     const try1 = line1 ? `${line1} ${word}` : word;
     if (ctx.measureText(try1).width <= 840 || !line1) line1 = try1;
@@ -868,7 +894,7 @@ function createStationLabel(text) {
 
   if (line2) {
     ctx.fillText(line1, 490, 72);
-    ctx.font = '700 48px Inter, Arial';
+    ctx.font = '700 51px Inter, Arial';
     ctx.fillText(line2, 490, 132);
   } else {
     while (ctx.measureText(line1).width > 850 && line1.length > 14) line1 = line1.slice(0, -2);
@@ -879,7 +905,7 @@ function createStationLabel(text) {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.06, .42),
+    new THREE.PlaneGeometry(2.22, .46),
     new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, toneMapped: false })
   );
   plane.renderOrder = 3;
@@ -1145,6 +1171,7 @@ function updateNav() {
 
 // ---------- board transition helpers ----------
 function tweenLocalTransform(parent, object, to, duration = 240, onComplete) {
+  duration = Math.round(duration * BOARD_MOTION_SCALE);
   const from = { p: object.position.clone(), q: object.quaternion.clone(), s: object.scale.clone() };
   if (state.reducedMotion) {
     object.position.copy(to.p); object.quaternion.copy(to.q); object.scale.copy(to.s); if (onComplete) onComplete(); return Promise.resolve();
@@ -1182,7 +1209,7 @@ async function slideBoardIn(station) {
 function beginHold(station) {
   const board = station.board;
   scene.attach(board);
-  board.scale.setScalar(1.05);
+  board.scale.setScalar(1.12);
   state.heldBoard = board;
   state.heldStation = station;
   const socket = socketWorld();
@@ -1205,7 +1232,7 @@ function heldBoardTargetPose(socket, swingX = 0, swingZ = 0) {
   const q = facing.quaternion.clone();
   q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX, 0, swingZ)));
   const viewDir = new THREE.Vector3(camera.position.x - socket.x, camera.position.y - socket.y, camera.position.z - socket.z).normalize();
-  const presentationOffset = viewDir.multiplyScalar(1.18);
+  const presentationOffset = viewDir.multiplyScalar(2.15);
   const localHandle = new THREE.Vector3(BOARD.handleX * BOARD.stationScale, BOARD.handleY * BOARD.stationScale, 0).applyQuaternion(q);
   return { position: socket.clone().add(presentationOffset).sub(localHandle), quaternion: q };
 }
