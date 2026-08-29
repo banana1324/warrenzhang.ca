@@ -301,20 +301,20 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.06;
-renderer.setClearColor(0x090c11, 1);
+renderer.setClearColor(0x05080c, 1);
 renderer.setScissorTest(true);
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x0c1215, 18, 38);
+scene.fog = new THREE.Fog(0x070b0f, 17, 37);
 
-const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-camera.position.set(1.3, 5.15, 14.35);
-const CAMERA_TARGET = new THREE.Vector3(1.45, 2.08, 1.56);
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+camera.position.set(1.45, 5.18, 13.90);
+const CAMERA_TARGET = new THREE.Vector3(1.45, 2.72, 1.85);
 camera.lookAt(CAMERA_TARGET);
 
-scene.add(new THREE.HemisphereLight(0xf9fbff, 0x262117, 2.2));
-const keyLight = new THREE.DirectionalLight(0xffefd8, 3.75);
-keyLight.position.set(0, 10.5, 7.2);
+scene.add(new THREE.HemisphereLight(0xeef7ff, 0x120d08, 2.05));
+const keyLight = new THREE.DirectionalLight(0xffe4c2, 4.25);
+keyLight.position.set(1.3, 11.2, 6.4);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(2048, 2048);
 keyLight.shadow.camera.left = -10;
@@ -322,11 +322,11 @@ keyLight.shadow.camera.right = 10;
 keyLight.shadow.camera.top = 10;
 keyLight.shadow.camera.bottom = -10;
 scene.add(keyLight);
-const fillLight = new THREE.PointLight(0x6eb4aa, 8.2, 20);
-fillLight.position.set(0, 5.4, 3.8);
+const fillLight = new THREE.PointLight(0x68b8ff, 11.0, 24);
+fillLight.position.set(2.1, 5.2, 1.7);
 scene.add(fillLight);
-const rimLight = new THREE.DirectionalLight(0xe2c79d, .72);
-rimLight.position.set(5.5, 5.2, -3.5);
+const rimLight = new THREE.DirectionalLight(0xffa34d, .92);
+rimLight.position.set(6.0, 6.4, -4.8);
 scene.add(rimLight);
 
 function mat(color, roughness = .55, metalness = .15) {
@@ -362,92 +362,177 @@ function disposeObject(object) {
 }
 
 // ---------- environment ----------
-const floor = box(18.8, .24, 13.2, .08, 0x273237, .90, .04);
-floor.position.set(0, -.12, 1.35);
+const floorMat = new THREE.MeshPhysicalMaterial({
+  color:0x11171d, roughness:.28, metalness:.68, clearcoat:.24, clearcoatRoughness:.38
+});
+const floor = new THREE.Mesh(new RoundedBoxGeometry(20.8, .22, 13.6, 5, .08), floorMat);
+floor.position.set(1.0, -.11, 1.45);
+floor.receiveShadow = true;
 scene.add(floor);
-const grid = new THREE.GridHelper(18.2, 28, 0x56636a, 0x364147);
-grid.position.set(0, .012, 1.4);
-grid.scale.z = .70;
-grid.material.opacity = .30;
+
+const grid = new THREE.GridHelper(19.8, 32, 0x234963, 0x182935);
+grid.position.set(1.0, .018, 1.48);
+grid.scale.z = .72;
+grid.material.opacity = .24;
 grid.material.transparent = true;
 scene.add(grid);
-const rear = box(17.0, 5.6, .14, .05, 0x20272a, .88, .03);
-rear.position.set(0, 2.70, -3.1);
-scene.add(rear);
-const sideL = box(.14, 5.6, 10.0, .05, 0x171d20, .90, .02); sideL.position.set(-8.5, 2.70, 1.4); scene.add(sideL);
-const sideR = sideL.clone(); sideR.position.x = 8.5; scene.add(sideR);
-const glow = mesh(new THREE.CircleGeometry(1.1, 40), 0x72a899, .4, .05);
-glow.material.transparent = true; glow.material.opacity = .075; glow.position.set(0, 3.0, -2.96); scene.add(glow);
-const hoseA = tubePath([new THREE.Vector3(-2.2,5.0,-2.96), new THREE.Vector3(-2.0,4.0,-2.0), new THREE.Vector3(-1.2,3.4,-1.4), new THREE.Vector3(-.45,2.5,-.82)], .065, 0x1b2225, .62, .08);
-const hoseB = tubePath([new THREE.Vector3(2.2,5.0,-2.96), new THREE.Vector3(2.0,4.0,-2.0), new THREE.Vector3(1.2,3.4,-1.4), new THREE.Vector3(.45,2.5,-.82)], .065, 0x1b2225, .62, .08);
-scene.add(hoseA, hoseB);
 
-const warmPool = new THREE.PointLight(0xe4b873, 4.8, 9);
-warmPool.position.set(4.2, 2.4, 3.8);
-scene.add(warmPool);
-const coolPool = new THREE.PointLight(0x77a999, 3.8, 8);
-coolPool.position.set(-4.8, 2.1, 4.2);
-scene.add(coolPool);
+const rear = box(19.2, 6.7, .18, .05, 0x090d12, .72, .24);
+rear.position.set(1.0, 3.28, -3.38);
+scene.add(rear);
+const sideL = box(.16, 6.7, 11.6, .05, 0x080c10, .78, .20); sideL.position.set(-8.55, 3.28, 1.5); scene.add(sideL);
+const sideR = sideL.clone(); sideR.position.x = 10.55; scene.add(sideR);
+
+// Repeating industrial wall bays, vertical light bars and structural columns.
+for (let i = 0; i < 8; i++) {
+  const x = -7.6 + i * 2.45;
+  const bay = box(1.92, 4.90, .11, .035, i % 2 ? 0x101820 : 0x0d141b, .74, .22);
+  bay.position.set(x + .8, 3.15, -3.23);
+  scene.add(bay);
+
+  const column = box(.18, 5.75, .28, .03, 0x27323b, .38, .66);
+  column.position.set(x - .16 + .8, 3.12, -3.02);
+  scene.add(column);
+
+  if (i % 2 === 0) {
+    const blue = box(.055, 2.35, .055, .012, 0x7bc8ff, .20, .16);
+    blue.material.emissive.setHex(0x2a91d0); blue.material.emissiveIntensity = 2.2;
+    blue.position.set(x + .49 + .8, 3.30, -3.04);
+    scene.add(blue);
+  }
+}
+
+// Ceiling beams and warm practical lights.
+for (let i = 0; i < 6; i++) {
+  const beam = box(18.4, .12, .26, .03, 0x1e272e, .34, .72);
+  beam.position.set(1.0, 6.30, -2.6 + i * 1.78);
+  scene.add(beam);
+  if (i < 4) {
+    const lamp = box(1.00, .055, .08, .02, 0xffbc70, .18, .08);
+    lamp.material.emissive.setHex(0xff8a32); lamp.material.emissiveIntensity = 2.8;
+    lamp.position.set(i % 2 ? 6.3 : -4.5, 6.18, -2.34 + i * 1.72);
+    lamp.rotation.y = i % 2 ? -.18 : .18;
+    scene.add(lamp);
+  }
+}
+
+function makeScreen(x,y,z,w,h,accent=0x56b9ff) {
+  const frame = box(w+.16, h+.16, .10, .035, 0x111820, .34, .46);
+  frame.position.set(x,y,z); scene.add(frame);
+  const panel = box(w,h,.025,.02,0x07131c,.25,.05);
+  panel.position.set(x,y,z+.065);
+  panel.material.emissive.setHex(accent); panel.material.emissiveIntensity=.38;
+  scene.add(panel);
+  for (let r=0;r<4;r++) {
+    const line=box(w*.66,.018,.010,.003,r===0?0x7dccff:0x2c6688,.25,.05);
+    line.position.set(x-w*.08,y+h*.26-r*h*.17,z+.083);
+    line.material.emissive.setHex(r===0?0x5fc8ff:0x245873); line.material.emissiveIntensity=1.2;
+    scene.add(line);
+  }
+}
+makeScreen(7.05,2.20,-3.03,1.62,1.02);
+makeScreen(7.05,1.02,-3.03,1.62,.72,0x58d6b4);
+makeScreen(-5.55,2.10,-3.03,1.36,.82,0x5ea9ff);
+
+function makeWallMark() {
+  const c=document.createElement('canvas'); c.width=700; c.height=1100;
+  const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle='rgba(255,255,255,.86)'; ctx.font='800 210px Inter, Arial'; ctx.fillText('WZ',74,260);
+  ctx.fillStyle='rgba(145,176,194,.88)'; ctx.font='700 54px Inter, Arial';
+  ctx.fillText('ENGINEER.',82,390); ctx.fillText('BUILDER.',82,462); ctx.fillText('EDUCATOR.',82,534);
+  const tex=new THREE.CanvasTexture(c); tex.colorSpace=THREE.SRGBColorSpace;
+  const p=new THREE.Mesh(new THREE.PlaneGeometry(1.45,2.28),new THREE.MeshBasicMaterial({map:tex,transparent:true,toneMapped:false}));
+  p.position.set(8.35,3.15,-3.10); p.rotation.y=-.04; scene.add(p);
+}
+makeWallMark();
+
+const warmPool = new THREE.PointLight(0xff8d38, 5.8, 10);
+warmPool.position.set(5.9, 2.4, 3.8); scene.add(warmPool);
+const coolPool = new THREE.PointLight(0x3d9fe5, 7.4, 11);
+coolPool.position.set(-3.7, 2.5, 3.4); scene.add(coolPool);
 
 // ---------- arm ----------
 const ARM = {
-  base: new THREE.Vector3(-3.65, .64, -1.08),
-  lengths: [1.96, 2.46, 2.18, 1.58],
-  radius: [.34, .28, .24, .20]
+  base: new THREE.Vector3(-4.18, .68, -.88),
+  lengths: [2.20, 2.70, 2.50, 1.80],
+  radius: [.37, .31, .26, .22]
 };
 
 const ARM_POSES = {
-  // Parked high and to the left, like a large industrial arm waiting off the main stage.
-  safe: [1.52, -.34, -.14, -.10],
-  // Exact pickup pose for the docked page beside each topic object.
-  pickup: [1.20, -.18, -.06, -.04],
-  // Slightly raised / retracted pose used immediately after the page is grabbed.
-  lift: [1.36, -.24, -.02, -.06],
-  // Presentation pose toward the visitor.
-  present: [1.00, -.12, .04, -.04]
+  // Entire arm and page are beyond the left edge in this pose.
+  offscreen: [1.08, -.22, .06, -.04],
+  // Heavy, high carry pose used when moving a sheet away from the visitor.
+  carry: [1.02, -.18, .05, -.03],
+  // Close presentation: the gripper itself is close enough that the panel fills the viewport.
+  present: [1.00, -.15, .03, -.02]
 };
 
-const ARM_MOTION_SCALE = 2.45;
-const GRIP_MOTION_SCALE = 1.65;
-const BOARD_MOTION_SCALE = 1.25;
+const ARM_MOTION_SCALE = 2.35;
+const GRIP_MOTION_SCALE = 1.55;
+const BOARD_MOTION_SCALE = 1.0;
+const PRESENT_YAW = .56;
+const OFFSCREEN_YAW = Math.PI;
+const HELD_BOARD_SCALE = 1.22;
 
-const armState = { yaw: 0.62, angles: [...ARM_POSES.safe], grip: .26 };
-const armVisual = { root: null, links: [], joints: [], wrist: null, fl: null, fr: null, socket: null };
+const armState = { yaw: OFFSCREEN_YAW, angles: [...ARM_POSES.offscreen], grip: .095 };
+const armVisual = { root:null, links:[], joints:[], wrist:null, fl:null, fr:null, socket:null };
 
-function buildArm() {
-  const root = new THREE.Group();
-  const plinth = mesh(new THREE.CylinderGeometry(.95, 1.18, .42, 46), 0x080a0e, .58, .28);
-  plinth.position.copy(ARM.base).setY(.18);
-  root.add(plinth);
-  const column = mesh(new THREE.CylinderGeometry(.72, .62, 1.12, 38), 0x48575a, .48, .54);
-  column.position.copy(ARM.base).setY(.62);
-  root.add(column);
-  const collar = mesh(new THREE.TorusGeometry(.75, .08, 20, 48), 0x8bb8aa, .28, .58);
-  collar.position.copy(ARM.base).setY(1.14); collar.rotation.x = Math.PI / 2;
-  root.add(collar);
-
-  for (let i = 0; i < ARM.lengths.length; i++) {
-    const link = mesh(new THREE.CylinderGeometry(ARM.radius[i], ARM.radius[i], 1, 34), 0x7f8c8c, .40, .62);
-    root.add(link); armVisual.links.push(link);
-    const joint = new THREE.Group();
-    const shell = mesh(new THREE.SphereGeometry(ARM.radius[i] + .08, 28, 22), 0x060a10, .36, .36);
-    joint.add(shell);
-    const ring = mesh(new THREE.TorusGeometry(ARM.radius[i] + .075, .028, 18, 42), 0x9bc9bb, .24, .62);
-    ring.rotation.x = Math.PI / 2; joint.add(ring);
-    root.add(joint); armVisual.joints.push(joint);
+function addBolt(parent, x, y, z, scale=.055) {
+  const bolt = mesh(new THREE.CylinderGeometry(scale, scale, scale*.45, 12), 0xb5bcc2, .22, .86);
+  bolt.rotation.x = Math.PI/2; bolt.position.set(x,y,z); parent.add(bolt);
+}
+function createIndustrialLink(index) {
+  const g=new THREE.Group();
+  const r=ARM.radius[index];
+  const core=box(r*2.05,1,r*1.55,.055,0x4b5055,.32,.82); g.add(core);
+  const inset=box(r*1.44,.82,r*1.62,.035,0x20262c,.40,.55); inset.position.z=.045; g.add(inset);
+  const railL=box(.065,.88,r*1.80,.022,0x8e9497,.24,.88); railL.position.x=-r*.91; g.add(railL);
+  const railR=railL.clone(); railR.position.x=r*.91; g.add(railR);
+  const cable=box(.075,.78,.075,.028,0x0b0d0f,.72,.12); cable.position.set(r*1.04,.02,-r*.66); g.add(cable);
+  for (const yy of [-.34,.34]) { addBolt(g,-r*.94,yy,r*.82,.045); addBolt(g,r*.94,yy,r*.82,.045); }
+  const caution=box(r*.62,.035,.025,.006,0xe88b32,.24,.30); caution.position.set(0,.05,r*.82); g.add(caution);
+  return g;
+}
+function createIndustrialJoint(index) {
+  const g=new THREE.Group();
+  const r=ARM.radius[Math.min(index,ARM.radius.length-1)] + .16;
+  const housing=mesh(new THREE.CylinderGeometry(r,r,.38,38),0x171b1f,.28,.82);
+  housing.rotation.z=Math.PI/2; g.add(housing);
+  const capL=mesh(new THREE.CylinderGeometry(r*.76,r*.76,.065,32),0x6c7378,.22,.88); capL.rotation.z=Math.PI/2; capL.position.x=-.22; g.add(capL);
+  const capR=capL.clone(); capR.position.x=.22; g.add(capR);
+  const ring=mesh(new THREE.TorusGeometry(r*.80,.035,16,42),0x2f8ed0,.20,.65); ring.rotation.y=Math.PI/2; ring.position.x=.255; ring.material.emissive.setHex(0x17496d); ring.material.emissiveIntensity=.8; g.add(ring);
+  for(let i=0;i<8;i++){
+    const a=i/8*Math.PI*2; const b=mesh(new THREE.CylinderGeometry(.032,.032,.025,10),0xc5c9cb,.18,.90);
+    b.rotation.z=Math.PI/2; b.position.set(.264,Math.cos(a)*r*.55,Math.sin(a)*r*.55); g.add(b);
   }
+  return g;
+}
+function buildArm() {
+  const root=new THREE.Group();
 
-  const wrist = new THREE.Group();
-  const wristBody = box(.38, .24, .58, .05, 0x090e15, .44, .32); wrist.add(wristBody);
-  const wristCollar = mesh(new THREE.CylinderGeometry(.16, .16, .22, 24), 0x9bc9bb, .24, .62);
-  wristCollar.rotation.z = Math.PI / 2; wristCollar.position.z = -.08; wrist.add(wristCollar);
-  const fl = box(.10, .58, .10, .02, 0xcbd6df, .22, .6); fl.position.set(-.15, -.24, .12); wrist.add(fl);
-  const fr = box(.10, .58, .10, .02, 0xcbd6df, .22, .6); fr.position.set(.15, -.24, .12); wrist.add(fr);
-  const tipL = box(.08, .16, .16, .02, 0x0c1118, .46, .18); tipL.position.set(0, -.34, .10); fl.add(tipL);
-  const tipR = box(.08, .16, .16, .02, 0x0c1118, .46, .18); tipR.position.set(0, -.34, .10); fr.add(tipR);
-  const socket = new THREE.Object3D(); socket.position.set(0, -.47, .24); wrist.add(socket);
+  const baseFoot=mesh(new THREE.CylinderGeometry(1.05,1.22,.26,54),0x080a0c,.28,.78); baseFoot.position.copy(ARM.base).setY(.13); root.add(baseFoot);
+  const baseRing=mesh(new THREE.TorusGeometry(.98,.085,20,56),0x2f3438,.22,.88); baseRing.position.copy(ARM.base).setY(.28); baseRing.rotation.x=Math.PI/2; root.add(baseRing);
+  const lower=mesh(new THREE.CylinderGeometry(.78,.92,.72,46),0x30363b,.30,.82); lower.position.copy(ARM.base).setY(.62); root.add(lower);
+  const bearing=mesh(new THREE.CylinderGeometry(.70,.70,.34,44),0x111418,.24,.88); bearing.position.copy(ARM.base).setY(1.05); root.add(bearing);
+  const crown=mesh(new THREE.TorusGeometry(.70,.065,18,48),0x2e91d0,.18,.65); crown.position.copy(ARM.base).setY(1.22); crown.rotation.x=Math.PI/2; crown.material.emissive.setHex(0x154969); crown.material.emissiveIntensity=.9; root.add(crown);
+  for(let i=0;i<12;i++){ const a=i/12*Math.PI*2; const b=mesh(new THREE.CylinderGeometry(.045,.045,.035,10),0xc2c6c9,.20,.9); b.position.set(ARM.base.x+Math.cos(a)*.87,.29,ARM.base.z+Math.sin(a)*.87); root.add(b); }
+
+  for(let i=0;i<ARM.lengths.length;i++) { const link=createIndustrialLink(i); root.add(link); armVisual.links.push(link); }
+  for(let i=0;i<ARM.lengths.length;i++) { const joint=createIndustrialJoint(i); root.add(joint); armVisual.joints.push(joint); }
+
+  const wrist=new THREE.Group();
+  const wristDrive=mesh(new THREE.CylinderGeometry(.31,.31,.54,32),0x161a1f,.24,.84); wristDrive.rotation.z=Math.PI/2; wrist.add(wristDrive);
+  const wristBand=mesh(new THREE.TorusGeometry(.315,.034,14,38),0x2d92d4,.18,.68); wristBand.rotation.y=Math.PI/2; wristBand.position.x=.28; wrist.add(wristBand);
+  const palm=box(.58,.30,.46,.055,0x252a2f,.30,.72); palm.position.y=-.26; wrist.add(palm);
+  const jawRail=box(.72,.11,.16,.025,0x9ca4aa,.22,.88); jawRail.position.set(0,-.43,.12); wrist.add(jawRail);
+  const fl=box(.13,.66,.15,.025,0xb7bdc1,.22,.88); fl.position.set(-.20,-.71,.12); wrist.add(fl);
+  const fr=fl.clone(); fr.position.x=.20; wrist.add(fr);
+  const tipL=box(.12,.18,.24,.022,0x121519,.52,.30); tipL.position.set(0,-.39,.06); fl.add(tipL);
+  const tipR=tipL.clone(); fr.add(tipR);
+  addBolt(palm,-.20,0,.24,.038); addBolt(palm,.20,0,.24,.038);
+  const socket=new THREE.Object3D(); socket.position.set(0,-1.10,.145); wrist.add(socket);
   root.add(wrist);
-  armVisual.root = root; armVisual.wrist = wrist; armVisual.fl = fl; armVisual.fr = fr; armVisual.socket = socket;
+  armVisual.root=root; armVisual.wrist=wrist; armVisual.fl=fl; armVisual.fr=fr; armVisual.socket=socket;
   scene.add(root);
 }
 
@@ -473,7 +558,7 @@ function armSocketForPose(yaw, angles) {
   const end = armWorldPoints(yaw, angles).at(-1);
   // Mirrors the wrist visual transform used in updateArmVisual().
   const wristQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -yaw + Math.PI / 2, 0));
-  const socketOffset = new THREE.Vector3(0, -.47, .24).applyQuaternion(wristQ);
+  const socketOffset = new THREE.Vector3(0, -1.10, .145).applyQuaternion(wristQ);
   return end.clone().add(socketOffset);
 }
 function placeLink(o, a, b) {
@@ -481,7 +566,7 @@ function placeLink(o, a, b) {
   const mid = a.clone().add(b).multiplyScalar(.5);
   o.position.copy(mid);
   o.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
-  o.scale.set(1, Math.max(.1, len - .20), 1);
+  o.scale.set(1, Math.max(.1, len - .28), 1);
 }
 function updateArmVisual() {
   const p = armWorldPoints();
@@ -524,138 +609,97 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width: 4.5, height: 5.28, thickness: .075, handleX: 0.0, handleY: 2.45, stationScale: 1.02 };
-function createBoard(section, item, index) {
-  const group = new THREE.Group();
-  const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf7f7f5, .96, .01);
-  group.add(base);
+const BOARD = { width:5.05, height:5.30, thickness:.095, handleX:0, handleY:2.78, stationScale:1 };
+function createBoard(section,item,index) {
+  const group=new THREE.Group();
+  const back=box(BOARD.width,BOARD.height,BOARD.thickness,.075,0xe8e4dd,.78,.02); group.add(back);
+  const rim=box(BOARD.width+.12,BOARD.height+.12,.055,.085,0xd1cec8,.58,.05); rim.position.z=-.055; group.add(rim);
 
-  const clip = box(.52, .19, .28, .04, 0xc5cbd0, .48, .30);
-  clip.position.set(0, BOARD.height / 2 - .06, .12);
-  group.add(clip);
+  // Physical clamp bar that the gripper actually holds.
+  const clampBase=box(.72,.20,.24,.045,0x8b9297,.28,.72); clampBase.position.set(0,BOARD.height/2-.08,.10); group.add(clampBase);
+  const gripTab=box(.055,.34,.19,.018,0x34393e,.22,.90); gripTab.position.set(0,BOARD.handleY,.145); group.add(gripTab);
+  const cap=box(.34,.09,.27,.025,0x70777d,.24,.82); cap.position.set(0,BOARD.height/2+.18,.12); group.add(cap);
+  for(const x of [-.22,.22]) addBolt(clampBase,x,0,.14,.035);
+  const handleAnchor=new THREE.Object3D(); handleAnchor.position.set(BOARD.handleX,BOARD.handleY,.145); group.add(handleAnchor); group.userData.handleAnchor=handleAnchor;
 
-  const handleAnchor = new THREE.Object3D();
-  handleAnchor.position.set(BOARD.handleX, BOARD.handleY, .045);
-  group.add(handleAnchor);
-  group.userData.handleAnchor = handleAnchor;
+  const canvas=document.createElement('canvas'); canvas.width=2400; canvas.height=3000;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#f3f0ea'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  // subtle paper grain
+  for(let i=0;i<6500;i++){ const a=Math.random()*.026; ctx.fillStyle=`rgba(55,48,42,${a})`; const x=Math.random()*2400,y=Math.random()*3000; ctx.fillRect(x,y,1,1); }
 
-  const canvas = document.createElement('canvas');
-  canvas.width = 2200;
-  canvas.height = 2700;
-  const ctx = canvas.getContext('2d');
+  ctx.fillStyle='#194777'; ctx.font='700 32px Inter, Arial'; ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,120,145);
+  ctx.fillStyle='#111820'; ctx.font='800 104px Inter, Arial';
+  const titleEnd=wrapText(ctx,item.title,120,285,2160,112);
+  ctx.fillStyle='#4d535a'; ctx.font='500 42px Inter, Arial';
+  const metaEnd=wrapText(ctx,item.meta,120,titleEnd+64,2160,52);
+  drawOutlinePills(ctx,item.tags.slice(0,6),120,metaEnd+54,2160);
+  const descY=metaEnd+155;
+  ctx.fillStyle='#20262c'; ctx.font='500 42px Inter, Arial';
+  const descEnd=wrapText(ctx,item.description,120,descY,2160,58);
 
-  // Apple / modern resume-sheet palette.
-  ctx.fillStyle = '#f7f7f5';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = '#111318';
-  ctx.font = '700 34px Inter, Arial';
-  ctx.fillText('WARREN ZHANG', 110, 126);
-
-  ctx.textAlign = 'right';
-  ctx.fillStyle = '#7c858f';
-  ctx.font = '600 34px Inter, Arial';
-  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index + 1).padStart(2, '0')}`, 1874, 126);
-  ctx.textAlign = 'left';
-
-  ctx.fillStyle = '#5a8e83';
-  ctx.fillRect(110, 156, 62, 6);
-
-  ctx.fillStyle = '#111318';
-  ctx.font = '700 88px Inter, Arial';
-  const titleEnd = wrapText(ctx, item.title, 110, 300, 1940, 108);
-
-  ctx.fillStyle = '#68717c';
-  ctx.font = '500 42px Inter, Arial';
-  const metaEnd = wrapText(ctx, item.meta, 110, titleEnd + 74, 1940, 58);
-
-  ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(110, metaEnd + 58, 1760, 2);
-
-  ctx.fillStyle = '#8a929c';
-  ctx.font = '700 29px Inter, Arial';
-  ctx.fillText('PROFILE', 110, metaEnd + 122);
-
-  ctx.fillStyle = '#272d35';
-  ctx.font = '500 46px Inter, Arial';
-  const summaryEnd = wrapText(ctx, item.description, 110, metaEnd + 198, 1940, 66);
-
-  // Impact row: resume style, no cards around cards.
-  const metricTop = Math.max(summaryEnd + 92, 930);
-  ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(110, metricTop - 40, 1760, 2);
-
-  item.metrics.slice(0, 3).forEach((m, i) => {
-    const x = 110 + i * 588;
-    if (i > 0) {
-      ctx.fillStyle = '#dfe3e7';
-      ctx.fillRect(x - 34, metricTop + 2, 2, 122);
-    }
-    ctx.fillStyle = '#111318';
-    ctx.font = '700 60px Inter, Arial';
-    wrapText(ctx, m[0], x, metricTop + 48, 520, 62);
-    ctx.fillStyle = '#7b848e';
-    ctx.font = '600 28px Inter, Arial';
-    wrapText(ctx, m[1], x, metricTop + 104, 520, 38);
+  // Five compact metric cards like the reference image.
+  const metrics=[...item.metrics.slice(0,3)];
+  let tagIndex=0;
+  while(metrics.length<5 && tagIndex<item.tags.length){ metrics.push([item.tags[tagIndex], metrics.length===3?'primary tool':'technical focus']); tagIndex++; }
+  const metricY=Math.max(descEnd+100,1040), cardGap=20, cardW=(2160-cardGap*4)/5, cardH=238;
+  metrics.slice(0,5).forEach((m,i)=>{
+    const x=120+i*(cardW+cardGap);
+    strokeRoundRect(ctx,x,metricY,cardW,cardH,26,'#cbc8c2',3);
+    ctx.fillStyle='#123f74'; ctx.font='800 48px Inter, Arial';
+    wrapText(ctx,String(m[0]),x+30,metricY+76,cardW-60,52);
+    ctx.fillStyle='#4f555c'; ctx.font='600 27px Inter, Arial';
+    wrapText(ctx,String(m[1]),x+30,metricY+150,cardW-60,34);
   });
 
-  const contribTop = metricTop + 218;
-  ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(110, contribTop - 38, 1760, 2);
-  ctx.fillStyle = '#8a929c';
-  ctx.font = '700 29px Inter, Arial';
-  ctx.fillText('SELECTED CONTRIBUTIONS', 110, contribTop + 30);
+  const lowerTop=metricY+cardH+95;
+  const colGap=52, colW=(2160-colGap*2)/3;
+  const colXs=[120,120+colW+colGap,120+(colW+colGap)*2];
+  const headers=['KEY CONTRIBUTIONS','ROLE & SCOPE','IMPACT & OUTCOMES'];
+  headers.forEach((h,i)=>{ ctx.fillStyle='#194777'; ctx.font='800 28px Inter, Arial'; ctx.fillText(h,colXs[i],lowerTop); });
 
-  let y = contribTop + 102;
-  ctx.font = '500 46px Inter, Arial';
-  item.details.slice(0, 5).forEach(line => {
-    ctx.fillStyle = '#5a8e83';
-    ctx.beginPath();
-    ctx.arc(120, y - 12, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#252c34';
-    y = wrapText(ctx, line, 152, y, 1860, 52) + 32;
-  });
+  // Contributions column.
+  let y=lowerTop+62; ctx.font='500 31px Inter, Arial';
+  item.details.slice(0,5).forEach(line=>{ ctx.fillStyle='#194777'; ctx.beginPath(); ctx.arc(colXs[0]+8,y-10,5,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#22272d'; y=wrapText(ctx,line,colXs[0]+28,y,colW-28,40)+24; });
 
-  const scopeTop = y + 34;
-  ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(110, scopeTop, 1760, 2);
-  ctx.fillStyle = '#8a929c';
-  ctx.font = '700 29px Inter, Arial';
-  ctx.fillText('ROLE / SCOPE', 110, scopeTop + 56);
+  // Role/scope column.
+  ctx.fillStyle='#262b31'; ctx.font='500 31px Inter, Arial';
+  const scopeEnd=wrapText(ctx,getScopeText(section,item),colXs[1],lowerTop+62,colW,42);
+  ctx.fillStyle='#59616a'; ctx.font='700 25px Inter, Arial'; ctx.fillText('FOCUS',colXs[1],scopeEnd+55);
+  ctx.fillStyle='#252a31'; ctx.font='500 29px Inter, Arial';
+  let sy=scopeEnd+104; item.tags.slice(0,5).forEach(tag=>{ ctx.fillText(`• ${tag}`,colXs[1],sy); sy+=39; });
 
-  ctx.fillStyle = '#252c34';
-  ctx.font = '500 39px Inter, Arial';
-  const scopeText = getScopeText(section, item);
-  const scopeEnd = wrapText(ctx, scopeText, 110, scopeTop + 124, 1940, 52);
+  // Impact column only uses facts already present on the item.
+  ctx.fillStyle='#22272d'; ctx.font='500 31px Inter, Arial';
+  let iy=lowerTop+62;
+  item.metrics.slice(0,3).forEach(([value,label])=>{ ctx.fillStyle='#194777'; ctx.fillText('✓',colXs[2],iy); ctx.fillStyle='#22272d'; iy=wrapText(ctx,`${value} — ${label}`,colXs[2]+32,iy,colW-32,40)+28; });
+  ctx.fillStyle='#194777'; ctx.fillText('✓',colXs[2],iy); ctx.fillStyle='#22272d';
+  wrapText(ctx,'Built through repeated testing, debugging, documentation, and iteration rather than a one-off demo.',colXs[2]+32,iy,colW-32,40);
 
-  // Skills line at bottom keeps the page looking like a resume rather than a dashboard.
-  const skillsY = Math.max(scopeEnd + 140, 2140);
-  ctx.fillStyle = '#d5d9de';
-  ctx.fillRect(110, skillsY - 90, 1760, 2);
-  ctx.fillStyle = '#8a929c';
-  ctx.font = '700 23px Inter, Arial';
-  ctx.fillText('TOOLS / FOCUS', 110, skillsY + 8);
+  const footerY=2635;
+  ctx.strokeStyle='#c9c5bf'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(120,footerY); ctx.lineTo(2280,footerY); ctx.stroke();
+  ctx.fillStyle='#194777'; ctx.font='800 28px Inter, Arial'; ctx.fillText('TECH STACK',120,footerY+65); ctx.fillText('LINKS & RESOURCES',1250,footerY+65);
+  ctx.fillStyle='#252a31'; ctx.font='600 30px Inter, Arial';
+  wrapText(ctx,item.tags.slice(0,7).join('   ·   '),120,footerY+118,1010,40);
+  ctx.fillStyle='#252a31'; ctx.font='500 28px Inter, Arial';
+  ctx.fillText('github.com/banana1324',1250,footerY+118);
+  ctx.fillText('linkedin.com/in/fuyuanzhang',1250,footerY+160);
+  ctx.fillStyle='#777d84'; ctx.font='500 24px Inter, Arial';
+  ctx.fillText('warrenz7980@gmail.com    ·    Waterloo, ON / Richmond, BC',120,2918);
+  ctx.textAlign='right'; ctx.fillText('Built with code. Driven by curiosity.',2280,2918); ctx.textAlign='left';
 
-  ctx.fillStyle = '#2f5f96';
-  ctx.font = '600 36px Inter, Arial';
-  wrapText(ctx, item.tags.slice(0, 6).join('   ·   '), 110, skillsY + 66, 1760, 42);
-
-  ctx.fillStyle = '#a0a7af';
-  ctx.font = '500 26px Inter, Arial';
-  ctx.fillText('warrenz7980@gmail.com  ·  github.com/banana1324  ·  linkedin.com/in/fuyuanzhang', 110, 2570);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 16);
-
-  const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(BOARD.width - .18, BOARD.height - .18),
-    new THREE.MeshBasicMaterial({ map: texture, toneMapped: false })
-  );
-  plane.position.z = BOARD.thickness / 2 + .002;
-  group.add(plane);
+  const texture=new THREE.CanvasTexture(canvas); texture.colorSpace=THREE.SRGBColorSpace; texture.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),16);
+  const plane=new THREE.Mesh(new THREE.PlaneGeometry(BOARD.width-.20,BOARD.height-.20),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
+  plane.position.z=BOARD.thickness/2+.006; group.add(plane);
+  group.userData.texture=texture;
   return group;
+}
+function drawOutlinePills(ctx,pills,x,y,maxWidth){
+  ctx.font='600 24px Inter, Arial'; let cx=x,cy=y;
+  pills.forEach(label=>{ const w=ctx.measureText(label).width+38; if(cx+w>maxWidth+x){cx=x;cy+=52;} strokeRoundRect(ctx,cx,cy,w,38,17,'#aeb7c0',2); ctx.fillStyle='#174878';ctx.fillText(label,cx+19,cy+27);cx+=w+12; });
+}
+function strokeRoundRect(ctx,x,y,w,h,r,stroke,width=2){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();
 }
 
 function getScopeText(section, item) {
@@ -701,216 +745,50 @@ function roundRect(ctx, x, y, w, h, r, fill) {
 }
 
 // ---------- stations ----------
-const STATION_RADIUS = 5.05;
-const rayTargets = [];
-const gltfLoader = new GLTFLoader();
-const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/refs/heads/main/2.0/Suzanne/glTF/Suzanne.gltf';
-
-function createAllStations() {
-  // Slots are on a precise inner circle matching the fixed pickup pose.
-  // Models sit farther out, alternating radii so the display objects do not overlap.
-  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(176), THREE.MathUtils.degToRad(4));
-  const displayOrder = [
-    'contact/contact',
-    'interests/music',
-    'experience/orchestra',
-    'projects/analog',
-    'interests/hardware',
-    'projects/vision',
-    'experience/coaching',
-    'experience/vex',
-    'experience/eim',
-    'projects/kc15',
-    'projects/wildfire',
-    'interests/blender',
-    'about/about',
-    'home/home'
-  ];
-  const orderedEntries = [
-    ...displayOrder.map(key => FLAT_ITEMS.find(entry => entry.key === key)).filter(Boolean),
-    ...FLAT_ITEMS.filter(entry => !displayOrder.includes(entry.key))
-  ];
-
-  orderedEntries.forEach((entry, i) => {
-    const theta = angles[i];
-    const dir = new THREE.Vector3(Math.cos(theta), 0, Math.sin(theta));
-    const pickupSocket = armSocketForPose(theta, ARM_POSES.pickup);
-    const slotCenter = new THREE.Vector3(pickupSocket.x, 0, pickupSocket.z);
-    const pickupRadius = Math.hypot(slotCenter.x - ARM.base.x, slotCenter.z - ARM.base.z);
-    const pickupHandleY = pickupSocket.y;
-    const modelRadius = pickupRadius + 5.1 + (i % 2) * 1.55;
-    const modelCenter = ARM.base.clone().addScaledVector(dir, modelRadius);
-    modelCenter.y = 0;
-
-    const root = new THREE.Group();
-    scene.add(root);
-
-    // Object pedestal, farther away from the arm than the page slot.
-    const pad = box(1.52, .10, 1.12, .12, 0x273238, .80, .08);
-    pad.position.set(modelCenter.x, .05, modelCenter.z);
-    pad.rotation.y = -theta + Math.PI / 2;
-    root.add(pad);
-
-    const ring = mesh(new THREE.TorusGeometry(.53, .022, 12, 44), 0x74857c, .48, .20);
-    ring.rotation.x = Math.PI / 2;
-    ring.position.set(modelCenter.x, .13, modelCenter.z);
-    root.add(ring);
-
-    const model = createTopicModel(entry.item.model, entry.key);
-    model.position.set(modelCenter.x, .18, modelCenter.z);
-    model.rotation.y = Math.atan2(camera.position.x - modelCenter.x, camera.position.z - modelCenter.z);
-    model.scale.setScalar(.58);
-    root.add(model);
-
-    const stationLabel = createStationLabel(entry.item.label);
-    const toCamera = new THREE.Vector3(camera.position.x - modelCenter.x, 0, camera.position.z - modelCenter.z).normalize();
-    stationLabel.position.copy(modelCenter).addScaledVector(toCamera, .84);
-    stationLabel.position.y = .28;
-    stationLabel.lookAt(camera.position.x, .25, camera.position.z);
-    root.add(stationLabel);
-
-    // A visible dock sits beside each topic object. The page does not pop out of the floor;
-    // it rests in a presentation cradle until the arm reaches over from the left to grab it.
-    const slotYaw = Math.PI / 2 - theta;
-    const tangent = new THREE.Vector3(Math.cos(theta + Math.PI / 2), 0, Math.sin(theta + Math.PI / 2));
-    const dockBase = box(1.02, .09, 1.26, .05, 0x12181d, .84, .05);
-    dockBase.position.set(slotCenter.x, .045, slotCenter.z);
-    dockBase.rotation.y = slotYaw;
-    root.add(dockBase);
-
-    const dockSpine = box(.10, 1.62, 1.08, .03, 0x1d252c, .62, .18);
-    dockSpine.position.set(slotCenter.x, .82, slotCenter.z);
-    dockSpine.rotation.y = slotYaw;
-    dockSpine.position.addScaledVector(tangent, -.26);
-    root.add(dockSpine);
-
-    const dockLip = box(.22, .10, 1.04, .03, 0x5c6872, .38, .24);
-    dockLip.position.set(slotCenter.x, .11, slotCenter.z);
-    dockLip.rotation.y = slotYaw;
-    dockLip.position.addScaledVector(tangent, .23);
-    root.add(dockLip);
-
-    const dockRails = box(.08, .12, 1.06, .03, 0x7b8a93, .30, .28);
-    dockRails.position.copy(dockLip.position).addScaledVector(tangent, .18);
-    dockRails.rotation.y = slotYaw;
-    root.add(dockRails);
-
-    const board = createBoard(entry.section, entry.item, entry.index);
-    board.scale.setScalar(BOARD.stationScale);
-    const shownCenterY = pickupHandleY - BOARD.handleY * BOARD.stationScale;
-    board.position.set(slotCenter.x, shownCenterY, slotCenter.z);
-    board.visible = false;
-    root.add(board);
-
-    const faceDummy = new THREE.Object3D();
-    faceDummy.position.copy(board.position);
-    faceDummy.lookAt(camera.position.x, board.position.y, camera.position.z);
-    const shownQ = faceDummy.quaternion.clone();
-    const dockQ = shownQ.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.24, 0, 0)));
-    const shownS = new THREE.Vector3(BOARD.stationScale, BOARD.stationScale, BOARD.stationScale);
-    const pickupP = board.position.clone();
-    const dockP = pickupP.clone().addScaledVector(tangent, -.18);
-    dockP.y -= .54;
-    const shownP = pickupP.clone();
-    board.quaternion.copy(dockQ);
-    board.userData.hiddenLocal = { p: dockP.clone(), q: dockQ.clone(), s: shownS.clone() };
-    board.userData.emergedLocal = { p: dockP.clone(), q: dockQ.clone(), s: shownS.clone() };
-    board.userData.pickupLocal = { p: pickupP.clone(), q: shownQ.clone(), s: shownS.clone() };
-    board.userData.shownLocal = { p: shownP, q: shownQ, s: shownS.clone() };
-
-    root.updateMatrixWorld(true);
-    ring.material.color.setHex(sectionAccent(entry.section));
-    ring.material.opacity = .76;
-    ring.material.transparent = true;
-
-    const station = {
-      ...entry, root, pad, ring, model, board,
-      slotBase: dockBase, slotBack: dockSpine, slotMouth: dockLip,
-      slotCenter: slotCenter.clone(), modelCenter: modelCenter.clone(),
-      pickupYaw: theta, pickupHandleY
-    };
-    state.stations.set(entry.key, station);
-
-    root.traverse(child => {
-      if (child.isMesh) child.userData.navKey = entry.key;
-      if (child.isMesh) rayTargets.push(child);
-    });
+const rayTargets=[];
+const gltfLoader=new GLTFLoader();
+const SUZANNE_URL='https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/refs/heads/main/2.0/Suzanne/glTF/Suzanne.gltf';
+const PODIUM_SCALE={
+  'interests/blender':.52, 'projects/kc15':.49, 'projects/wildfire':.50,
+  'experience/coaching':.43, 'projects/vision':.47, 'experience/orchestra':.38, 'experience/eim':.45
+};
+const PODIUM_LAYOUT={
+  'interests/blender':[-3.00,.12,5.02],
+  'projects/kc15':[-1.40,.12,5.14],
+  'projects/wildfire':[.20,.12,5.23],
+  'experience/coaching':[1.80,.12,5.27],
+  'projects/vision':[3.40,.12,5.22],
+  'experience/orchestra':[5.00,.12,5.10],
+  'experience/eim':[6.60,.12,4.92]
+};
+function sectionAccent(section){ return ({home:0x64b7ee,about:0x66c3f2,projects:0x53b6ff,experience:0x61c9f1,interests:0x63bde6,contact:0x64b7ee})[section]||0x5ab9f1; }
+function createPodiumLabel(text){
+  const c=document.createElement('canvas'); c.width=900;c.height=180;const ctx=c.getContext('2d');ctx.clearRect(0,0,900,180);
+  roundRect(ctx,8,8,884,164,44,'rgba(7,12,18,.94)');ctx.strokeStyle='rgba(68,179,247,.55)';ctx.lineWidth=4;ctx.stroke();
+  ctx.fillStyle='#f4f7fa';ctx.font='700 48px Inter, Arial';ctx.textAlign='center';ctx.textBaseline='middle';
+  let label=text;while(ctx.measureText(label).width>780&&label.length>12)label=label.slice(0,-2);if(label!==text)label+='…';ctx.fillText(label,450,90);
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;
+  const p=new THREE.Mesh(new THREE.PlaneGeometry(1.55,.31),new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false,toneMapped:false}));p.renderOrder=4;return p;
+}
+function createAllStations(){
+  FLAT_ITEMS.forEach(entry=>{
+    const root=new THREE.Group(); scene.add(root);
+    let pad=null,ring=null,model=null,label=null;
+    const pos=PODIUM_LAYOUT[entry.key];
+    if(pos){
+      pad=mesh(new THREE.CylinderGeometry(.66,.78,.18,38),0x111820,.32,.72);pad.position.set(pos[0],.09,pos[2]);root.add(pad);
+      const lower=mesh(new THREE.CylinderGeometry(.76,.82,.10,38),0x060a0e,.30,.72);lower.position.set(pos[0],.025,pos[2]);root.add(lower);
+      ring=mesh(new THREE.TorusGeometry(.72,.035,16,48),0x3cb5ff,.18,.54);ring.rotation.x=Math.PI/2;ring.position.set(pos[0],.19,pos[2]);ring.material.emissive.setHex(0x146a9d);ring.material.emissiveIntensity=1.2;root.add(ring);
+      model=createTopicModel(entry.item.model,entry.key);model.position.set(pos[0],.22,pos[2]);const baseScale=PODIUM_SCALE[entry.key]||.48;model.scale.setScalar(baseScale);model.userData.baseScale=baseScale;model.rotation.y=Math.atan2(camera.position.x-pos[0],camera.position.z-pos[2]);root.add(model);
+      label=createPodiumLabel(entry.item.label);const toCam=new THREE.Vector3(camera.position.x-pos[0],0,camera.position.z-pos[2]).normalize();label.position.set(pos[0],.28,pos[2]).addScaledVector(toCam,.70);label.lookAt(camera.position.x,.30,camera.position.z);root.add(label);
+      root.traverse(child=>{if(child.isMesh){child.userData.navKey=entry.key;rayTargets.push(child);}});
+    }
+    state.stations.set(entry.key,{...entry,root,pad,ring,model,label,board:null});
   });
 }
-function distributeAngles(count, start, end) {
-  if (count === 1) return [(start + end) / 2];
-  return Array.from({ length: count }, (_, i) => start + (end - start) * (i / (count - 1)));
-}
-function stationGuideWorld(station) {
-  // By construction, the fixed pickup pose lands exactly on this handle.
-  return armSocketForPose(station.pickupYaw, ARM_POSES.pickup);
-}
-function sectionAccent(section) {
-  return ({
-    home: 0x7aa9a0,
-    about: 0xc5a77b,
-    projects: 0x6faaa4,
-    experience: 0xd2a56f,
-    interests: 0x86a86f,
-    contact: 0xc48672
-  })[section] || 0x7aa9a0;
-}
-
-function setSelectedStation(key) {
-  state.selectedKey = key;
-  for (const [k, s] of state.stations) {
-    const selected = k === key;
-    s.ring.material.color.setHex(selected ? sectionAccent(s.section) : 0x64736c);
-    s.model.scale.setScalar(selected ? .72 : .50);
-    s.slotMouth.material.color.setHex(selected ? sectionAccent(s.section) : 0x05090a);
-    s.slotMouth.material.emissive?.setHex?.(selected ? sectionAccent(s.section) : 0x000000);
-    if (s.slotMouth.material.emissiveIntensity !== undefined) s.slotMouth.material.emissiveIntensity = selected ? .22 : 0;
-  }
-}
-
-function createStationLabel(text) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 980;
-  canvas.height = 196;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  roundRect(ctx, 10, 10, 960, 176, 40, 'rgba(10,15,22,0.90)');
-  ctx.strokeStyle = 'rgba(143,184,222,0.24)';
-  ctx.lineWidth = 4;
-  ctx.stroke();
-  ctx.fillStyle = '#f3f6f9';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-
-  const words = text.split(/\s+/);
-  let line1 = '', line2 = '';
-  ctx.font = '700 58px Inter, Arial';
-  for (const word of words) {
-    const try1 = line1 ? `${line1} ${word}` : word;
-    if (ctx.measureText(try1).width <= 840 || !line1) line1 = try1;
-    else line2 = line2 ? `${line2} ${word}` : word;
-  }
-  while (ctx.measureText(line2).width > 840 && line2.length > 14) line2 = line2.slice(0, -2);
-  if (line2 && line2 !== text.split(/\s+/).slice(line1.split(/\s+/).length).join(' ')) line2 += '…';
-
-  if (line2) {
-    ctx.fillText(line1, 490, 72);
-    ctx.font = '700 51px Inter, Arial';
-    ctx.fillText(line2, 490, 132);
-  } else {
-    while (ctx.measureText(line1).width > 850 && line1.length > 14) line1 = line1.slice(0, -2);
-    if (line1 !== text) line1 += '…';
-    ctx.fillText(line1, 490, 98);
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.22, .46),
-    new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, toneMapped: false })
-  );
-  plane.renderOrder = 3;
-  return plane;
+function setSelectedStation(key){
+  state.selectedKey=key;
+  for(const [k,st] of state.stations){ if(!st.model)continue; const selected=k===key; const base=st.model.userData.baseScale||.48; st.model.scale.setScalar(base*(selected?1.16:1)); if(st.ring){st.ring.material.color.setHex(selected?0x76d0ff:0x3cb5ff);st.ring.material.emissiveIntensity=selected?2.0:1.0;} }
 }
 
 // ---------- models ----------
@@ -1190,163 +1068,86 @@ function updateLocalTweens(now) {
     return t < 1;
   });
 }
-async function slideBoardOut(station) {
-  const board = station.board;
-  board.visible = true;
-  board.position.copy(board.userData.hiddenLocal.p);
-  board.quaternion.copy(board.userData.hiddenLocal.q);
-  board.scale.copy(board.userData.hiddenLocal.s);
-  // The page begins docked beside the object, then the arm comes over to collect it.
-  await tweenLocalTransform(station.root, board, board.userData.pickupLocal, 260);
+function disposeBoard(board){
+  if(!board)return;
+  scene.remove(board);
+  board.userData.texture?.dispose?.();
+  disposeObject(board);
 }
-async function slideBoardIn(station) {
-  const board = station.board;
-  // Return the page to its dock beside the object.
-  await tweenLocalTransform(station.root, board, board.userData.hiddenLocal, 240, () => { board.visible = false; });
+function beginHold(station,board){
+  scene.add(board);
+  board.scale.setScalar(HELD_BOARD_SCALE);
+  board.visible=true;
+  state.heldBoard=board;
+  state.heldStation=station;
+  const socket=socketWorld();
+  state.heldFollow={prevSocket:socket.clone(),prevVelocity:new THREE.Vector3(),swingX:0,swingZ:0,swingVX:0,swingVZ:0};
+  updateHeldBoard(performance.now(),1/60,true);
 }
-function beginHold(station) {
-  const board = station.board;
-  scene.attach(board);
-  board.scale.setScalar(1.18);
-  state.heldBoard = board;
-  state.heldStation = station;
-  const socket = socketWorld();
-  state.heldFollow = {
-    prevSocket: socket.clone(),
-    prevVelocity: new THREE.Vector3(),
-    swingX: 0,
-    swingZ: 0,
-    swingVX: 0,
-    swingVZ: 0
-  };
-  updateHeldBoard(performance.now(), 1 / 60, true);
+function heldBoardTargetPose(socket,swingX=0,swingZ=0){
+  // Critical physical constraint: the board's actual clamp point and the gripper socket are identical.
+  const facing=new THREE.Object3D();facing.position.copy(socket);facing.lookAt(camera.position.x,camera.position.y-.05,camera.position.z);
+  const q=facing.quaternion.clone();q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX,0,swingZ)));
+  const scale=state.heldBoard?.scale.x||HELD_BOARD_SCALE;
+  const localHandle=new THREE.Vector3(BOARD.handleX*scale,BOARD.handleY*scale,.145*scale).applyQuaternion(q);
+  return {position:socket.clone().sub(localHandle),quaternion:q};
 }
-function heldBoardTargetPose(socket, swingX = 0, swingZ = 0) {
-  // The board is a rigid plate pinned at its top-center handle.
-  // Nominal orientation faces the visitor; swing is applied around that rigid orientation.
-  const facing = new THREE.Object3D();
-  facing.position.copy(socket);
-  facing.lookAt(camera.position.x, camera.position.y - .15, camera.position.z);
-  const q = facing.quaternion.clone();
-  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX, 0, swingZ)));
-  const viewDir = new THREE.Vector3(camera.position.x - socket.x, camera.position.y - socket.y, camera.position.z - socket.z).normalize();
-  const presentationOffset = viewDir.multiplyScalar(3.35);
-  const localHandle = new THREE.Vector3(BOARD.handleX * BOARD.stationScale, BOARD.handleY * BOARD.stationScale, 0).applyQuaternion(q);
-  return { position: socket.clone().add(presentationOffset).sub(localHandle), quaternion: q };
+function updateHeldBoard(now,dt,snap=false){
+  if(!state.heldBoard||!state.heldFollow)return;
+  const socket=socketWorld(),f=state.heldFollow,safeDt=Math.max(1/120,Math.min(dt||1/60,1/20));
+  const velocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);const acceleration=velocity.clone().sub(f.prevVelocity).multiplyScalar(1/safeDt);
+  f.prevSocket.copy(socket);f.prevVelocity.lerp(velocity,.38);
+  const stiffness=18.5,damping=7.2,drive=.0055;
+  const ax=THREE.MathUtils.clamp(acceleration.z*drive,-.42,.42),az=THREE.MathUtils.clamp(-acceleration.x*drive,-.42,.42);
+  f.swingVX+=(-stiffness*f.swingX-damping*f.swingVX+ax)*safeDt;f.swingVZ+=(-stiffness*f.swingZ-damping*f.swingVZ+az)*safeDt;
+  f.swingX=THREE.MathUtils.clamp(f.swingX+f.swingVX*safeDt,-.09,.09);f.swingZ=THREE.MathUtils.clamp(f.swingZ+f.swingVZ*safeDt,-.09,.09);
+  const target=heldBoardTargetPose(socket,f.swingX,f.swingZ);state.heldBoard.position.copy(target.position);if(snap||state.reducedMotion)state.heldBoard.quaternion.copy(target.quaternion);else state.heldBoard.quaternion.slerp(target.quaternion,.46);
 }
-function updateHeldBoard(now, dt, snap = false) {
-  if (!state.heldBoard || !state.heldFollow) return;
-  const socket = socketWorld();
-  const f = state.heldFollow;
-  const safeDt = Math.max(1 / 120, Math.min(dt || 1 / 60, 1 / 20));
-  const velocity = socket.clone().sub(f.prevSocket).multiplyScalar(1 / safeDt);
-  const acceleration = velocity.clone().sub(f.prevVelocity).multiplyScalar(1 / safeDt);
-  f.prevSocket.copy(socket);
-  f.prevVelocity.lerp(velocity, .42);
-
-  // Damped pendulum response. This is not a visual lag: the top-center handle remains constrained to the gripper.
-  const stiffness = 15.5, damping = 6.2, drive = .0075;
-  const ax = THREE.MathUtils.clamp(acceleration.z * drive, -.75, .75);
-  const az = THREE.MathUtils.clamp(-acceleration.x * drive, -.75, .75);
-  f.swingVX += (-stiffness * f.swingX - damping * f.swingVX + ax) * safeDt;
-  f.swingVZ += (-stiffness * f.swingZ - damping * f.swingVZ + az) * safeDt;
-  f.swingX = THREE.MathUtils.clamp(f.swingX + f.swingVX * safeDt, -.18, .18);
-  f.swingZ = THREE.MathUtils.clamp(f.swingZ + f.swingVZ * safeDt, -.18, .18);
-
-  const target = heldBoardTargetPose(socket, f.swingX, f.swingZ);
-  if (snap || state.reducedMotion) {
-    state.heldBoard.position.copy(target.position);
-    state.heldBoard.quaternion.copy(target.quaternion);
-  } else {
-    // Position is exact enough to preserve the rigid pin constraint; orientation is smoothly damped.
-    state.heldBoard.position.copy(target.position);
-    state.heldBoard.quaternion.slerp(target.quaternion, .36);
-  }
+async function carryCurrentCompletelyOffscreen(){
+  if(!state.heldBoard)return;
+  dom.status.textContent='Moving current page away';
+  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,320);
+  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.carry,650);
+  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.offscreen,260);
+  // The current panel is now completely outside the camera frustum.
+  await wait(250);
+  await setGrip(.26,90);
+  await wait(250);
 }
-
-const PRESENT_YAW = 0.58;
-const SAFE_YAW = 0.18;
-
-async function rotateSafelyTo(yaw, duration = 330) {
-  // Never rotate the base while the links are extended near the objects.
-  await moveArmPose(armState.yaw, ARM_POSES.safe, 190);
-  await moveArmPose(yaw, ARM_POSES.safe, duration);
+async function swapBoardWhileOffscreen(station){
+  const old=state.heldBoard;
+  state.heldBoard=null;state.heldFollow=null;state.heldStation=null;
+  if(old)disposeBoard(old);
+  updateArmVisual();
+  const board=createBoard(station.section,station.item,station.index);
+  beginHold(station,board);
+  await setGrip(.095,115);
 }
-
-async function stowCurrentBoard() {
-  if (!state.heldBoard || !state.heldStation) return;
-  const station = state.heldStation;
-  dom.status.textContent = 'Returning page';
-
-  // Fold first, rotate only while clear of the display ring, then extend to the exact slot handle.
-  await moveArmPose(armState.yaw, ARM_POSES.lift, 180);
-  await rotateSafelyTo(station.pickupYaw, 340);
-  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 200);
-  await moveArmPose(station.pickupYaw, ARM_POSES.pickup, 210);
-
-  await setGrip(.26, 100);
-  const board = state.heldBoard;
-  state.heldBoard = null;
-  state.heldFollow = null;
-  station.root.attach(board);
-  board.position.copy(board.userData.shownLocal.p);
-  board.quaternion.copy(board.userData.shownLocal.q);
-  board.scale.copy(board.userData.shownLocal.s);
-  await slideBoardIn(station);
-  state.heldStation = null;
-
-  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 180);
-  await rotateSafelyTo(SAFE_YAW, 320);
+async function bringBoardBackOnscreen(){
+  dom.status.textContent='Bringing next page in';
+  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.carry,220);
+  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,720);
+  dom.status.textContent='Presenting page';
+  await moveArmPose(PRESENT_YAW,ARM_POSES.present,400);
+  dom.status.textContent='Page ready';
 }
-
-async function pickupBoard(station) {
-  setSelectedStation(station.key);
-  updateNav();
-  dom.status.textContent = 'Opening slot';
-  await slideBoardOut(station);
-
-  await setGrip(.26, 70);
-  await rotateSafelyTo(station.pickupYaw, 340);
-  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 200);
-  dom.status.textContent = 'Aligning page';
-  await tweenLocalTransform(station.root, station.board, station.board.userData.pickupLocal, 110);
-  dom.status.textContent = 'Grabbing page';
-  await moveArmPose(station.pickupYaw, ARM_POSES.pickup, 280);
-  await setGrip(.09, 120);
-
-  // At this instant the socket and top-center board handle are the same point by construction.
-  beginHold(station);
-
-  dom.status.textContent = 'Lifting page';
-  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 320);
-  await rotateSafelyTo(PRESENT_YAW, 520);
-  dom.status.textContent = 'Bringing page forward';
-  await moveArmPose(PRESENT_YAW, ARM_POSES.present, 460);
-  dom.status.textContent = 'Page ready';
+async function deliverBoard(section,index){
+  state.busy=true;
+  const item=CONTENT[section][index],key=`${section}/${item.id}`,station=state.stations.get(key);
+  if(state.heldBoard)await carryCurrentCompletelyOffscreen();
+  state.section=section;state.index=index;setSelectedStation(key);updateNav();dom.topbarTitle.textContent=item.title;dom.live.textContent=`${item.title}. ${item.description}`;
+  await swapBoardWhileOffscreen(station);
+  // For the initial page, the arm begins off-camera already holding it. For every later page,
+  // the swap happens only after the old panel has stayed fully off-camera for 0.5 seconds.
+  await bringBoardBackOnscreen();
+  state.busy=false;
+  if(state.queued){const q=state.queued;state.queued=null;requestSelection(q.section,q.index,q.updateHash);}
 }
-
-async function deliverBoard(section, index) {
-  state.busy = true;
-  await stowCurrentBoard();
-  state.section = section; state.index = index;
-  const item = currentItem();
-  const key = `${section}/${item.id}`;
-  const station = state.stations.get(key);
-  setSelectedStation(key);
-  dom.topbarTitle.textContent = item.title;
-  dom.live.textContent = `${item.title}. ${item.description}`;
-  await pickupBoard(station);
-  state.busy = false;
-  if (state.queued) {
-    const q = state.queued; state.queued = null; requestSelection(q.section, q.index, q.updateHash);
-  }
-}
-function requestSelection(section, index = 0, updateHash = true) {
-  if (!CONTENT[section]) section = 'home';
-  index = Math.max(0, Math.min(index, CONTENT[section].length - 1));
-  if (state.busy) { state.queued = { section, index, updateHash }; dom.status.textContent = 'Queued next page'; return; }
-  if (updateHash) history.replaceState(null, '', `#${section}/${CONTENT[section][index].id}`);
-  deliverBoard(section, index);
+function requestSelection(section,index=0,updateHash=true){
+  if(!CONTENT[section])section='home';index=Math.max(0,Math.min(index,CONTENT[section].length-1));
+  if(state.busy){state.queued={section,index,updateHash};dom.status.textContent='Queued next page';return;}
+  if(updateHash)history.replaceState(null,'',`#${section}/${CONTENT[section][index].id}`);
+  deliverBoard(section,index);
 }
 
 // ---------- object picking ----------
@@ -1424,14 +1225,8 @@ function updatePhysics(dt) {
     o.rotation.x += a.x * dt; o.rotation.y += a.y * dt; o.rotation.z += a.z * dt;
     if (o.position.y - r < 0) { o.position.y = r; if (v.y < 0) v.y *= -.40; v.x *= .985; v.z *= .985; a.multiplyScalar(.991); }
     for (const st of state.stations.values()) {
-      const modelBox = new THREE.Box3().setFromObject(st.model); resolveSphereBox(o, modelBox, r);
-      const padBox = new THREE.Box3().setFromObject(st.pad); resolveSphereBox(o, padBox, r);
-      const slotBox = new THREE.Box3().setFromObject(st.slotBack); resolveSphereBox(o, slotBox, r);
-      if (st.board.visible || st === state.heldStation) {
-        st.board.updateMatrixWorld(true);
-        boardOBB.center.set(0, 0, 0); boardOBB.halfSize.set(BOARD.width / 2, BOARD.height / 2, BOARD.thickness / 2 + .14); boardOBB.rotation.identity();
-        boardOBB.applyMatrix4(st.board.matrixWorld); resolveSphereOBB(o, boardOBB, r);
-      }
+      if (st.model) { const modelBox = new THREE.Box3().setFromObject(st.model); resolveSphereBox(o, modelBox, r); }
+      if (st.pad) { const padBox = new THREE.Box3().setFromObject(st.pad); resolveSphereBox(o, padBox, r); }
     }
     if (state.heldBoard) {
       state.heldBoard.updateMatrixWorld(true);
@@ -1451,6 +1246,12 @@ function updatePhysics(dt) {
     if (o.position.x - r < -limitX) { o.position.x = -limitX + r; v.x = Math.abs(v.x) * .5; }
     if (o.position.z + r > maxZ) { o.position.z = maxZ - r; v.z = -Math.abs(v.z) * .5; }
     if (o.position.z - r < minZ) { o.position.z = minZ + r; v.z = Math.abs(v.z) * .5; }
+  }
+  // Spawned rigid bodies also collide with each other instead of ghosting through one another.
+  for (let i=0;i<state.spawned.length;i++) for (let j=i+1;j<state.spawned.length;j++) {
+    const a=state.spawned[i],b=state.spawned[j],ra=a.userData.radius||.55,rb=b.userData.radius||.55;
+    const delta=b.position.clone().sub(a.position);let dist=delta.length(),min=ra+rb;
+    if(dist<min){ if(dist<1e-5){delta.set(1,0,0);dist=.001;} const n=delta.multiplyScalar(1/dist),push=(min-dist)*.5; a.position.addScaledVector(n,-push);b.position.addScaledVector(n,push); const va=a.userData.velocity,vb=b.userData.velocity,rel=vb.clone().sub(va).dot(n); if(rel<0){const impulse=-rel*.58;va.addScaledVector(n,-impulse);vb.addScaledVector(n,impulse);} }
   }
 }
 
