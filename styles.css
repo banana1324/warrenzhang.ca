@@ -1,7 +1,7 @@
 :root {
   color-scheme: dark;
   --bg: #080a0e;
-  --sidebar: 368px;
+  --sidebar: 290px;
   --text: #f6f7f9;
   --soft: #c7ccd4;
   --muted: #8c95a0;
@@ -10,8 +10,8 @@
   --line-strong: rgba(255,255,255,.15);
   --surface: rgba(15,18,23,.82);
   --surface-strong: #11151b;
-  --accent:#82b3a5;
-  --accent-soft:rgba(130,179,165,.11);
+  --accent:#45b9ff;
+  --accent-soft:rgba(69,185,255,.12);
   --font: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
@@ -26,9 +26,7 @@ body {
   color:var(--text);
   font-family:var(--font);
   background:
-    radial-gradient(circle at 72% 14%, rgba(219,179,112,.075), transparent 25%),
-    radial-gradient(circle at 68% 16%, rgba(98,147,132,.075), transparent 31%),
-    linear-gradient(180deg,#0c0f14,#080a0e 72%);
+    linear-gradient(180deg,#05080c,#060b10 72%);
 }
 a,button { color:inherit; font:inherit; }
 a { text-decoration:none; }
@@ -42,7 +40,7 @@ button { cursor:pointer; }
 .sidebar {
   position:fixed; z-index:60; inset:0 auto 0 0; width:var(--sidebar);
   display:flex; flex-direction:column; padding:28px 22px 22px;
-  background:rgba(9,12,13,.965); border-right:1px solid rgba(255,255,255,.075); backdrop-filter:blur(12px);
+  background:rgba(5,9,13,.975); border-right:1px solid rgba(255,255,255,.075); backdrop-filter:blur(12px);
 }
 .brand { display:flex; align-items:center; gap:13px; padding:0 3px 26px; }
 .brand-mark {
@@ -51,19 +49,19 @@ button { cursor:pointer; }
   font-weight:760; font-size:19px; letter-spacing:-.05em;
 }
 .brand-copy { display:flex; flex-direction:column; gap:3px; min-width:0; }
-.brand-copy strong { font-size:18px; font-weight:680; letter-spacing:-.035em; }
+.brand-copy strong { font-size:18px; font-weight:700; letter-spacing:-.035em; }
 .brand-copy small { color:var(--accent); font-size:10px; }
 
 .nav-groups { flex:1; min-height:0; overflow-y:auto; scrollbar-width:none; padding-right:2px; }
 .nav-groups::-webkit-scrollbar { display:none; }
 .nav-group { margin-bottom:8px; }
 .nav-header {
-  width:100%; min-height:48px; display:flex; align-items:center; gap:11px;
+  width:100%; min-height:46px; display:flex; align-items:center; gap:11px;
   border:0; border-radius:12px; padding:0 12px; background:transparent;
-  color:#aeb6b2; text-align:left; font-size:13px; font-weight:600;
+  color:#aeb6b2; text-align:left; font-size:13px; font-weight:620;
 }
 .nav-header:hover,.nav-header:focus-visible { background:rgba(255,255,255,.028); color:#fff; outline:none; }
-.nav-header.is-active { background:rgba(255,255,255,.045); color:#fff; }
+.nav-header.is-active { background:rgba(28,50,66,.42); color:#fff; }
 .nav-icon { width:18px; text-align:center; color:#707986; font:12px var(--mono); }
 .nav-header.is-active .nav-icon { color:var(--accent); }
 .nav-chevron { margin-left:auto; color:#636d79; font-size:11px; transition:transform .15s ease; }
@@ -75,7 +73,7 @@ button { cursor:pointer; }
   padding:0 11px; background:transparent; color:#7f8994; text-align:left; font-size:11px; line-height:1.25;
 }
 .nav-item:hover,.nav-item:focus-visible { background:rgba(255,255,255,.03); color:#dfe4ea; outline:none; }
-.nav-item.is-active { background:rgba(255,255,255,.05); color:#fff; box-shadow:inset 2px 0 0 var(--accent); }
+.nav-item.is-active { background:rgba(30,67,91,.46); color:#fff; box-shadow:inset 2px 0 0 var(--accent); }
 
 .sidebar-footer { display:grid; gap:15px; padding:18px 3px 0; border-top:1px solid var(--line); }
 .social-links { display:flex; gap:13px; flex-wrap:wrap; }
@@ -91,7 +89,7 @@ button { cursor:pointer; }
   position:fixed; z-index:45; top:0; left:var(--sidebar); right:0; min-height:76px;
   display:flex; align-items:center; justify-content:space-between; gap:24px; padding:16px 28px;
   border-bottom:1px solid rgba(255,255,255,.055);
-  background:linear-gradient(180deg,rgba(9,13,14,.88),rgba(9,13,14,.26)); backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(5,9,13,.88),rgba(5,9,13,.18)); backdrop-filter:blur(14px);
 }
 .topbar-copy { min-width:0; display:flex; align-items:baseline; gap:14px; }
 .topbar-kicker { color:var(--accent); font:9px var(--mono); letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; }
