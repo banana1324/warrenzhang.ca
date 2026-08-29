@@ -453,18 +453,18 @@ coolPool.position.set(-3.7, 2.5, 3.4); scene.add(coolPool);
 
 // ---------- arm ----------
 const ARM = {
-  base: new THREE.Vector3(-4.18, .68, -.88),
-  lengths: [2.20, 2.70, 2.50, 1.80],
+  base: new THREE.Vector3(-4.72, .68, -.98),
+  lengths: [2.55, 3.15, 2.95, 2.28],
   radius: [.37, .31, .26, .22]
 };
 
 const ARM_POSES = {
   // Entire arm and page are beyond the left edge in this pose.
-  offscreen: [1.08, -.22, .06, -.04],
+  offscreen: [.98, -.40, .12, -.05],
   // Heavy, high carry pose used when moving a sheet away from the visitor.
-  carry: [1.02, -.18, .05, -.03],
+  carry: [.94, -.34, .11, -.05],
   // Close presentation: the gripper itself is close enough that the panel fills the viewport.
-  present: [1.00, -.15, .03, -.02]
+  present: [.90, -.28, .10, -.04]
 };
 
 const ARM_MOTION_SCALE = 2.35;
@@ -472,7 +472,7 @@ const GRIP_MOTION_SCALE = 1.55;
 const BOARD_MOTION_SCALE = 1.0;
 const PRESENT_YAW = .56;
 const OFFSCREEN_YAW = Math.PI;
-const HELD_BOARD_SCALE = 1.22;
+const HELD_BOARD_SCALE = 1.26;
 
 const armState = { yaw: OFFSCREEN_YAW, angles: [...ARM_POSES.offscreen], grip: .095 };
 const armVisual = { root:null, links:[], joints:[], wrist:null, fl:null, fr:null, socket:null };
@@ -609,84 +609,83 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width:5.05, height:5.30, thickness:.095, handleX:0, handleY:2.78, stationScale:1 };
+const BOARD = { width:5.18, height:5.48, thickness:.095, handleX:0, handleY:2.90, stationScale:1 };
 function createBoard(section,item,index) {
   const group=new THREE.Group();
   const back=box(BOARD.width,BOARD.height,BOARD.thickness,.075,0xe8e4dd,.78,.02); group.add(back);
   const rim=box(BOARD.width+.12,BOARD.height+.12,.055,.085,0xd1cec8,.58,.05); rim.position.z=-.055; group.add(rim);
 
-  // Physical clamp bar that the gripper actually holds.
   const clampBase=box(.72,.20,.24,.045,0x8b9297,.28,.72); clampBase.position.set(0,BOARD.height/2-.08,.10); group.add(clampBase);
   const gripTab=box(.055,.34,.19,.018,0x34393e,.22,.90); gripTab.position.set(0,BOARD.handleY,.145); group.add(gripTab);
   const cap=box(.34,.09,.27,.025,0x70777d,.24,.82); cap.position.set(0,BOARD.height/2+.18,.12); group.add(cap);
   for(const x of [-.22,.22]) addBolt(clampBase,x,0,.14,.035);
   const handleAnchor=new THREE.Object3D(); handleAnchor.position.set(BOARD.handleX,BOARD.handleY,.145); group.add(handleAnchor); group.userData.handleAnchor=handleAnchor;
 
-  const canvas=document.createElement('canvas'); canvas.width=2400; canvas.height=3000;
+  const canvas=document.createElement('canvas'); canvas.width=2400; canvas.height=3200;
   const ctx=canvas.getContext('2d');
   ctx.fillStyle='#f3f0ea'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  // subtle paper grain
-  for(let i=0;i<6500;i++){ const a=Math.random()*.026; ctx.fillStyle=`rgba(55,48,42,${a})`; const x=Math.random()*2400,y=Math.random()*3000; ctx.fillRect(x,y,1,1); }
+  for(let i=0;i<5200;i++){ const a=Math.random()*.018; ctx.fillStyle=`rgba(55,48,42,${a})`; const x=Math.random()*canvas.width,y=Math.random()*canvas.height; ctx.fillRect(x,y,1,1); }
 
-  ctx.fillStyle='#194777'; ctx.font='700 32px Inter, Arial'; ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,120,145);
-  ctx.fillStyle='#111820'; ctx.font='800 104px Inter, Arial';
-  const titleEnd=wrapText(ctx,item.title,120,285,2160,112);
-  ctx.fillStyle='#4d535a'; ctx.font='500 42px Inter, Arial';
-  const metaEnd=wrapText(ctx,item.meta,120,titleEnd+64,2160,52);
-  drawOutlinePills(ctx,item.tags.slice(0,6),120,metaEnd+54,2160);
-  const descY=metaEnd+155;
-  ctx.fillStyle='#20262c'; ctx.font='500 42px Inter, Arial';
-  const descEnd=wrapText(ctx,item.description,120,descY,2160,58);
+  ctx.fillStyle='#194777'; ctx.font='700 42px Inter, Arial'; ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,120,160);
+  ctx.fillStyle='#111820'; ctx.font='800 154px Inter, Arial';
+  const titleEnd=wrapText(ctx,item.title,120,340,2160,156);
+  ctx.fillStyle='#4d535a'; ctx.font='500 56px Inter, Arial';
+  const metaEnd=wrapText(ctx,item.meta,120,titleEnd+82,2160,68);
+  drawOutlinePills(ctx,item.tags.slice(0,5),120,metaEnd+58,2160);
 
-  // Five compact metric cards like the reference image.
+  const sectionLine = metaEnd + 168;
+  ctx.strokeStyle='#c8c2bb'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(120,sectionLine); ctx.lineTo(2280,sectionLine); ctx.stroke();
+  ctx.fillStyle='#194777'; ctx.font='800 40px Inter, Arial'; ctx.fillText('PROFILE',120,sectionLine+66);
+  ctx.fillStyle='#22272d'; ctx.font='500 58px Inter, Arial';
+  const descEnd=wrapText(ctx,item.description,120,sectionLine+148,2160,74);
+
   const metrics=[...item.metrics.slice(0,3)];
-  let tagIndex=0;
-  while(metrics.length<5 && tagIndex<item.tags.length){ metrics.push([item.tags[tagIndex], metrics.length===3?'primary tool':'technical focus']); tagIndex++; }
-  const metricY=Math.max(descEnd+100,1040), cardGap=20, cardW=(2160-cardGap*4)/5, cardH=238;
-  metrics.slice(0,5).forEach((m,i)=>{
-    const x=120+i*(cardW+cardGap);
-    strokeRoundRect(ctx,x,metricY,cardW,cardH,26,'#cbc8c2',3);
-    ctx.fillStyle='#123f74'; ctx.font='800 48px Inter, Arial';
-    wrapText(ctx,String(m[0]),x+30,metricY+76,cardW-60,52);
-    ctx.fillStyle='#4f555c'; ctx.font='600 27px Inter, Arial';
-    wrapText(ctx,String(m[1]),x+30,metricY+150,cardW-60,34);
+  while(metrics.length<3){ metrics.push([item.tags[metrics.length]||'build','focus area']); }
+  const metricY=descEnd+108, gap=32, cardW=(2160-gap*2)/3, cardH=278;
+  metrics.slice(0,3).forEach((m,i)=>{
+    const x=120+i*(cardW+gap);
+    strokeRoundRect(ctx,x,metricY,cardW,cardH,30,'#cbc8c2',3);
+    ctx.fillStyle='#123f74'; ctx.font='800 62px Inter, Arial';
+    wrapText(ctx,String(m[0]),x+34,metricY+88,cardW-68,68);
+    ctx.fillStyle='#4f555c'; ctx.font='600 34px Inter, Arial';
+    wrapText(ctx,String(m[1]),x+34,metricY+176,cardW-68,42);
   });
 
-  const lowerTop=metricY+cardH+95;
-  const colGap=52, colW=(2160-colGap*2)/3;
-  const colXs=[120,120+colW+colGap,120+(colW+colGap)*2];
-  const headers=['KEY CONTRIBUTIONS','ROLE & SCOPE','IMPACT & OUTCOMES'];
-  headers.forEach((h,i)=>{ ctx.fillStyle='#194777'; ctx.font='800 28px Inter, Arial'; ctx.fillText(h,colXs[i],lowerTop); });
+  const lowerTop=metricY+cardH+108;
+  const colGap=76, colW=(2160-colGap)/2;
+  const leftX=120, rightX=120+colW+colGap;
+  ctx.fillStyle='#194777'; ctx.font='800 36px Inter, Arial';
+  ctx.fillText('SELECTED CONTRIBUTIONS',leftX,lowerTop);
+  ctx.fillText('IMPACT · CONTEXT · TOOLS',rightX,lowerTop);
 
-  // Contributions column.
-  let y=lowerTop+62; ctx.font='500 31px Inter, Arial';
-  item.details.slice(0,5).forEach(line=>{ ctx.fillStyle='#194777'; ctx.beginPath(); ctx.arc(colXs[0]+8,y-10,5,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#22272d'; y=wrapText(ctx,line,colXs[0]+28,y,colW-28,40)+24; });
+  let y=lowerTop+74; ctx.font='500 40px Inter, Arial';
+  item.details.slice(0,4).forEach(line=>{
+    ctx.fillStyle='#194777'; ctx.beginPath(); ctx.arc(leftX+10,y-14,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#22272d'; y=wrapText(ctx,line,leftX+34,y,colW-34,52)+30;
+  });
 
-  // Role/scope column.
-  ctx.fillStyle='#262b31'; ctx.font='500 31px Inter, Arial';
-  const scopeEnd=wrapText(ctx,getScopeText(section,item),colXs[1],lowerTop+62,colW,42);
-  ctx.fillStyle='#59616a'; ctx.font='700 25px Inter, Arial'; ctx.fillText('FOCUS',colXs[1],scopeEnd+55);
-  ctx.fillStyle='#252a31'; ctx.font='500 29px Inter, Arial';
-  let sy=scopeEnd+104; item.tags.slice(0,5).forEach(tag=>{ ctx.fillText(`• ${tag}`,colXs[1],sy); sy+=39; });
+  ctx.fillStyle='#262b31'; ctx.font='500 40px Inter, Arial';
+  const scopeEnd=wrapText(ctx,getScopeText(section,item),rightX,lowerTop+74,colW,52);
+  ctx.fillStyle='#194777'; ctx.font='800 34px Inter, Arial'; ctx.fillText('CORE STACK',rightX,scopeEnd+66);
+  ctx.fillStyle='#252a31'; ctx.font='500 36px Inter, Arial';
+  let sy=scopeEnd+118;
+  item.tags.slice(0,4).forEach(tag=>{ ctx.fillText(`• ${tag}`,rightX,sy); sy+=46; });
+  ctx.fillStyle='#194777'; ctx.font='800 34px Inter, Arial'; ctx.fillText('RESULTS',rightX,sy+24);
+  ctx.fillStyle='#252a31'; ctx.font='500 36px Inter, Arial';
+  let ry=sy+76;
+  item.metrics.slice(0,3).forEach(([value,label])=>{ ry=wrapText(ctx,`${value} — ${label}`,rightX,ry,colW,48)+20; });
 
-  // Impact column only uses facts already present on the item.
-  ctx.fillStyle='#22272d'; ctx.font='500 31px Inter, Arial';
-  let iy=lowerTop+62;
-  item.metrics.slice(0,3).forEach(([value,label])=>{ ctx.fillStyle='#194777'; ctx.fillText('✓',colXs[2],iy); ctx.fillStyle='#22272d'; iy=wrapText(ctx,`${value} — ${label}`,colXs[2]+32,iy,colW-32,40)+28; });
-  ctx.fillStyle='#194777'; ctx.fillText('✓',colXs[2],iy); ctx.fillStyle='#22272d';
-  wrapText(ctx,'Built through repeated testing, debugging, documentation, and iteration rather than a one-off demo.',colXs[2]+32,iy,colW-32,40);
-
-  const footerY=2635;
+  const footerY=2860;
   ctx.strokeStyle='#c9c5bf'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(120,footerY); ctx.lineTo(2280,footerY); ctx.stroke();
-  ctx.fillStyle='#194777'; ctx.font='800 28px Inter, Arial'; ctx.fillText('TECH STACK',120,footerY+65); ctx.fillText('LINKS & RESOURCES',1250,footerY+65);
-  ctx.fillStyle='#252a31'; ctx.font='600 30px Inter, Arial';
-  wrapText(ctx,item.tags.slice(0,7).join('   ·   '),120,footerY+118,1010,40);
-  ctx.fillStyle='#252a31'; ctx.font='500 28px Inter, Arial';
-  ctx.fillText('github.com/banana1324',1250,footerY+118);
-  ctx.fillText('linkedin.com/in/fuyuanzhang',1250,footerY+160);
-  ctx.fillStyle='#777d84'; ctx.font='500 24px Inter, Arial';
-  ctx.fillText('warrenz7980@gmail.com    ·    Waterloo, ON / Richmond, BC',120,2918);
-  ctx.textAlign='right'; ctx.fillText('Built with code. Driven by curiosity.',2280,2918); ctx.textAlign='left';
+  ctx.fillStyle='#194777'; ctx.font='800 34px Inter, Arial'; ctx.fillText('TECH STACK',120,footerY+66); ctx.fillText('LINKS',1270,footerY+66);
+  ctx.fillStyle='#252a31'; ctx.font='600 34px Inter, Arial';
+  wrapText(ctx,item.tags.slice(0,6).join('   ·   '),120,footerY+126,1010,46);
+  ctx.fillStyle='#252a31'; ctx.font='500 32px Inter, Arial';
+  ctx.fillText('github.com/banana1324',1270,footerY+126);
+  ctx.fillText('linkedin.com/in/fuyuanzhang',1270,footerY+176);
+  ctx.fillStyle='#777d84'; ctx.font='500 28px Inter, Arial';
+  ctx.fillText('warrenz7980@gmail.com    ·    Waterloo, ON / Richmond, BC',120,3136);
+  ctx.textAlign='right'; ctx.fillText('Built with code. Driven by curiosity.',2280,3136); ctx.textAlign='left';
 
   const texture=new THREE.CanvasTexture(canvas); texture.colorSpace=THREE.SRGBColorSpace; texture.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),16);
   const plane=new THREE.Mesh(new THREE.PlaneGeometry(BOARD.width-.20,BOARD.height-.20),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
@@ -694,9 +693,10 @@ function createBoard(section,item,index) {
   group.userData.texture=texture;
   return group;
 }
+
 function drawOutlinePills(ctx,pills,x,y,maxWidth){
-  ctx.font='600 24px Inter, Arial'; let cx=x,cy=y;
-  pills.forEach(label=>{ const w=ctx.measureText(label).width+38; if(cx+w>maxWidth+x){cx=x;cy+=52;} strokeRoundRect(ctx,cx,cy,w,38,17,'#aeb7c0',2); ctx.fillStyle='#174878';ctx.fillText(label,cx+19,cy+27);cx+=w+12; });
+  ctx.font='600 34px Inter, Arial'; let cx=x,cy=y;
+  pills.forEach(label=>{ const w=ctx.measureText(label).width+54; if(cx+w>maxWidth+x){cx=x;cy+=64;} strokeRoundRect(ctx,cx,cy,w,50,20,'#aeb7c0',2); ctx.fillStyle='#174878';ctx.fillText(label,cx+26,cy+35);cx+=w+16; });
 }
 function strokeRoundRect(ctx,x,y,w,h,r,stroke,width=2){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();
@@ -753,13 +753,13 @@ const PODIUM_SCALE={
   'experience/coaching':.43, 'projects/vision':.47, 'experience/orchestra':.38, 'experience/eim':.45
 };
 const PODIUM_LAYOUT={
-  'interests/blender':[-3.00,.12,5.02],
-  'projects/kc15':[-1.40,.12,5.14],
-  'projects/wildfire':[.20,.12,5.23],
-  'experience/coaching':[1.80,.12,5.27],
-  'projects/vision':[3.40,.12,5.22],
-  'experience/orchestra':[5.00,.12,5.10],
-  'experience/eim':[6.60,.12,4.92]
+  'interests/blender':[-4.15,.12,4.22],
+  'projects/kc15':[-2.25,.12,4.35],
+  'projects/wildfire':[-.20,.12,4.48],
+  'experience/coaching':[1.90,.12,4.52],
+  'projects/vision':[4.05,.12,4.46],
+  'experience/orchestra':[6.05,.12,4.30],
+  'experience/eim':[7.90,.12,4.14]
 };
 function sectionAccent(section){ return ({home:0x64b7ee,about:0x66c3f2,projects:0x53b6ff,experience:0x61c9f1,interests:0x63bde6,contact:0x64b7ee})[section]||0x5ab9f1; }
 function createPodiumLabel(text){
