@@ -308,8 +308,8 @@ const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x0c1215, 18, 38);
 
 const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-camera.position.set(0, 5.05, 15.0);
-const CAMERA_TARGET = new THREE.Vector3(0, 1.94, 1.12);
+camera.position.set(1.3, 5.15, 14.35);
+const CAMERA_TARGET = new THREE.Vector3(1.45, 2.08, 1.56);
 camera.lookAt(CAMERA_TARGET);
 
 scene.add(new THREE.HemisphereLight(0xf9fbff, 0x262117, 2.2));
@@ -391,27 +391,27 @@ scene.add(coolPool);
 
 // ---------- arm ----------
 const ARM = {
-  base: new THREE.Vector3(0, .64, -1.34),
-  lengths: [1.62, 2.02, 1.84, 1.24],
-  radius: [.31, .26, .22, .18]
+  base: new THREE.Vector3(-3.65, .64, -1.08),
+  lengths: [1.96, 2.46, 2.18, 1.58],
+  radius: [.34, .28, .24, .20]
 };
 
 const ARM_POSES = {
-  // High, folded transport pose. All page changes pass through this pose.
-  safe: [1.38, -.22, -.06, -.08],
-  // Exact pickup / deposit pose. Slots are positioned from this pose, not solved with IK.
-  pickup: [1.18, -.06, -.01, -.08],
+  // Parked high and to the left, like a large industrial arm waiting off the main stage.
+  safe: [1.52, -.34, -.14, -.10],
+  // Exact pickup pose for the docked page beside each topic object.
+  pickup: [1.20, -.18, -.06, -.04],
   // Slightly raised / retracted pose used immediately after the page is grabbed.
-  lift: [1.30, -.15, .02, -.10],
-  // Presentation pose toward the visitor. Same deterministic geometry every time.
-  present: [1.02, -.03, .00, -.06]
+  lift: [1.36, -.24, -.02, -.06],
+  // Presentation pose toward the visitor.
+  present: [1.00, -.12, .04, -.04]
 };
 
-const ARM_MOTION_SCALE = 1.85;
-const GRIP_MOTION_SCALE = 1.55;
-const BOARD_MOTION_SCALE = 1.2;
+const ARM_MOTION_SCALE = 2.45;
+const GRIP_MOTION_SCALE = 1.65;
+const BOARD_MOTION_SCALE = 1.25;
 
-const armState = { yaw: Math.PI / 2, angles: [...ARM_POSES.safe], grip: .26 };
+const armState = { yaw: 0.62, angles: [...ARM_POSES.safe], grip: .26 };
 const armVisual = { root: null, links: [], joints: [], wrist: null, fl: null, fr: null, socket: null };
 
 function buildArm() {
@@ -524,7 +524,7 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width: 4.26, height: 5.05, thickness: .075, handleX: 0.0, handleY: 2.34, stationScale: .98 };
+const BOARD = { width: 4.5, height: 5.28, thickness: .075, handleX: 0.0, handleY: 2.45, stationScale: 1.02 };
 function createBoard(section, item, index) {
   const group = new THREE.Group();
   const base = box(BOARD.width, BOARD.height, BOARD.thickness, .045, 0xf7f7f5, .96, .01);
@@ -540,8 +540,8 @@ function createBoard(section, item, index) {
   group.userData.handleAnchor = handleAnchor;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 2000;
-  canvas.height = 2500;
+  canvas.width = 2200;
+  canvas.height = 2700;
   const ctx = canvas.getContext('2d');
 
   // Apple / modern resume-sheet palette.
@@ -562,12 +562,12 @@ function createBoard(section, item, index) {
   ctx.fillRect(110, 156, 62, 6);
 
   ctx.fillStyle = '#111318';
-  ctx.font = '700 78px Inter, Arial';
-  const titleEnd = wrapText(ctx, item.title, 110, 295, 1760, 98);
+  ctx.font = '700 88px Inter, Arial';
+  const titleEnd = wrapText(ctx, item.title, 110, 300, 1940, 108);
 
   ctx.fillStyle = '#68717c';
-  ctx.font = '500 38px Inter, Arial';
-  const metaEnd = wrapText(ctx, item.meta, 110, titleEnd + 72, 1760, 52);
+  ctx.font = '500 42px Inter, Arial';
+  const metaEnd = wrapText(ctx, item.meta, 110, titleEnd + 74, 1940, 58);
 
   ctx.fillStyle = '#d5d9de';
   ctx.fillRect(110, metaEnd + 58, 1760, 2);
@@ -577,8 +577,8 @@ function createBoard(section, item, index) {
   ctx.fillText('PROFILE', 110, metaEnd + 122);
 
   ctx.fillStyle = '#272d35';
-  ctx.font = '500 40px Inter, Arial';
-  const summaryEnd = wrapText(ctx, item.description, 110, metaEnd + 190, 1760, 58);
+  ctx.font = '500 46px Inter, Arial';
+  const summaryEnd = wrapText(ctx, item.description, 110, metaEnd + 198, 1940, 66);
 
   // Impact row: resume style, no cards around cards.
   const metricTop = Math.max(summaryEnd + 92, 930);
@@ -607,14 +607,14 @@ function createBoard(section, item, index) {
   ctx.fillText('SELECTED CONTRIBUTIONS', 110, contribTop + 30);
 
   let y = contribTop + 102;
-  ctx.font = '500 40px Inter, Arial';
+  ctx.font = '500 46px Inter, Arial';
   item.details.slice(0, 5).forEach(line => {
     ctx.fillStyle = '#5a8e83';
     ctx.beginPath();
     ctx.arc(120, y - 12, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#252c34';
-    y = wrapText(ctx, line, 152, y, 1690, 46) + 26;
+    y = wrapText(ctx, line, 152, y, 1860, 52) + 32;
   });
 
   const scopeTop = y + 34;
@@ -625,9 +625,9 @@ function createBoard(section, item, index) {
   ctx.fillText('ROLE / SCOPE', 110, scopeTop + 56);
 
   ctx.fillStyle = '#252c34';
-  ctx.font = '500 35px Inter, Arial';
+  ctx.font = '500 39px Inter, Arial';
   const scopeText = getScopeText(section, item);
-  const scopeEnd = wrapText(ctx, scopeText, 110, scopeTop + 118, 1760, 46);
+  const scopeEnd = wrapText(ctx, scopeText, 110, scopeTop + 124, 1940, 52);
 
   // Skills line at bottom keeps the page looking like a resume rather than a dashboard.
   const skillsY = Math.max(scopeEnd + 140, 2140);
@@ -638,12 +638,12 @@ function createBoard(section, item, index) {
   ctx.fillText('TOOLS / FOCUS', 110, skillsY + 8);
 
   ctx.fillStyle = '#2f5f96';
-  ctx.font = '600 32px Inter, Arial';
+  ctx.font = '600 36px Inter, Arial';
   wrapText(ctx, item.tags.slice(0, 6).join('   ·   '), 110, skillsY + 66, 1760, 42);
 
   ctx.fillStyle = '#a0a7af';
   ctx.font = '500 26px Inter, Arial';
-  ctx.fillText('warrenz7980@gmail.com  ·  github.com/banana1324  ·  linkedin.com/in/fuyuanzhang', 110, 2390);
+  ctx.fillText('warrenz7980@gmail.com  ·  github.com/banana1324  ·  linkedin.com/in/fuyuanzhang', 110, 2570);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -701,7 +701,7 @@ function roundRect(ctx, x, y, w, h, r, fill) {
 }
 
 // ---------- stations ----------
-const STATION_RADIUS = 4.45;
+const STATION_RADIUS = 5.05;
 const rayTargets = [];
 const gltfLoader = new GLTFLoader();
 const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/refs/heads/main/2.0/Suzanne/glTF/Suzanne.gltf';
@@ -709,7 +709,7 @@ const SUZANNE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-
 function createAllStations() {
   // Slots are on a precise inner circle matching the fixed pickup pose.
   // Models sit farther out, alternating radii so the display objects do not overlap.
-  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(168), THREE.MathUtils.degToRad(12));
+  const angles = distributeAngles(FLAT_ITEMS.length, THREE.MathUtils.degToRad(176), THREE.MathUtils.degToRad(4));
   const displayOrder = [
     'contact/contact',
     'interests/music',
@@ -769,28 +769,31 @@ function createAllStations() {
     stationLabel.lookAt(camera.position.x, .25, camera.position.z);
     root.add(stationLabel);
 
-    // A real table cassette in FRONT of the object. The panel is stored edge-on inside it,
-    // rises vertically as one rigid object, then rotates to face the visitor before pickup.
+    // A visible dock sits beside each topic object. The page does not pop out of the floor;
+    // it rests in a presentation cradle until the arm reaches over from the left to grab it.
     const slotYaw = Math.PI / 2 - theta;
-    const slotHousing = box(.50, .10, 4.22, .05, 0x101517, .84, .05);
-    slotHousing.position.set(slotCenter.x, -.035, slotCenter.z);
-    slotHousing.rotation.y = slotYaw;
-    root.add(slotHousing);
-
-    const slotMouth = box(.16, .014, 4.00, .008, 0x05090a, .75, .02);
-    slotMouth.position.set(slotCenter.x, .016, slotCenter.z);
-    slotMouth.rotation.y = slotYaw;
-    root.add(slotMouth);
-
-    const lipA = box(.035, .020, 4.04, .008, 0x7a8981, .55, .14);
-    lipA.position.set(slotCenter.x, .025, slotCenter.z);
-    lipA.rotation.y = slotYaw;
     const tangent = new THREE.Vector3(Math.cos(theta + Math.PI / 2), 0, Math.sin(theta + Math.PI / 2));
-    lipA.position.addScaledVector(tangent, -.09);
-    root.add(lipA);
-    const lipB = lipA.clone();
-    lipB.position.addScaledVector(tangent, .18);
-    root.add(lipB);
+    const dockBase = box(1.02, .09, 1.26, .05, 0x12181d, .84, .05);
+    dockBase.position.set(slotCenter.x, .045, slotCenter.z);
+    dockBase.rotation.y = slotYaw;
+    root.add(dockBase);
+
+    const dockSpine = box(.10, 1.62, 1.08, .03, 0x1d252c, .62, .18);
+    dockSpine.position.set(slotCenter.x, .82, slotCenter.z);
+    dockSpine.rotation.y = slotYaw;
+    dockSpine.position.addScaledVector(tangent, -.26);
+    root.add(dockSpine);
+
+    const dockLip = box(.22, .10, 1.04, .03, 0x5c6872, .38, .24);
+    dockLip.position.set(slotCenter.x, .11, slotCenter.z);
+    dockLip.rotation.y = slotYaw;
+    dockLip.position.addScaledVector(tangent, .23);
+    root.add(dockLip);
+
+    const dockRails = box(.08, .12, 1.06, .03, 0x7b8a93, .30, .28);
+    dockRails.position.copy(dockLip.position).addScaledVector(tangent, .18);
+    dockRails.rotation.y = slotYaw;
+    root.add(dockRails);
 
     const board = createBoard(entry.section, entry.item, entry.index);
     board.scale.setScalar(BOARD.stationScale);
@@ -799,21 +802,19 @@ function createAllStations() {
     board.visible = false;
     root.add(board);
 
-    // Stored edge-on: board width points radially. The top-center handle stays at the same x/z
-    // while it rotates, so the deterministic robot pickup coordinate remains exact.
-    const edgeQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -theta, 0));
     const faceDummy = new THREE.Object3D();
     faceDummy.position.copy(board.position);
     faceDummy.lookAt(camera.position.x, board.position.y, camera.position.z);
     const shownQ = faceDummy.quaternion.clone();
+    const dockQ = shownQ.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.24, 0, 0)));
     const shownS = new THREE.Vector3(BOARD.stationScale, BOARD.stationScale, BOARD.stationScale);
     const pickupP = board.position.clone();
-    const viewOffset = new THREE.Vector3(camera.position.x - slotCenter.x, 0, camera.position.z - slotCenter.z).normalize().multiplyScalar(.24);
-    const shownP = pickupP.clone().add(viewOffset); shownP.y += .12;
-    const hiddenP = pickupP.clone(); hiddenP.y = -BOARD.height * BOARD.stationScale * .55;
-    board.quaternion.copy(edgeQ);
-    board.userData.hiddenLocal = { p: hiddenP, q: edgeQ.clone(), s: shownS.clone() };
-    board.userData.emergedLocal = { p: pickupP.clone(), q: edgeQ.clone(), s: shownS.clone() };
+    const dockP = pickupP.clone().addScaledVector(tangent, -.18);
+    dockP.y -= .54;
+    const shownP = pickupP.clone();
+    board.quaternion.copy(dockQ);
+    board.userData.hiddenLocal = { p: dockP.clone(), q: dockQ.clone(), s: shownS.clone() };
+    board.userData.emergedLocal = { p: dockP.clone(), q: dockQ.clone(), s: shownS.clone() };
     board.userData.pickupLocal = { p: pickupP.clone(), q: shownQ.clone(), s: shownS.clone() };
     board.userData.shownLocal = { p: shownP, q: shownQ, s: shownS.clone() };
 
@@ -824,7 +825,7 @@ function createAllStations() {
 
     const station = {
       ...entry, root, pad, ring, model, board,
-      slotBase: slotHousing, slotBack: slotHousing, slotMouth,
+      slotBase: dockBase, slotBack: dockSpine, slotMouth: dockLip,
       slotCenter: slotCenter.clone(), modelCenter: modelCenter.clone(),
       pickupYaw: theta, pickupHandleY
     };
@@ -1195,21 +1196,18 @@ async function slideBoardOut(station) {
   board.position.copy(board.userData.hiddenLocal.p);
   board.quaternion.copy(board.userData.hiddenLocal.q);
   board.scale.copy(board.userData.hiddenLocal.s);
-  // Vertical rigid-body translation out of the physical table cassette.
-  await tweenLocalTransform(station.root, board, board.userData.emergedLocal, 300);
-  // The cassette turns the rigid sheet toward the viewer before the robot closes its gripper.
-  await tweenLocalTransform(station.root, board, board.userData.shownLocal, 180);
+  // The page begins docked beside the object, then the arm comes over to collect it.
+  await tweenLocalTransform(station.root, board, board.userData.pickupLocal, 260);
 }
 async function slideBoardIn(station) {
   const board = station.board;
-  // Rotate edge-on first, then lower the same rigid plate into the slot.
-  await tweenLocalTransform(station.root, board, board.userData.emergedLocal, 150);
-  await tweenLocalTransform(station.root, board, board.userData.hiddenLocal, 300, () => { board.visible = false; });
+  // Return the page to its dock beside the object.
+  await tweenLocalTransform(station.root, board, board.userData.hiddenLocal, 240, () => { board.visible = false; });
 }
 function beginHold(station) {
   const board = station.board;
   scene.attach(board);
-  board.scale.setScalar(1.12);
+  board.scale.setScalar(1.18);
   state.heldBoard = board;
   state.heldStation = station;
   const socket = socketWorld();
@@ -1232,7 +1230,7 @@ function heldBoardTargetPose(socket, swingX = 0, swingZ = 0) {
   const q = facing.quaternion.clone();
   q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX, 0, swingZ)));
   const viewDir = new THREE.Vector3(camera.position.x - socket.x, camera.position.y - socket.y, camera.position.z - socket.z).normalize();
-  const presentationOffset = viewDir.multiplyScalar(2.15);
+  const presentationOffset = viewDir.multiplyScalar(3.35);
   const localHandle = new THREE.Vector3(BOARD.handleX * BOARD.stationScale, BOARD.handleY * BOARD.stationScale, 0).applyQuaternion(q);
   return { position: socket.clone().add(presentationOffset).sub(localHandle), quaternion: q };
 }
@@ -1247,7 +1245,7 @@ function updateHeldBoard(now, dt, snap = false) {
   f.prevVelocity.lerp(velocity, .42);
 
   // Damped pendulum response. This is not a visual lag: the top-center handle remains constrained to the gripper.
-  const stiffness = 13.5, damping = 5.4, drive = .011;
+  const stiffness = 15.5, damping = 6.2, drive = .0075;
   const ax = THREE.MathUtils.clamp(acceleration.z * drive, -.75, .75);
   const az = THREE.MathUtils.clamp(-acceleration.x * drive, -.75, .75);
   f.swingVX += (-stiffness * f.swingX - damping * f.swingVX + ax) * safeDt;
@@ -1266,8 +1264,8 @@ function updateHeldBoard(now, dt, snap = false) {
   }
 }
 
-const PRESENT_YAW = Math.PI / 2;
-const SAFE_YAW = Math.PI / 2;
+const PRESENT_YAW = 0.58;
+const SAFE_YAW = 0.18;
 
 async function rotateSafelyTo(yaw, duration = 330) {
   // Never rotate the base while the links are extended near the objects.
@@ -1313,17 +1311,17 @@ async function pickupBoard(station) {
   dom.status.textContent = 'Aligning page';
   await tweenLocalTransform(station.root, station.board, station.board.userData.pickupLocal, 110);
   dom.status.textContent = 'Grabbing page';
-  await moveArmPose(station.pickupYaw, ARM_POSES.pickup, 220);
+  await moveArmPose(station.pickupYaw, ARM_POSES.pickup, 280);
   await setGrip(.09, 120);
 
   // At this instant the socket and top-center board handle are the same point by construction.
   beginHold(station);
 
   dom.status.textContent = 'Lifting page';
-  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 220);
-  await rotateSafelyTo(PRESENT_YAW, 380);
-  dom.status.textContent = 'Presenting page';
-  await moveArmPose(PRESENT_YAW, ARM_POSES.present, 360);
+  await moveArmPose(station.pickupYaw, ARM_POSES.lift, 320);
+  await rotateSafelyTo(PRESENT_YAW, 520);
+  dom.status.textContent = 'Bringing page forward';
+  await moveArmPose(PRESENT_YAW, ARM_POSES.present, 460);
   dom.status.textContent = 'Page ready';
 }
 
