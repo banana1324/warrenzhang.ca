@@ -539,7 +539,7 @@ keyLight.shadow.camera.right = 10;
 keyLight.shadow.camera.top = 10;
 keyLight.shadow.camera.bottom = -10;
 scene.add(keyLight);
-const fillLight = new THREE.PointLight(0x68b8ff, 11.0, 24);
+const fillLight = new THREE.PointLight(0x61c8ff, 11.0, 24);
 fillLight.position.set(2.1, 5.2, 1.7);
 scene.add(fillLight);
 const rimLight = new THREE.DirectionalLight(0xffa34d, .92);
@@ -665,7 +665,7 @@ makeWallMark();
 
 const warmPool = new THREE.PointLight(0xff8d38, 5.8, 10);
 warmPool.position.set(5.9, 2.4, 3.8); scene.add(warmPool);
-const coolPool = new THREE.PointLight(0x3d9fe5, 7.4, 11);
+const coolPool = new THREE.PointLight(0x35b9e8, 7.4, 11);
 coolPool.position.set(-3.7, 2.5, 3.4); scene.add(coolPool);
 
 // ---------- arm ----------
@@ -892,7 +892,7 @@ function createBoard(section,item,index) {
 
 function drawStandardBoard(ctx,section,copy,index){
   const margin=150, contentW=3400;
-  const accent='#82b4d8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
+  const accent='#69bfe8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
 
   ctx.fillStyle=accent; ctx.font='700 44px Inter, Arial';
   ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,margin,50);
@@ -924,14 +924,14 @@ function drawStandardBoard(ctx,section,copy,index){
   let leftY=lowerTop+64; ctx.font='500 40px Inter, Arial';
   copy.contributions.slice(0,2).forEach(line=>{
     ctx.fillStyle=accent; ctx.beginPath(); ctx.arc(leftX+9,leftY-13,5,0,Math.PI*2); ctx.fill(); ctx.fillStyle=body;
-    const lineEnd=wrapText(ctx,line,leftX+32,leftY,colW-32,54); leftY=lineEnd+38;
+    const lineEnd=wrapText(ctx,line,leftX+32,leftY,colW-32,68); leftY=lineEnd+68;
   });
 
   ctx.fillStyle=body; ctx.font='500 40px Inter, Arial';
-  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+64,colW,54);
+  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+64,colW,62);
   ctx.fillStyle=accent; ctx.font='800 33px Inter, Arial'; ctx.fillText('WHY IT MATTERS',rightX,scopeEnd+44);
   ctx.fillStyle=body; ctx.font='500 40px Inter, Arial';
-  wrapText(ctx,copy.impact,rightX,scopeEnd+96,colW,54);
+  wrapText(ctx,copy.impact,rightX,scopeEnd+104,colW,62);
 
   const footerY=1290;
   ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,footerY); ctx.lineTo(3550,footerY); ctx.stroke();
@@ -945,7 +945,7 @@ function drawStandardBoard(ctx,section,copy,index){
 
 function drawAboutBoard(ctx,copy,index){
   const margin=150, contentW=3400;
-  const accent='#82b4d8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
+  const accent='#69bfe8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
   ctx.fillStyle=accent; ctx.font='700 44px Inter, Arial'; ctx.fillText(`ABOUT  ·  ${String(index+1).padStart(2,'0')}`,margin,50);
   ctx.fillStyle=primary; ctx.font='800 120px Inter, Arial'; ctx.fillText('About Warren Zhang',margin,178);
   ctx.fillStyle=muted; ctx.font='500 48px Inter, Arial'; ctx.fillText(copy.meta,margin,259);
@@ -1402,22 +1402,9 @@ function beginHold(station,board){
   board.visible=true;
   state.heldBoard=board;
   state.heldStation=station;
-  const socket=socketWorld();
-  // Constrained rigid-plate state. The top clamp is the pivot; the rest of the
-  // sheet responds to gravity and acceleration like a lightly damped pendulum.
-  state.heldFollow={
-    prevSocket:socket.clone(),
-    prevVelocity:new THREE.Vector3(),
-    angleX:(Math.random()-.5)*.010,
-    angleZ:(Math.random()-.5)*.0025,
-    angularVX:(Math.random()-.5)*.040,
-    angularVZ:(Math.random()-.5)*.008,
-    comLength:Math.max(1.1, BOARD.height * board.scale.y * (.40 + Math.random()*.055)),
-    damping:1.75 + Math.random()*.55,
-    nextImpulseAt:performance.now() + 120 + Math.random()*260,
-    impulseX:0,
-    impulseZ:0
-  };
+  // The info board is treated as a rigid payload. It follows the claw exactly;
+  // there is no pendulum sway, velocity lag, random rocking, or collision-induced tilt.
+  state.heldFollow=null;
   updateHeldBoard(performance.now(),1/60,true);
 }
 function baseBoardQuaternion(){
@@ -1435,92 +1422,13 @@ function heldBoardTargetPose(socket,angleX=0,angleZ=0){
   return {position:socket.clone().sub(localHandle),quaternion:q};
 }
 function updateHeldBoard(now,dt,snap=false){
-  if(!state.heldBoard||!state.heldFollow)return;
-  const socket=socketWorld(),f=state.heldFollow,safeDt=Math.max(1/180,Math.min(dt||1/60,1/30));
-
-  // Claw kinematics. Horizontal velocity now matters for the ENTIRE movement,
-  // not only at starts/stops. This is what makes the heavy board visibly trail.
-  const rawVelocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);
-  const velocity=f.prevVelocity.clone().lerp(rawVelocity,.62);
-  const acceleration=velocity.clone().sub(f.prevVelocity).multiplyScalar(1/safeDt);
-  f.prevSocket.copy(socket);
-  f.prevVelocity.copy(velocity);
-
-  // Only horizontal travel should establish the sustained lag direction.
-  // Vertical arm motion can still create a short inertial impulse through acceleration.
-  const horizontalVelocity=velocity.clone(); horizontalVelocity.y=0;
-  const horizontalAcceleration=acceleration.clone(); horizontalAcceleration.y=0;
-  const invBaseQ=baseBoardQuaternion().clone().invert();
-  const localVelocity=horizontalVelocity.applyQuaternion(invBaseQ);
-  const localAcceleration=horizontalAcceleration.applyQuaternion(invBaseQ);
-  const moving=horizontalVelocity.lengthSq()>.006 || horizontalAcceleration.lengthSq()>.12 || !!state.armTween;
-
-  // Small irregular mechanical disturbances. A heavy metal plate should not roll
-  // freely side-to-side, so almost all of the random energy is applied to pitch.
-  if(moving && now>=f.nextImpulseAt){
-    const pitchStrength=.010 + Math.random()*.024;
-    const rollStrength=.002 + Math.random()*.006;
-    f.impulseX+=(Math.random()-.5)*pitchStrength;
-    f.impulseZ+=(Math.random()-.5)*rollStrength;
-    f.nextImpulseAt=now + 220 + Math.random()*560;
-  }
-
-  const gravity=9.81;
-  const L=f.comLength;
-
-  // Treat the page as a broad, fairly massive metal panel. Travel toward/away
-  // from the viewer produces the dominant aerodynamic/inertial drag; sideways
-  // travel still produces a little roll, but much less.
-  const forwardVelocityDrag=1.42;
-  const lateralVelocityDrag=.22;
-  const forwardAccelerationDrag=.082;
-  const lateralAccelerationDrag=.016;
-
-  const forceX=-localVelocity.x*Math.abs(localVelocity.x)*lateralVelocityDrag
-    -localAcceleration.x*lateralAccelerationDrag;
-  const forceZ=-localVelocity.z*Math.abs(localVelocity.z)*forwardVelocityDrag
-    -localAcceleration.z*forwardAccelerationDrag;
-
-  // Pitch (angleX) is allowed to trail noticeably. Roll (angleZ) is intentionally
-  // constrained, as if the claw and the wide metal plate resist twisting sideways.
-  const maxPitchTarget=.32;   // ~18 degrees front/back target
-  const maxRollTarget=.065;   // ~3.7 degrees left/right target
-  const targetAngleX=THREE.MathUtils.clamp(Math.atan2(-forceZ,gravity),-maxPitchTarget,maxPitchTarget);
-  const targetAngleZ=THREE.MathUtils.clamp(Math.atan2(forceX,gravity),-maxRollTarget,maxRollTarget);
-
-  // Separate rotational inertia on each axis. Pitch is heavy and underdamped enough
-  // to visibly lag and overshoot. Roll is much more strongly damped and recenters fast.
-  const pitchStiffness=7.4;
-  const pitchDamping=2.35;
-  const rollStiffness=13.5;
-  const rollDamping=6.2;
-  const pitchAccelKick=.032;
-  const rollAccelKick=.0045;
-
-  const alphaX=pitchStiffness*(targetAngleX-f.angleX)-pitchDamping*f.angularVX
-    +THREE.MathUtils.clamp(localAcceleration.z*pitchAccelKick,-2.5,2.5)+f.impulseX;
-  const alphaZ=rollStiffness*(targetAngleZ-f.angleZ)-rollDamping*f.angularVZ
-    +THREE.MathUtils.clamp(-localAcceleration.x*rollAccelKick,-.45,.45)+f.impulseZ;
-
-  f.angularVX+=alphaX*safeDt;
-  f.angularVZ+=alphaZ*safeDt;
-  f.angleX+=f.angularVX*safeDt;
-  f.angleZ+=f.angularVZ*safeDt;
-
-  f.impulseX*=Math.exp(-8.0*safeDt);
-  f.impulseZ*=Math.exp(-14.0*safeDt);
-
-  // Physical travel limits: a large forward/back swing is allowed, while sideways
-  // roll remains visually subtle and mechanically constrained.
-  const maxPitchAngle=.36; // ~20.6 degrees
-  const maxRollAngle=.075; // ~4.3 degrees
-  if(Math.abs(f.angleX)>maxPitchAngle){ f.angleX=THREE.MathUtils.clamp(f.angleX,-maxPitchAngle,maxPitchAngle); f.angularVX*=-.10; }
-  if(Math.abs(f.angleZ)>maxRollAngle){ f.angleZ=THREE.MathUtils.clamp(f.angleZ,-maxRollAngle,maxRollAngle); f.angularVZ*=-.06; }
-
-  if(state.reducedMotion){ f.angleX=0;f.angleZ=0;f.angularVX=0;f.angularVZ=0; }
-  const target=heldBoardTargetPose(socket,f.angleX,f.angleZ);
+  if(!state.heldBoard)return;
+  const socket=socketWorld();
+  const target=heldBoardTargetPose(socket,0,0);
+  // Rigid attachment: the clamp point, position, and orientation all follow the
+  // gripper directly. The only orientation change is the deliberate carry/read
+  // blend used by the robot-arm choreography.
   state.heldBoard.position.copy(target.position);
-  // Exact clamp constraint: only orientation swings; the board never detaches.
   state.heldBoard.quaternion.copy(target.quaternion);
 }
 async function carryCurrentCompletelyOffscreen(){
@@ -1669,13 +1577,7 @@ function updatePhysics(dt) {
       state.heldBoard.updateMatrixWorld(true);
       boardOBB.center.set(0, 0, 0); boardOBB.halfSize.set(BOARD.width / 2, BOARD.height / 2, BOARD.thickness / 2 + .14); boardOBB.rotation.identity();
       boardOBB.applyMatrix4(state.heldBoard.matrixWorld);
-      resolveSphereOBB(o, boardOBB, r, (normal, impulse) => {
-        // Two-way response: a thrown object can kick the constrained rigid page and make it swing.
-        if (state.heldFollow) {
-          state.heldFollow.angularVX += THREE.MathUtils.clamp(normal.z * impulse * .035, -.24, .24);
-          state.heldFollow.angularVZ += THREE.MathUtils.clamp(-normal.x * impulse * .035, -.24, .24);
-        }
-      });
+      resolveSphereOBB(o, boardOBB, r);
     }
     resolveSphereArm(o, r);
     const limitX = 7.1, minZ = -3.0, maxZ = 6.6;
@@ -1698,10 +1600,10 @@ function spawnShape(kind) {
   if (kind === 'plane') o = box(1.15, .08, 1.15, .025, 0x717980, .78, .05);
   else if (kind === 'circle') o = mesh(new THREE.CylinderGeometry(.52, .52, .10, 32), 0x7b746c, .62, .14);
   else if (kind === 'sphere') o = mesh(new THREE.SphereGeometry(.50, 26, 18), 0x64786b, .50, .13);
-  else if (kind === 'icosphere') o = mesh(new THREE.IcosahedronGeometry(.52, 2), 0x5d7488, .48, .18);
-  else if (kind === 'cylinder') o = mesh(new THREE.CylinderGeometry(.43, .43, .94, 24), 0x776b6b, .52, .18);
-  else if (kind === 'cone') o = mesh(new THREE.ConeGeometry(.53, 1.0, 26), 0x81785e, .52, .18);
-  else if (kind === 'torus') o = mesh(new THREE.TorusGeometry(.46, .15, 16, 42), 0x706979, .48, .20);
+  else if (kind === 'icosphere') o = mesh(new THREE.IcosahedronGeometry(.52, 2), 0x5b7180, .48, .18);
+  else if (kind === 'cylinder') o = mesh(new THREE.CylinderGeometry(.43, .43, .94, 24), 0x6c7479, .52, .18);
+  else if (kind === 'cone') o = mesh(new THREE.ConeGeometry(.53, 1.0, 26), 0x717871, .52, .18);
+  else if (kind === 'torus') o = mesh(new THREE.TorusGeometry(.46, .15, 16, 42), 0x65737d, .48, .20);
   else if (kind === 'monkey') {
     o = new THREE.Group();
     const base = mesh(new THREE.CylinderGeometry(.34, .42, .16, 24), 0x536171, .52, .34); base.position.y = .08; o.add(base);
@@ -1710,7 +1612,7 @@ function spawnShape(kind) {
       s.traverse(c => { if (c.isMesh) { c.material = mat(0xced4db, .48, .08); c.castShadow = true; } });
       o.add(s);
     });
-  } else o = box(.86, .86, .86, .055, 0x5d7488, .48, .18);
+  } else o = box(.86, .86, .86, .055, 0x5b7180, .48, .18);
   o.userData.radius = .54;
   o.position.set((Math.random() - .5) * 2.0, 4.0 + Math.random(), 2.0 + (Math.random() - .5) * 1.6);
   o.rotation.set(Math.random(), Math.random(), Math.random());
