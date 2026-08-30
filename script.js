@@ -250,12 +250,11 @@ const CONTENT = {
 };
 
 
-// Board copy is intentionally written for a senior software-engineering hiring audience.
-// It preserves the underlying facts while foregrounding ownership, debugging, reliability,
-// systems thinking, measurable output, and communication.
-const SWE_BOARD_COPY = {
+// Board copy foregrounds ownership, debugging, reliability, systems thinking, measurable output, and communication.
+// The goal is a strong technical portfolio voice without sounding like a job-specific application.
+const PORTFOLIO_BOARD_COPY = {
   'home/home': {
-    title: 'Software Engineer · Systems, Embedded & Robotics',
+    title: 'Software, Embedded Systems & Robotics',
     meta: 'University of Waterloo CS · Python · C/C++ · Embedded Systems',
     summary: 'I build software that has to work under real constraints: hardware timing, sensor data, networks, robotics, and users. The common thread across my projects is end-to-end ownership, disciplined debugging, and making systems understandable enough for other people to rely on.',
     metrics: [['15', 'embedded apps + games'], ['$195K+', 'Kickstarter funding tied to products contributed to'], ['3 years', 'competition robotics']],
@@ -265,7 +264,7 @@ const SWE_BOARD_COPY = {
       'Debug by measuring first, changing one variable at a time, retesting, and documenting the result.',
       'Comfortable explaining technical decisions to teammates, learners, and non-specialists.'
     ],
-    scope: 'Best fit: software-engineering roles where implementation, testing, integration, and ownership matter more than isolated coding exercises.',
+    scope: 'Best fit: technical roles where implementation, testing, integration, and ownership matter more than isolated coding exercises.',
     impact: 'Evidence of execution includes 15 shipped learning projects, contribution to three Kickstarter-backed products, and three years of iterative robotics development.',
     tags: ['Python', 'C/C++', 'Embedded', 'Robotics', 'Systems Debugging']
   },
@@ -280,13 +279,13 @@ const SWE_BOARD_COPY = {
       'Turn technical understanding into documentation, tutorials, and explanations for other learners.',
       'Bring the same collaborative mindset to robotics, teaching, coaching, and technical product work.'
     ],
-    scope: 'For a software team, this translates to strong debugging discipline, clear written and verbal communication, and comfort working across system boundaries.',
+    scope: 'This translates to strong debugging discipline, clear written and verbal communication, and comfort working across system boundaries.',
     impact: 'The result is a working style centered on reliability, reproducibility, and making the next engineer’s job easier.',
     tags: ['Debugging', 'Systems Thinking', 'Documentation', 'Collaboration']
   },
   'projects/wildfire': {
     title: 'Wildfire Detection System',
-    meta: 'Software Engineering Project · C++ · LoRaWAN · Raspberry Pi · MQTT',
+    meta: 'Systems Project · C++ · LoRaWAN · Raspberry Pi · MQTT',
     summary: 'Built an end-to-end environmental-monitoring pipeline from sensor acquisition to long-range transport, gateway processing, messaging, and dashboard visualization. The project required reasoning across interfaces rather than treating each component as an isolated demo.',
     metrics: [['End-to-end', 'sensor → network → dashboard'], ['LoRaWAN', 'long-range transport'], ['MQTT + Node-RED', 'processing + visualization']],
     contributions: [
@@ -295,7 +294,7 @@ const SWE_BOARD_COPY = {
       'Tested the full pipeline as one system and debugged failures across hardware, networking, and software boundaries.',
       'Designed the project around observable data flow instead of a single successful component test.'
     ],
-    scope: 'Strong SWE signal: system decomposition, interface design, integration testing, networked data flow, and end-to-end ownership.',
+    scope: 'Engineering focus: system decomposition, interface design, integration testing, networked data flow, and end-to-end ownership.',
     impact: 'Demonstrates the ability to build and debug a multi-stage system where correctness depends on several technologies working together.',
     tags: ['C++', 'LoRaWAN', 'MQTT', 'Raspberry Pi', 'BME680', 'Node-RED']
   },
@@ -310,7 +309,7 @@ const SWE_BOARD_COPY = {
       'Diagnosed timing, state, and hardware-interaction issues until projects behaved consistently.',
       'Produced a tutorial for each project, turning implementation knowledge into reproducible engineering documentation.'
     ],
-    scope: 'Strong SWE signal: repeated delivery, test/debug cycles, platform constraints, documentation, and maintaining quality across a family of related programs.',
+    scope: 'Engineering focus: repeated delivery, test/debug cycles, platform constraints, documentation, and maintaining quality across a family of related programs.',
     impact: 'Shows that I can move beyond one-off prototypes and deliver a set of usable, documented software experiences on real hardware.',
     tags: ['RP2040', 'MicroPython', 'Python', 'Testing', 'Technical Writing']
   },
@@ -325,14 +324,14 @@ const SWE_BOARD_COPY = {
       'Mapped vision results into commands for robotic systems, connecting software inference to physical behavior.',
       'Used the project to learn how perception errors propagate into downstream control decisions.'
     ],
-    scope: 'Relevant SWE skills: data pipelines, API boundaries between subsystems, handling imperfect inputs, and integrating multiple modules into one working behavior.',
+    scope: 'Technical focus: data pipelines, API boundaries between subsystems, handling imperfect inputs, and integrating multiple modules into one working behavior.',
     impact: 'Demonstrates curiosity about applied AI while keeping the focus on integration and system behavior rather than model demos alone.',
     tags: ['Python', 'Computer Vision', 'Recognition', 'Robotics', 'Integration']
   },
   'projects/analog': {
     title: 'Analog Circuit II · Technical Verification',
     meta: 'Validation · Numerical Results · Oscilloscope Evidence · Technical Review',
-    summary: 'Supported verification of an analog-electronics learning project by checking formulas, diagrams, labels, code examples, numerical results, and oscilloscope evidence. The software-engineering relevance is the same discipline used in code review and QA: verify assumptions, reproduce results, and communicate defects precisely.',
+    summary: 'Supported verification of an analog-electronics learning project by checking formulas, diagrams, labels, code examples, numerical results, and oscilloscope evidence. The engineering value is the same discipline used in review and QA: verify assumptions, reproduce results, and communicate defects precisely.',
     metrics: [['Verification', 'diagrams + technical text'], ['Oscilloscope', 'measured evidence'], ['Laplace / Fourier', 'analysis reviewed']],
     contributions: [
       'Checked technical material for correctness rather than accepting documentation at face value.',
@@ -340,7 +339,7 @@ const SWE_BOARD_COPY = {
       'Reviewed content involving op-amps, MOSFETs, BJTs, diodes, and signal transforms.',
       'Reported errors and possible improvements clearly to the technical team.'
     ],
-    scope: 'Strong SWE signal: verification mindset, attention to edge cases, reproducible evidence, technical review, and concise defect communication.',
+    scope: 'Engineering focus: verification mindset, attention to edge cases, reproducible evidence, technical review, and concise defect communication.',
     impact: 'Shows that I care about correctness and can validate technical work created by other people, not only code I wrote myself.',
     tags: ['Verification', 'Testing', 'Technical Review', 'Signals', 'Documentation']
   },
@@ -355,7 +354,7 @@ const SWE_BOARD_COPY = {
       'Integrated sensors and LoRaWAN systems and used oscilloscopes / logic analyzers to diagnose failures.',
       'Reviewed instructional material, debugged AI software, and contributed to products launched through Kickstarter.'
     ],
-    scope: 'Strong SWE signal: broad technical ownership, debugging across layers, repeated delivery, product context, and communication with people outside a single engineering specialty.',
+    scope: 'Engineering focus: broad technical ownership, debugging across layers, repeated delivery, product context, and communication with people outside a single engineering specialty.',
     impact: 'Contributed to three Kickstarter campaigns reaching 446 backers and more than $195K in funding while building practical engineering judgment in a real team environment.',
     tags: ['Python', 'C/C++', 'RP2040', 'ESP32', 'LoRaWAN', 'Debugging']
   },
@@ -370,7 +369,7 @@ const SWE_BOARD_COPY = {
       'Served as a primary CAD designer and pushed the team toward more deliberate design planning.',
       'Helped a small team continue iterating through repeated failures until it became an official school team and tournament champion.'
     ],
-    scope: 'Strong SWE signal: control systems, state estimation, debugging under pressure, collaboration with mechanical teammates, and learning from repeated production-like failures.',
+    scope: 'Engineering focus: control systems, state estimation, debugging under pressure, collaboration with mechanical teammates, and learning from repeated production-like failures.',
     impact: 'The strongest signal is trajectory: measurable improvement came from better engineering process, not a single lucky redesign.',
     tags: ['C++', 'PID', 'Odometry', 'Autonomous', 'VEX V5', 'CAD']
   },
@@ -385,7 +384,7 @@ const SWE_BOARD_COPY = {
       'Used disagreements and losses to teach constructive resets instead of blame.',
       'Learned to give specific feedback without removing ownership from the person doing the work.'
     ],
-    scope: 'SWE relevance: mentoring, code-review style feedback, conflict de-escalation, communicating across experience levels, and helping a team improve without dominating it.',
+    scope: 'What this demonstrates: mentoring, code-review style feedback, conflict de-escalation, communicating across experience levels, and helping a team improve without dominating it.',
     impact: 'Shows leadership through patience and clarity rather than authority—useful on teams where strong engineers also need to make other people more effective.',
     tags: ['Communication', 'Mentoring', 'Leadership', 'Feedback']
   },
@@ -400,7 +399,7 @@ const SWE_BOARD_COPY = {
       'Performed in large ensembles and public events where preparation and timing have immediate consequences.',
       'Practice consistently outside scheduled rehearsals rather than relying on last-minute preparation.'
     ],
-    scope: 'SWE relevance: preparation, listening, dependable execution, mentoring, and contributing to a system where success depends on every participant meeting a shared standard.',
+    scope: 'What this demonstrates: preparation, listening, dependable execution, mentoring, and contributing to a system where success depends on every participant meeting a shared standard.',
     impact: 'Adds evidence of discipline and team reliability beyond technical projects alone.',
     tags: ['Teamwork', 'Preparation', 'Mentoring', 'Performance']
   },
@@ -415,7 +414,7 @@ const SWE_BOARD_COPY = {
       'Experiment with how physical behavior can become part of an interface instead of decoration.',
       'Translate 3D ideas into browser-based interaction through Three.js.'
     ],
-    scope: 'SWE relevance: simulation thinking, stateful interaction, geometry, real-time rendering, and designing user-facing behavior with technical constraints.',
+    scope: 'What this demonstrates: simulation thinking, stateful interaction, geometry, real-time rendering, and designing user-facing behavior with technical constraints.',
     impact: 'Demonstrates technical curiosity outside coursework and a willingness to learn unfamiliar systems deeply enough to build with them.',
     tags: ['Three.js', 'Blender', 'Simulation', 'Rigging', '3D Interaction']
   },
@@ -430,7 +429,7 @@ const SWE_BOARD_COPY = {
       'Use oscilloscopes and logic analyzers when logs alone cannot explain a failure.',
       'Trace problems across boundaries until the actual root cause is understood.'
     ],
-    scope: 'SWE relevance: low-level debugging, concurrency/timing intuition, interfaces, observability, and comfort working close to the system boundary.',
+    scope: 'What this demonstrates: low-level debugging, concurrency/timing intuition, interfaces, observability, and comfort working close to the system boundary.',
     impact: 'Gives me a broader failure model than software-only experience and improves how I reason about systems under real constraints.',
     tags: ['Embedded', 'C/C++', 'Debugging', 'Sensors', 'Observability']
   },
@@ -445,14 +444,14 @@ const SWE_BOARD_COPY = {
       'Mentor younger musicians and explain technique in practical, actionable language.',
       'Practice deliberately outside formal sessions to improve weak points before performance.'
     ],
-    scope: 'SWE relevance: operational awareness, calm troubleshooting, preparation, monitoring, and communication in a live environment.',
+    scope: 'What this demonstrates: operational awareness, calm troubleshooting, preparation, monitoring, and communication in a live environment.',
     impact: 'Shows that I am comfortable being accountable when a system has to work in real time rather than only in development.',
     tags: ['Live Systems', 'Troubleshooting', 'Mentoring', 'Team Execution']
   },
   'contact/contact': {
-    title: 'Software Engineering Opportunities',
-    meta: 'SWE · Embedded · Robotics · Systems',
-    summary: 'I am interested in software-engineering opportunities where I can own meaningful pieces of a system, learn from strong engineers, and work close enough to real users or hardware that correctness and reliability matter.',
+    title: 'Contact & Opportunities',
+    meta: 'Software · Embedded · Robotics · Systems',
+    summary: 'I am interested in technical opportunities where I can own meaningful pieces of a system, learn from strong engineers, and work close enough to real users or hardware that correctness and reliability matter.',
     metrics: [['GitHub', 'banana1324'], ['LinkedIn', 'fuyuanzhang'], ['Email', 'warrenz7980@gmail.com']],
     contributions: [
       'Strongest experience: embedded software, robotics controls, end-to-end IoT systems, and technical debugging.',
@@ -460,9 +459,9 @@ const SWE_BOARD_COPY = {
       'Interested in teams with high engineering standards, thoughtful code review, and meaningful ownership.',
       'Portfolio links include GitHub, LinkedIn, YouTube, and résumé.'
     ],
-    scope: 'Target roles: software engineering, embedded software, robotics software, systems, or related internships where strong debugging and learning speed are valued.',
+    scope: 'Interested in: software, embedded systems, robotics, or related technical internships where strong debugging and learning speed are valued.',
     impact: 'I would bring curiosity, technical range, careful debugging, and a track record of sticking with difficult systems until they work reliably.',
-    tags: ['Software Engineering', 'Embedded', 'Robotics', 'Systems']
+    tags: ['Software', 'Embedded', 'Robotics', 'Systems']
   }
 };
 
@@ -505,6 +504,7 @@ const state = {
   armTween: null,
   gripTween: null,
   heldFollow: null,
+  boardMode: 'carry',
   addOpen: false,
   spawned: [],
   selectedSpawn: null,
@@ -676,20 +676,19 @@ const ARM = {
 };
 
 const ARM_POSES = {
-  // Entire arm and page are beyond the left edge in this pose.
-  offscreen: [.98, -.40, .12, -.05],
-  // Heavy, high carry pose used when moving a sheet away from the visitor.
-  carry: [.94, -.34, .11, -.05],
-  // Close presentation: the gripper itself is close enough that the panel fills the viewport.
-  present: [.88, -.36, .14, -.04]
+  // Compact carry pose: high enough to clear the floor and folded close to the base.
+  offscreen: [1.830, -.280, -1.150, -1.100],
+  carry: [1.830, -.280, -1.150, -1.100],
+  // Same wrist height as carry, but extended toward the viewer for a nearly horizontal approach.
+  read: [1.026, -.514, -.144, -.138]
 };
 
-const ARM_MOTION_SCALE = 2.82;
+const ARM_MOTION_SCALE = 2.18;
 const GRIP_MOTION_SCALE = 1.55;
 const BOARD_MOTION_SCALE = 1.0;
-const PRESENT_YAW = .78;
+const PRESENT_YAW = .88;
 const OFFSCREEN_YAW = Math.PI;
-const HELD_BOARD_SCALE = 1.15;
+const HELD_BOARD_SCALE = 1.08;
 
 const armState = { yaw: OFFSCREEN_YAW, angles: [...ARM_POSES.offscreen], grip: .095 };
 const armVisual = { root:null, links:[], joints:[], wrist:null, fl:null, fr:null, socket:null };
@@ -826,95 +825,99 @@ function socketWorld() {
 }
 
 // ---------- info boards ----------
-const BOARD = { width:5.18, height:5.48, thickness:.095, handleX:0, handleY:2.90, stationScale:1 };
+const BOARD = { width:6.80, height:2.75, thickness:.095, handleX:0, handleY:1.50, stationScale:1 };
 function createBoard(section,item,index) {
   const key=`${section}/${item.id}`;
-  const copy=SWE_BOARD_COPY[key]||{
+  const copy=PORTFOLIO_BOARD_COPY[key]||{
     title:item.title, meta:item.meta, summary:item.description, metrics:item.metrics,
     contributions:item.details, scope:getScopeText(section,item), impact:'Built through repeated testing, debugging, documentation, and iteration.', tags:item.tags
   };
 
   const group=new THREE.Group();
-  const back=box(BOARD.width,BOARD.height,BOARD.thickness,.075,0xe8e4dd,.78,.02); group.add(back);
-  const rim=box(BOARD.width+.12,BOARD.height+.12,.055,.085,0xd1cec8,.58,.05); rim.position.z=-.055; group.add(rim);
+  const back=box(BOARD.width,BOARD.height,BOARD.thickness,.075,0x1b232b,.66,.12); group.add(back);
+  const rim=box(BOARD.width+.12,BOARD.height+.12,.055,.085,0x384651,.44,.28); rim.position.z=-.055; group.add(rim);
 
-  const clampBase=box(.72,.20,.24,.045,0x8b9297,.28,.72); clampBase.position.set(0,BOARD.height/2-.08,.10); group.add(clampBase);
-  const gripTab=box(.055,.34,.19,.018,0x34393e,.22,.90); gripTab.position.set(0,BOARD.handleY,.145); group.add(gripTab);
-  const cap=box(.34,.09,.27,.025,0x70777d,.24,.82); cap.position.set(0,BOARD.height/2+.18,.12); group.add(cap);
-  for(const x of [-.22,.22]) addBolt(clampBase,x,0,.14,.035);
+  const clampBase=box(.76,.20,.24,.045,0x727d86,.28,.72); clampBase.position.set(BOARD.handleX,BOARD.height/2-.07,.10); group.add(clampBase);
+  const gripTab=box(.055,.34,.19,.018,0x242b31,.22,.90); gripTab.position.set(BOARD.handleX,BOARD.handleY,.145); group.add(gripTab);
+  const cap=box(.36,.09,.27,.025,0x59636c,.24,.82); cap.position.set(BOARD.handleX,BOARD.height/2+.18,.12); group.add(cap);
+  for(const x of [-.23,.23]) addBolt(clampBase,BOARD.handleX+x,0,.14,.035);
   const handleAnchor=new THREE.Object3D(); handleAnchor.position.set(BOARD.handleX,BOARD.handleY,.145); group.add(handleAnchor); group.userData.handleAnchor=handleAnchor;
 
-  const canvas=document.createElement('canvas'); canvas.width=2500; canvas.height=3200;
+  const canvas=document.createElement('canvas'); canvas.width=3700; canvas.height=1500;
   const ctx=canvas.getContext('2d');
-  ctx.fillStyle='#f3f0ea'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  for(let i=0;i<4200;i++){ const a=Math.random()*.014; ctx.fillStyle=`rgba(55,48,42,${a})`; ctx.fillRect(Math.random()*2500,Math.random()*3200,1,1); }
+  ctx.fillStyle='#1c242c'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  for(let i=0;i<2200;i++){ const a=Math.random()*.018; ctx.fillStyle=`rgba(205,218,228,${a})`; ctx.fillRect(Math.random()*3700,Math.random()*1500,1,1); }
 
-  ctx.fillStyle='#194777'; ctx.font='700 42px Inter, Arial'; ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,130,160);
-  ctx.fillStyle='#101820'; ctx.font='800 146px Inter, Arial';
-  const titleEnd=wrapText(ctx,copy.title,130,345,2240,150);
-  ctx.fillStyle='#50565d'; ctx.font='500 58px Inter, Arial';
-  const metaEnd=wrapText(ctx,copy.meta,130,titleEnd+82,2240,72);
-  drawOutlinePills(ctx,copy.tags.slice(0,5),130,metaEnd+62,2240);
+  const margin=150, contentW=3400;
+  const accent='#79a9cf', primary='#e2e8ed', body='#c8d0d7', muted='#95a2ad', rule='#3d4a55', card='#232d36';
 
-  const profileTop=metaEnd+180;
-  ctx.strokeStyle='#c8c2bb'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(130,profileTop); ctx.lineTo(2370,profileTop); ctx.stroke();
-  ctx.fillStyle='#194777'; ctx.font='800 48px Inter, Arial'; ctx.fillText('SOFTWARE ENGINEERING PROFILE',130,profileTop+76);
-  ctx.fillStyle='#20262c'; ctx.font='500 60px Inter, Arial';
-  const summaryEnd=wrapText(ctx,copy.summary,130,profileTop+168,2240,78);
+  ctx.fillStyle=accent; ctx.font='700 38px Inter, Arial';
+  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,margin,104);
 
-  const metricY=summaryEnd+110, gap=34, cardW=(2240-gap*2)/3, cardH=280;
+  ctx.fillStyle=primary; ctx.font='800 100px Inter, Arial';
+  const titleEnd=wrapText(ctx,copy.title,margin,220,contentW,106);
+  ctx.fillStyle=muted; ctx.font='500 40px Inter, Arial';
+  const metaEnd=wrapText(ctx,copy.meta,margin,titleEnd+46,contentW,50);
+  drawOutlinePills(ctx,copy.tags.slice(0,5),margin,metaEnd+28,contentW,true);
+
+  const profileY=metaEnd+104;
+  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,profileY); ctx.lineTo(3550,profileY); ctx.stroke();
+  ctx.fillStyle=accent; ctx.font='800 32px Inter, Arial'; ctx.fillText('PROFILE',margin,profileY+50);
+  ctx.fillStyle=body; ctx.font='500 40px Inter, Arial';
+  const summaryEnd=wrapText(ctx,copy.summary,margin,profileY+108,contentW,52);
+
+  const metricY=summaryEnd+54, gap=34, cardW=(contentW-gap*2)/3, cardH=152;
   copy.metrics.slice(0,3).forEach((m,i)=>{
-    const x=130+i*(cardW+gap);
-    strokeRoundRect(ctx,x,metricY,cardW,cardH,30,'#cbc8c2',3);
-    ctx.fillStyle='#123f74'; ctx.font='800 68px Inter, Arial';
-    wrapText(ctx,String(m[0]),x+36,metricY+94,cardW-72,72);
-    ctx.fillStyle='#4f555c'; ctx.font='600 36px Inter, Arial';
-    wrapText(ctx,String(m[1]),x+36,metricY+186,cardW-72,44);
+    const x=margin+i*(cardW+gap);
+    roundRect(ctx,x,metricY,cardW,cardH,22,card);
+    strokeRoundRect(ctx,x,metricY,cardW,cardH,22,'#43515c',2);
+    ctx.fillStyle=accent; ctx.font='800 50px Inter, Arial';
+    wrapText(ctx,String(m[0]),x+28,metricY+58,cardW-56,54);
+    ctx.fillStyle=muted; ctx.font='600 25px Inter, Arial';
+    wrapText(ctx,String(m[1]),x+28,metricY+108,cardW-56,32);
   });
 
-  const lowerTop=metricY+cardH+120;
-  const colGap=92, colW=(2240-colGap)/2;
-  const leftX=130, rightX=130+colW+colGap;
+  const lowerTop=metricY+cardH+72;
+  const colGap=170, colW=(contentW-colGap)/2;
+  const leftX=margin, rightX=margin+colW+colGap;
 
-  // These sections intentionally use roughly 2x the previous text size.
-  ctx.fillStyle='#194777'; ctx.font='800 62px Inter, Arial';
+  ctx.fillStyle=accent; ctx.font='800 38px Inter, Arial';
   ctx.fillText('SELECTED CONTRIBUTIONS',leftX,lowerTop);
   ctx.fillText('ROLE · SCOPE · IMPACT',rightX,lowerTop);
 
-  let y=lowerTop+104; ctx.font='500 56px Inter, Arial';
-  copy.contributions.slice(0,4).forEach(line=>{
-    ctx.fillStyle='#194777'; ctx.beginPath(); ctx.arc(leftX+12,y-18,7,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#20262c'; y=wrapText(ctx,line,leftX+42,y,colW-42,70)+36;
+  let leftY=lowerTop+70; ctx.font='500 35px Inter, Arial';
+  copy.contributions.slice(0,3).forEach(line=>{
+    ctx.fillStyle=accent; ctx.beginPath(); ctx.arc(leftX+8,leftY-11,5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=body;
+    const end=wrapText(ctx,line,leftX+28,leftY,colW-28,46);
+    leftY=end+64;
   });
 
-  ctx.fillStyle='#20262c'; ctx.font='500 56px Inter, Arial';
-  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+104,colW,70);
-  ctx.fillStyle='#194777'; ctx.font='800 48px Inter, Arial'; ctx.fillText('WHY THIS MATTERS FOR SWE',rightX,scopeEnd+88);
-  ctx.fillStyle='#20262c'; ctx.font='500 56px Inter, Arial';
-  const impactEnd=wrapText(ctx,copy.impact,rightX,scopeEnd+176,colW,70);
+  ctx.fillStyle=body; ctx.font='500 35px Inter, Arial';
+  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+70,colW,46);
+  ctx.fillStyle=accent; ctx.font='800 30px Inter, Arial'; ctx.fillText('WHY IT MATTERS',rightX,scopeEnd+58);
+  ctx.fillStyle=body; ctx.font='500 35px Inter, Arial';
+  wrapText(ctx,copy.impact,rightX,scopeEnd+112,colW,46);
 
-  const footerY=2860;
-  ctx.strokeStyle='#c9c5bf'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(130,footerY); ctx.lineTo(2370,footerY); ctx.stroke();
-  ctx.fillStyle='#194777'; ctx.font='800 42px Inter, Arial'; ctx.fillText('CORE STACK',130,footerY+76); ctx.fillText('CONTACT',1360,footerY+76);
-  ctx.fillStyle='#252a31'; ctx.font='600 42px Inter, Arial';
-  wrapText(ctx,copy.tags.slice(0,6).join('   ·   '),130,footerY+142,1080,54);
-  ctx.fillStyle='#252a31'; ctx.font='500 38px Inter, Arial';
-  ctx.fillText('github.com/banana1324',1360,footerY+142);
-  ctx.fillText('linkedin.com/in/fuyuanzhang',1360,footerY+198);
-  ctx.fillStyle='#777d84'; ctx.font='500 30px Inter, Arial';
-  ctx.fillText('warrenz7980@gmail.com',130,3130);
-  ctx.textAlign='right'; ctx.fillText('Software · Systems · Embedded · Robotics',2370,3130); ctx.textAlign='left';
+  const footerY=1340;
+  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,footerY); ctx.lineTo(3550,footerY); ctx.stroke();
+  ctx.fillStyle=accent; ctx.font='800 27px Inter, Arial'; ctx.fillText('CORE STACK',margin,footerY+42); ctx.fillText('CONTACT',2200,footerY+42);
+  ctx.fillStyle=muted; ctx.font='600 26px Inter, Arial';
+  wrapText(ctx,copy.tags.slice(0,6).join('   ·   '),margin,footerY+82,1850,32);
+  ctx.fillStyle=muted; ctx.font='500 25px Inter, Arial';
+  ctx.fillText('github.com/banana1324',2200,footerY+82);
+  ctx.fillText('linkedin.com/in/fuyuanzhang',2200,footerY+116);
 
   const texture=new THREE.CanvasTexture(canvas); texture.colorSpace=THREE.SRGBColorSpace; texture.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),16);
-  const plane=new THREE.Mesh(new THREE.PlaneGeometry(BOARD.width-.20,BOARD.height-.20),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
+  const plane=new THREE.Mesh(new THREE.PlaneGeometry(BOARD.width-.18,BOARD.height-.18),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
   plane.position.z=BOARD.thickness/2+.006; group.add(plane);
   group.userData.texture=texture;
   return group;
 }
 
-function drawOutlinePills(ctx,pills,x,y,maxWidth){
-  ctx.font='600 34px Inter, Arial'; let cx=x,cy=y;
-  pills.forEach(label=>{ const w=ctx.measureText(label).width+54; if(cx+w>maxWidth+x){cx=x;cy+=64;} strokeRoundRect(ctx,cx,cy,w,50,20,'#aeb7c0',2); ctx.fillStyle='#174878';ctx.fillText(label,cx+26,cy+35);cx+=w+16; });
+function drawOutlinePills(ctx,pills,x,y,maxWidth,dark=false){
+  ctx.font='600 28px Inter, Arial'; let cx=x,cy=y;
+  pills.forEach(label=>{ const w=ctx.measureText(label).width+44; if(cx+w>maxWidth+x){cx=x;cy+=52;} strokeRoundRect(ctx,cx,cy,w,42,18,dark?'#465967':'#aeb7c0',2); ctx.fillStyle=dark?'#9ec4df':'#174878';ctx.fillText(label,cx+22,cy+30);cx+=w+14; });
 }
 function strokeRoundRect(ctx,x,y,w,h,r,stroke,width=2){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();
@@ -1315,6 +1318,7 @@ function disposeBoard(board){
   disposeObject(board);
 }
 function beginHold(station,board){
+  state.boardMode='carry';
   scene.add(board);
   board.scale.setScalar(HELD_BOARD_SCALE);
   board.visible=true;
@@ -1325,10 +1329,15 @@ function beginHold(station,board){
   updateHeldBoard(performance.now(),1/60,true);
 }
 function heldBoardTargetPose(socket,swingX=0,swingZ=0){
-  // Keep the sheet parallel to the viewer's image plane instead of pitching it downward.
-  // The board clamp point remains exactly coincident with the gripper socket.
-  const q=camera.quaternion.clone();
-  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX*.35,0,swingZ*.35)));
+  let q;
+  if(state.boardMode==='carry'){
+    // Tangent to the base rotation: the panel rides edge-on beside the arm instead of broadside.
+    q=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-armState.yaw+Math.PI/2,0));
+  }else{
+    // Final reading state is exactly parallel to the viewer's image plane.
+    q=camera.quaternion.clone();
+  }
+  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX*.25,0,swingZ*.25)));
   const scale=state.heldBoard?.scale.x||HELD_BOARD_SCALE;
   const localHandle=new THREE.Vector3(BOARD.handleX*scale,BOARD.handleY*scale,.145*scale).applyQuaternion(q);
   return {position:socket.clone().sub(localHandle),quaternion:q};
@@ -1346,16 +1355,19 @@ function updateHeldBoard(now,dt,snap=false){
 }
 async function carryCurrentCompletelyOffscreen(){
   if(!state.heldBoard)return;
-  dom.status.textContent='Moving current page away';
-  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,320);
-  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.carry,650);
-  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.offscreen,260);
-  // The current panel is now completely outside the camera frustum.
+  state.boardMode='carry';
+  // First retract and fold the panel beside the arm so the package stays compact.
+  dom.status.textContent='Retracting current page';
+  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,330);
+  // Then rotate the compact, elevated package completely out of frame.
+  dom.status.textContent='Rotating page away';
+  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.carry,540);
   await wait(250);
-  await setGrip(.26,90);
+  await setGrip(.26,80);
   await wait(250);
 }
 async function swapBoardWhileOffscreen(station){
+  state.boardMode='carry';
   const old=state.heldBoard;
   state.heldBoard=null;state.heldFollow=null;state.heldStation=null;
   if(old)disposeBoard(old);
@@ -1365,11 +1377,16 @@ async function swapBoardWhileOffscreen(station){
   await setGrip(.095,115);
 }
 async function bringBoardBackOnscreen(){
-  dom.status.textContent='Bringing next page in';
-  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.carry,220);
-  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,720);
-  dom.status.textContent='Presenting page';
-  await moveArmPose(PRESENT_YAW,ARM_POSES.present,400);
+  // The new page is already clamped while the arm is off-camera.
+  // Rotate into frame while the panel stays edge-on and tucked against the arm.
+  state.boardMode='carry';
+  dom.status.textContent='Rotating next page into frame';
+  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,560);
+  await wait(110);
+  // Once rotation is finished, turn the panel parallel to the viewer and push it forward.
+  state.boardMode='read';
+  dom.status.textContent='Sliding page forward';
+  await moveArmPose(PRESENT_YAW,ARM_POSES.read,390);
   dom.status.textContent='Page ready';
 }
 async function deliverBoard(section,index){
