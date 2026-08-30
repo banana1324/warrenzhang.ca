@@ -1438,54 +1438,77 @@ function updateHeldBoard(now,dt,snap=false){
   if(!state.heldBoard||!state.heldFollow)return;
   const socket=socketWorld(),f=state.heldFollow,safeDt=Math.max(1/180,Math.min(dt||1/60,1/30));
 
-  // Linear acceleration of the claw is the external force that makes the plate lag.
-  const velocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);
+  // Claw kinematics. Horizontal velocity now matters for the ENTIRE movement,
+  // not only at starts/stops. This is what makes the heavy board visibly trail.
+  const rawVelocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);
+  const velocity=f.prevVelocity.clone().lerp(rawVelocity,.62);
   const acceleration=velocity.clone().sub(f.prevVelocity).multiplyScalar(1/safeDt);
   f.prevSocket.copy(socket);
-  f.prevVelocity.lerp(velocity,.46);
+  f.prevVelocity.copy(velocity);
 
-  // Express acceleration in the plate's unswung local coordinates so turns and
-  // horizontal pushes naturally excite different axes.
-  const localAcceleration=acceleration.clone().applyQuaternion(baseBoardQuaternion().clone().invert());
-  const moving=velocity.lengthSq()>.012 || acceleration.lengthSq()>.20 || !!state.armTween;
+  // Only horizontal travel should establish the sustained lag direction.
+  // Vertical arm motion can still create a short inertial impulse through acceleration.
+  const horizontalVelocity=velocity.clone(); horizontalVelocity.y=0;
+  const horizontalAcceleration=acceleration.clone(); horizontalAcceleration.y=0;
+  const invBaseQ=baseBoardQuaternion().clone().invert();
+  const localVelocity=horizontalVelocity.applyQuaternion(invBaseQ);
+  const localAcceleration=horizontalAcceleration.applyQuaternion(invBaseQ);
+  const moving=horizontalVelocity.lengthSq()>.006 || horizontalAcceleration.lengthSq()>.12 || !!state.armTween;
 
-  // Small irregular mechanical disturbances represent gearbox/backlash/joint vibration.
-  // They occur only while moving and are newly sampled each time, so there is no canned cycle.
+  // Irregular tiny gearbox/backlash impulses. These are secondary; the dominant
+  // board motion comes from the arm's real velocity and acceleration below.
   if(moving && now>=f.nextImpulseAt){
-    const strength=.025 + Math.random()*.055;
+    const strength=.012 + Math.random()*.028;
     f.impulseX+=(Math.random()-.5)*strength;
     f.impulseZ+=(Math.random()-.5)*strength;
-    f.nextImpulseAt=now + 150 + Math.random()*430;
+    f.nextImpulseAt=now + 180 + Math.random()*520;
   }
 
   const gravity=9.81;
   const L=f.comLength;
-  const damping=f.damping;
-  const accelGain=.070;
-  const maxDrive=2.8;
-  const driveX=THREE.MathUtils.clamp(localAcceleration.z*accelGain,-maxDrive,maxDrive);
-  const driveZ=THREE.MathUtils.clamp(-localAcceleration.x*accelGain,-maxDrive,maxDrive);
 
-  // Small-angle rigid pendulum equations about the top clamp.
-  const alphaX=-(gravity/L)*Math.sin(f.angleX)-damping*f.angularVX+driveX+f.impulseX;
-  const alphaZ=-(gravity/L)*Math.sin(f.angleZ)-damping*f.angularVZ+driveZ+f.impulseZ;
+  // Aerodynamic / inertial drag on a broad plate. A constant claw velocity now
+  // produces a constant opposite force, so the sheet stays leaned backward for
+  // the whole translation instead of snapping upright until the final stop.
+  const velocityDrag=.72;
+  const accelerationDrag=.050;
+  const forceX=-localVelocity.x*Math.abs(localVelocity.x)*velocityDrag-localAcceleration.x*accelerationDrag;
+  const forceZ=-localVelocity.z*Math.abs(localVelocity.z)*velocityDrag-localAcceleration.z*accelerationDrag;
+
+  // Equilibrium angle of a plate hanging from the top clamp under gravity plus
+  // the horizontal drag force. Signs are chosen so the BOTTOM trails opposite
+  // the claw's direction of travel in both horizontal axes.
+  const maxTarget=.24;
+  const targetAngleX=THREE.MathUtils.clamp(Math.atan2(-forceZ,gravity),-maxTarget,maxTarget);
+  const targetAngleZ=THREE.MathUtils.clamp(Math.atan2(forceX,gravity),-maxTarget,maxTarget);
+
+  // A damped rotational spring chases that moving equilibrium. Low enough damping
+  // preserves momentum through direction changes; stiffness keeps the plate heavy.
+  const stiffness=10.5;
+  const damping=3.35;
+  const accelKick=.018;
+  const alphaX=stiffness*(targetAngleX-f.angleX)-damping*f.angularVX
+    +THREE.MathUtils.clamp(localAcceleration.z*accelKick,-1.8,1.8)+f.impulseX;
+  const alphaZ=stiffness*(targetAngleZ-f.angleZ)-damping*f.angularVZ
+    +THREE.MathUtils.clamp(-localAcceleration.x*accelKick,-1.8,1.8)+f.impulseZ;
+
   f.angularVX+=alphaX*safeDt;
   f.angularVZ+=alphaZ*safeDt;
   f.angleX+=f.angularVX*safeDt;
   f.angleZ+=f.angularVZ*safeDt;
 
-  // Joint impulses are momentary rather than continuous noise.
-  f.impulseX*=Math.exp(-10*safeDt);
-  f.impulseZ*=Math.exp(-10*safeDt);
+  f.impulseX*=Math.exp(-9*safeDt);
+  f.impulseZ*=Math.exp(-9*safeDt);
 
-  const maxAngle=.085;
-  if(Math.abs(f.angleX)>maxAngle){ f.angleX=THREE.MathUtils.clamp(f.angleX,-maxAngle,maxAngle); f.angularVX*=-.16; }
-  if(Math.abs(f.angleZ)>maxAngle){ f.angleZ=THREE.MathUtils.clamp(f.angleZ,-maxAngle,maxAngle); f.angularVZ*=-.16; }
+  // Allow a visibly heavy lag (about 16 degrees) but keep it safely constrained.
+  const maxAngle=.28;
+  if(Math.abs(f.angleX)>maxAngle){ f.angleX=THREE.MathUtils.clamp(f.angleX,-maxAngle,maxAngle); f.angularVX*=-.12; }
+  if(Math.abs(f.angleZ)>maxAngle){ f.angleZ=THREE.MathUtils.clamp(f.angleZ,-maxAngle,maxAngle); f.angularVZ*=-.12; }
 
   if(state.reducedMotion){ f.angleX=0;f.angleZ=0;f.angularVX=0;f.angularVZ=0; }
   const target=heldBoardTargetPose(socket,f.angleX,f.angleZ);
   state.heldBoard.position.copy(target.position);
-  // Position is constrained exactly at the claw; orientation is simulated directly.
+  // Exact clamp constraint: only orientation swings; the board never detaches.
   state.heldBoard.quaternion.copy(target.quaternion);
 }
 async function carryCurrentCompletelyOffscreen(){
