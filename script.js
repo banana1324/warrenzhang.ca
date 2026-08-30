@@ -1403,29 +1403,90 @@ function beginHold(station,board){
   state.heldBoard=board;
   state.heldStation=station;
   const socket=socketWorld();
-  state.heldFollow={prevSocket:socket.clone(),prevVelocity:new THREE.Vector3(),swingX:0,swingZ:0,swingVX:0,swingVZ:0};
+  // Constrained rigid-plate state. The top clamp is the pivot; the rest of the
+  // sheet responds to gravity and acceleration like a lightly damped pendulum.
+  state.heldFollow={
+    prevSocket:socket.clone(),
+    prevVelocity:new THREE.Vector3(),
+    angleX:(Math.random()-.5)*.008,
+    angleZ:(Math.random()-.5)*.008,
+    angularVX:(Math.random()-.5)*.035,
+    angularVZ:(Math.random()-.5)*.035,
+    comLength:Math.max(1.1, BOARD.height * board.scale.y * (.40 + Math.random()*.055)),
+    damping:1.75 + Math.random()*.55,
+    nextImpulseAt:performance.now() + 120 + Math.random()*260,
+    impulseX:0,
+    impulseZ:0
+  };
   updateHeldBoard(performance.now(),1/60,true);
 }
-function heldBoardTargetPose(socket,swingX=0,swingZ=0){
+function baseBoardQuaternion(){
   const readQ=camera.quaternion.clone();
   const carryQ=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-armState.yaw+Math.PI/2,0));
   const blend=THREE.MathUtils.clamp(state.boardCarryBlend ?? 1,0,1);
-  const q=readQ.clone().slerp(carryQ,blend);
-  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX*.42,0,swingZ*.42)));
+  return readQ.slerp(carryQ,blend);
+}
+function heldBoardTargetPose(socket,angleX=0,angleZ=0){
+  const q=baseBoardQuaternion();
+  // The clamp point stays fixed; only the plate rotates around it.
+  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(angleX,0,angleZ)));
   const scale=state.heldBoard?.scale||new THREE.Vector3(HELD_BOARD_SCALE,HELD_BOARD_SCALE,HELD_BOARD_SCALE);
   const localHandle=new THREE.Vector3(BOARD.handleX*scale.x,BOARD.handleY*scale.y,.145*scale.z).applyQuaternion(q);
   return {position:socket.clone().sub(localHandle),quaternion:q};
 }
 function updateHeldBoard(now,dt,snap=false){
   if(!state.heldBoard||!state.heldFollow)return;
-  const socket=socketWorld(),f=state.heldFollow,safeDt=Math.max(1/120,Math.min(dt||1/60,1/20));
-  const velocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);const acceleration=velocity.clone().sub(f.prevVelocity).multiplyScalar(1/safeDt);
-  f.prevSocket.copy(socket);f.prevVelocity.lerp(velocity,.38);
-  const stiffness=17.5,damping=6.8,drive=.0042;
-  const ax=THREE.MathUtils.clamp(acceleration.z*drive,-.42,.42),az=THREE.MathUtils.clamp(-acceleration.x*drive,-.42,.42);
-  f.swingVX+=(-stiffness*f.swingX-damping*f.swingVX+ax)*safeDt;f.swingVZ+=(-stiffness*f.swingZ-damping*f.swingVZ+az)*safeDt;
-  f.swingX=THREE.MathUtils.clamp(f.swingX+f.swingVX*safeDt,-.055,.055);f.swingZ=THREE.MathUtils.clamp(f.swingZ+f.swingVZ*safeDt,-.055,.055);
-  const target=heldBoardTargetPose(socket,f.swingX,f.swingZ);state.heldBoard.position.copy(target.position);if(snap||state.reducedMotion)state.heldBoard.quaternion.copy(target.quaternion);else state.heldBoard.quaternion.slerp(target.quaternion,.46);
+  const socket=socketWorld(),f=state.heldFollow,safeDt=Math.max(1/180,Math.min(dt||1/60,1/30));
+
+  // Linear acceleration of the claw is the external force that makes the plate lag.
+  const velocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);
+  const acceleration=velocity.clone().sub(f.prevVelocity).multiplyScalar(1/safeDt);
+  f.prevSocket.copy(socket);
+  f.prevVelocity.lerp(velocity,.46);
+
+  // Express acceleration in the plate's unswung local coordinates so turns and
+  // horizontal pushes naturally excite different axes.
+  const localAcceleration=acceleration.clone().applyQuaternion(baseBoardQuaternion().clone().invert());
+  const moving=velocity.lengthSq()>.012 || acceleration.lengthSq()>.20 || !!state.armTween;
+
+  // Small irregular mechanical disturbances represent gearbox/backlash/joint vibration.
+  // They occur only while moving and are newly sampled each time, so there is no canned cycle.
+  if(moving && now>=f.nextImpulseAt){
+    const strength=.025 + Math.random()*.055;
+    f.impulseX+=(Math.random()-.5)*strength;
+    f.impulseZ+=(Math.random()-.5)*strength;
+    f.nextImpulseAt=now + 150 + Math.random()*430;
+  }
+
+  const gravity=9.81;
+  const L=f.comLength;
+  const damping=f.damping;
+  const accelGain=.070;
+  const maxDrive=2.8;
+  const driveX=THREE.MathUtils.clamp(localAcceleration.z*accelGain,-maxDrive,maxDrive);
+  const driveZ=THREE.MathUtils.clamp(-localAcceleration.x*accelGain,-maxDrive,maxDrive);
+
+  // Small-angle rigid pendulum equations about the top clamp.
+  const alphaX=-(gravity/L)*Math.sin(f.angleX)-damping*f.angularVX+driveX+f.impulseX;
+  const alphaZ=-(gravity/L)*Math.sin(f.angleZ)-damping*f.angularVZ+driveZ+f.impulseZ;
+  f.angularVX+=alphaX*safeDt;
+  f.angularVZ+=alphaZ*safeDt;
+  f.angleX+=f.angularVX*safeDt;
+  f.angleZ+=f.angularVZ*safeDt;
+
+  // Joint impulses are momentary rather than continuous noise.
+  f.impulseX*=Math.exp(-10*safeDt);
+  f.impulseZ*=Math.exp(-10*safeDt);
+
+  const maxAngle=.085;
+  if(Math.abs(f.angleX)>maxAngle){ f.angleX=THREE.MathUtils.clamp(f.angleX,-maxAngle,maxAngle); f.angularVX*=-.16; }
+  if(Math.abs(f.angleZ)>maxAngle){ f.angleZ=THREE.MathUtils.clamp(f.angleZ,-maxAngle,maxAngle); f.angularVZ*=-.16; }
+
+  if(state.reducedMotion){ f.angleX=0;f.angleZ=0;f.angularVX=0;f.angularVZ=0; }
+  const target=heldBoardTargetPose(socket,f.angleX,f.angleZ);
+  state.heldBoard.position.copy(target.position);
+  // Position is constrained exactly at the claw; orientation is simulated directly.
+  state.heldBoard.quaternion.copy(target.quaternion);
 }
 async function carryCurrentCompletelyOffscreen(){
   if(!state.heldBoard)return;
@@ -1576,8 +1637,8 @@ function updatePhysics(dt) {
       resolveSphereOBB(o, boardOBB, r, (normal, impulse) => {
         // Two-way response: a thrown object can kick the constrained rigid page and make it swing.
         if (state.heldFollow) {
-          state.heldFollow.swingVX += THREE.MathUtils.clamp(normal.z * impulse * .055, -.42, .42);
-          state.heldFollow.swingVZ += THREE.MathUtils.clamp(-normal.x * impulse * .055, -.42, .42);
+          state.heldFollow.angularVX += THREE.MathUtils.clamp(normal.z * impulse * .035, -.24, .24);
+          state.heldFollow.angularVZ += THREE.MathUtils.clamp(-normal.x * impulse * .035, -.24, .24);
         }
       });
     }
