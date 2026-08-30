@@ -1408,10 +1408,10 @@ function beginHold(station,board){
   state.heldFollow={
     prevSocket:socket.clone(),
     prevVelocity:new THREE.Vector3(),
-    angleX:(Math.random()-.5)*.008,
-    angleZ:(Math.random()-.5)*.008,
-    angularVX:(Math.random()-.5)*.035,
-    angularVZ:(Math.random()-.5)*.035,
+    angleX:(Math.random()-.5)*.010,
+    angleZ:(Math.random()-.5)*.0025,
+    angularVX:(Math.random()-.5)*.040,
+    angularVZ:(Math.random()-.5)*.008,
     comLength:Math.max(1.1, BOARD.height * board.scale.y * (.40 + Math.random()*.055)),
     damping:1.75 + Math.random()*.55,
     nextImpulseAt:performance.now() + 120 + Math.random()*260,
@@ -1455,55 +1455,67 @@ function updateHeldBoard(now,dt,snap=false){
   const localAcceleration=horizontalAcceleration.applyQuaternion(invBaseQ);
   const moving=horizontalVelocity.lengthSq()>.006 || horizontalAcceleration.lengthSq()>.12 || !!state.armTween;
 
-  // Irregular tiny gearbox/backlash impulses. These are secondary; the dominant
-  // board motion comes from the arm's real velocity and acceleration below.
+  // Small irregular mechanical disturbances. A heavy metal plate should not roll
+  // freely side-to-side, so almost all of the random energy is applied to pitch.
   if(moving && now>=f.nextImpulseAt){
-    const strength=.012 + Math.random()*.028;
-    f.impulseX+=(Math.random()-.5)*strength;
-    f.impulseZ+=(Math.random()-.5)*strength;
-    f.nextImpulseAt=now + 180 + Math.random()*520;
+    const pitchStrength=.010 + Math.random()*.024;
+    const rollStrength=.002 + Math.random()*.006;
+    f.impulseX+=(Math.random()-.5)*pitchStrength;
+    f.impulseZ+=(Math.random()-.5)*rollStrength;
+    f.nextImpulseAt=now + 220 + Math.random()*560;
   }
 
   const gravity=9.81;
   const L=f.comLength;
 
-  // Aerodynamic / inertial drag on a broad plate. A constant claw velocity now
-  // produces a constant opposite force, so the sheet stays leaned backward for
-  // the whole translation instead of snapping upright until the final stop.
-  const velocityDrag=.72;
-  const accelerationDrag=.050;
-  const forceX=-localVelocity.x*Math.abs(localVelocity.x)*velocityDrag-localAcceleration.x*accelerationDrag;
-  const forceZ=-localVelocity.z*Math.abs(localVelocity.z)*velocityDrag-localAcceleration.z*accelerationDrag;
+  // Treat the page as a broad, fairly massive metal panel. Travel toward/away
+  // from the viewer produces the dominant aerodynamic/inertial drag; sideways
+  // travel still produces a little roll, but much less.
+  const forwardVelocityDrag=1.42;
+  const lateralVelocityDrag=.22;
+  const forwardAccelerationDrag=.082;
+  const lateralAccelerationDrag=.016;
 
-  // Equilibrium angle of a plate hanging from the top clamp under gravity plus
-  // the horizontal drag force. Signs are chosen so the BOTTOM trails opposite
-  // the claw's direction of travel in both horizontal axes.
-  const maxTarget=.24;
-  const targetAngleX=THREE.MathUtils.clamp(Math.atan2(-forceZ,gravity),-maxTarget,maxTarget);
-  const targetAngleZ=THREE.MathUtils.clamp(Math.atan2(forceX,gravity),-maxTarget,maxTarget);
+  const forceX=-localVelocity.x*Math.abs(localVelocity.x)*lateralVelocityDrag
+    -localAcceleration.x*lateralAccelerationDrag;
+  const forceZ=-localVelocity.z*Math.abs(localVelocity.z)*forwardVelocityDrag
+    -localAcceleration.z*forwardAccelerationDrag;
 
-  // A damped rotational spring chases that moving equilibrium. Low enough damping
-  // preserves momentum through direction changes; stiffness keeps the plate heavy.
-  const stiffness=10.5;
-  const damping=3.35;
-  const accelKick=.018;
-  const alphaX=stiffness*(targetAngleX-f.angleX)-damping*f.angularVX
-    +THREE.MathUtils.clamp(localAcceleration.z*accelKick,-1.8,1.8)+f.impulseX;
-  const alphaZ=stiffness*(targetAngleZ-f.angleZ)-damping*f.angularVZ
-    +THREE.MathUtils.clamp(-localAcceleration.x*accelKick,-1.8,1.8)+f.impulseZ;
+  // Pitch (angleX) is allowed to trail noticeably. Roll (angleZ) is intentionally
+  // constrained, as if the claw and the wide metal plate resist twisting sideways.
+  const maxPitchTarget=.32;   // ~18 degrees front/back target
+  const maxRollTarget=.065;   // ~3.7 degrees left/right target
+  const targetAngleX=THREE.MathUtils.clamp(Math.atan2(-forceZ,gravity),-maxPitchTarget,maxPitchTarget);
+  const targetAngleZ=THREE.MathUtils.clamp(Math.atan2(forceX,gravity),-maxRollTarget,maxRollTarget);
+
+  // Separate rotational inertia on each axis. Pitch is heavy and underdamped enough
+  // to visibly lag and overshoot. Roll is much more strongly damped and recenters fast.
+  const pitchStiffness=7.4;
+  const pitchDamping=2.35;
+  const rollStiffness=13.5;
+  const rollDamping=6.2;
+  const pitchAccelKick=.032;
+  const rollAccelKick=.0045;
+
+  const alphaX=pitchStiffness*(targetAngleX-f.angleX)-pitchDamping*f.angularVX
+    +THREE.MathUtils.clamp(localAcceleration.z*pitchAccelKick,-2.5,2.5)+f.impulseX;
+  const alphaZ=rollStiffness*(targetAngleZ-f.angleZ)-rollDamping*f.angularVZ
+    +THREE.MathUtils.clamp(-localAcceleration.x*rollAccelKick,-.45,.45)+f.impulseZ;
 
   f.angularVX+=alphaX*safeDt;
   f.angularVZ+=alphaZ*safeDt;
   f.angleX+=f.angularVX*safeDt;
   f.angleZ+=f.angularVZ*safeDt;
 
-  f.impulseX*=Math.exp(-9*safeDt);
-  f.impulseZ*=Math.exp(-9*safeDt);
+  f.impulseX*=Math.exp(-8.0*safeDt);
+  f.impulseZ*=Math.exp(-14.0*safeDt);
 
-  // Allow a visibly heavy lag (about 16 degrees) but keep it safely constrained.
-  const maxAngle=.28;
-  if(Math.abs(f.angleX)>maxAngle){ f.angleX=THREE.MathUtils.clamp(f.angleX,-maxAngle,maxAngle); f.angularVX*=-.12; }
-  if(Math.abs(f.angleZ)>maxAngle){ f.angleZ=THREE.MathUtils.clamp(f.angleZ,-maxAngle,maxAngle); f.angularVZ*=-.12; }
+  // Physical travel limits: a large forward/back swing is allowed, while sideways
+  // roll remains visually subtle and mechanically constrained.
+  const maxPitchAngle=.36; // ~20.6 degrees
+  const maxRollAngle=.075; // ~4.3 degrees
+  if(Math.abs(f.angleX)>maxPitchAngle){ f.angleX=THREE.MathUtils.clamp(f.angleX,-maxPitchAngle,maxPitchAngle); f.angularVX*=-.10; }
+  if(Math.abs(f.angleZ)>maxRollAngle){ f.angleZ=THREE.MathUtils.clamp(f.angleZ,-maxRollAngle,maxRollAngle); f.angularVZ*=-.06; }
 
   if(state.reducedMotion){ f.angleX=0;f.angleZ=0;f.angularVX=0;f.angularVZ=0; }
   const target=heldBoardTargetPose(socket,f.angleX,f.angleZ);
