@@ -264,7 +264,7 @@ const PORTFOLIO_BOARD_COPY = {
       'Debug by measuring first, changing one variable at a time, retesting, and documenting the result.',
       'Comfortable explaining technical decisions to teammates, learners, and non-specialists.'
     ],
-    scope: 'Best fit: technical roles where implementation, testing, integration, and ownership matter more than isolated coding exercises.',
+    scope: 'Most of my work sits where implementation, testing, integration, and ownership meet: building a useful system, understanding why it fails, and improving it until other people can rely on it.',
     impact: 'Evidence of execution includes 15 shipped learning projects, contribution to three Kickstarter-backed products, and three years of iterative robotics development.',
     tags: ['Python', 'C/C++', 'Java', 'Embedded', 'Robotics', 'Systems Debugging']
   },
@@ -504,6 +504,7 @@ const state = {
   gripTween: null,
   heldFollow: null,
   boardMode: 'carry',
+  boardCarryBlend: 1,
   addOpen: false,
   spawned: [],
   selectedSpawn: null,
@@ -682,8 +683,8 @@ const ARM_POSES = {
   read: [1.026, -.514, -.144, -.138]
 };
 
-const ARM_MOTION_SCALE = 1.22;
-const GRIP_MOTION_SCALE = 1.20;
+const ARM_MOTION_SCALE = 1.05;
+const GRIP_MOTION_SCALE = 1.08;
 const BOARD_MOTION_SCALE = 1.0;
 const PRESENT_YAW = .88;
 const OFFSCREEN_YAW = Math.PI;
@@ -739,22 +740,24 @@ function buildArm() {
   const wristDrive=mesh(new THREE.CylinderGeometry(.33,.33,.58,36),0x161a1f,.24,.84); wristDrive.rotation.z=Math.PI/2; wrist.add(wristDrive);
   const wristBand=mesh(new THREE.TorusGeometry(.335,.038,16,42),0x2d92d4,.18,.68); wristBand.rotation.y=Math.PI/2; wristBand.position.x=.30; wrist.add(wristBand);
 
-  // Rounded claw hub instead of a rectangular end-effector block.
-  const hub=mesh(new THREE.CylinderGeometry(.29,.34,.34,32),0x2c3339,.28,.78); hub.position.y=-.30; wrist.add(hub);
-  const hubRing=mesh(new THREE.TorusGeometry(.30,.035,14,36),0x87939b,.20,.72); hubRing.rotation.x=Math.PI/2; hubRing.position.y=-.46; wrist.add(hubRing);
+  // Simple industrial claw, based on the reference image: two articulated jaws with flat inner pads.
+  const hub=mesh(new THREE.CylinderGeometry(.30,.35,.34,32),0x2c3339,.28,.78); hub.position.y=-.30; wrist.add(hub);
+  const palm=box(.50,.20,.42,.040,0x3d464d,.28,.76); palm.position.set(0,-.48,.145); wrist.add(palm);
+  const palmCap=mesh(new THREE.CylinderGeometry(.105,.105,.46,24),0x69757e,.22,.80); palmCap.rotation.z=Math.PI/2; palmCap.position.set(0,-.55,.145); wrist.add(palmCap);
 
-  const fl=new THREE.Group(); fl.position.set(-.23,-.45,.12); wrist.add(fl);
-  const fr=new THREE.Group(); fr.position.set(.23,-.45,.12); wrist.add(fr);
+  const fl=new THREE.Group(); wrist.add(fl);
+  const fr=new THREE.Group(); wrist.add(fr);
 
-  function buildClawFinger(group, mirror=1){
-    const upper=box(.14,.46,.17,.035,0xa8b0b6,.24,.82); upper.position.set(.08*mirror,-.19,0); upper.rotation.z=-.22*mirror; group.add(upper);
-    const knuckle=mesh(new THREE.CylinderGeometry(.105,.105,.17,20),0x58636b,.24,.76); knuckle.rotation.x=Math.PI/2; knuckle.position.set(.16*mirror,-.40,0); group.add(knuckle);
-    const lower=box(.13,.38,.16,.030,0xb9c0c5,.22,.86); lower.position.set(.20*mirror,-.57,0); lower.rotation.z=.32*mirror; group.add(lower);
-    const pad=box(.12,.15,.25,.025,0x101419,.50,.28); pad.position.set(.13*mirror,-.77,.04); pad.rotation.z=.12*mirror; group.add(pad);
+  function buildSimpleClawFinger(group){
+    const upper=box(.12,.32,.17,.030,0x87939b,.26,.80); upper.position.set(0,-.15,0); group.add(upper);
+    const hinge=mesh(new THREE.CylinderGeometry(.095,.095,.18,20),0x4b5861,.24,.78); hinge.rotation.x=Math.PI/2; hinge.position.set(0,-.34,0); group.add(hinge);
+    const lower=box(.105,.34,.16,.028,0xa8b0b6,.23,.84); lower.position.set(0,-.50,0); group.add(lower);
+    const pad=box(.08,.15,.24,.022,0x11161a,.48,.24); pad.position.set(0,-.69,0); group.add(pad);
   }
-  buildClawFinger(fl,-1); buildClawFinger(fr,1);
+  buildSimpleClawFinger(fl); buildSimpleClawFinger(fr);
 
-  const socket=new THREE.Object3D(); socket.position.set(0,-1.10,.145); wrist.add(socket);
+  // The socket and the two closed finger pads share this exact Y/Z level.
+  const socket=new THREE.Object3D(); socket.position.set(0,-1.11,.145); wrist.add(socket);
   root.add(wrist);
   armVisual.root=root; armVisual.wrist=wrist; armVisual.fl=fl; armVisual.fr=fr; armVisual.socket=socket;
   scene.add(root);
@@ -800,8 +803,11 @@ function updateArmVisual() {
   armVisual.wrist.position.copy(end);
   armVisual.wrist.rotation.set(0, -armState.yaw + Math.PI / 2, 0);
   const gripT=THREE.MathUtils.clamp((.26-armState.grip)/(.26-.095),0,1);
-  armVisual.fl.rotation.z = THREE.MathUtils.lerp(-.10,-.34,gripT);
-  armVisual.fr.rotation.z = THREE.MathUtils.lerp(.10,.34,gripT);
+  const jawX=THREE.MathUtils.lerp(.22,.0675,gripT);
+  armVisual.fl.position.set(-jawX,-.42,.145);
+  armVisual.fr.position.set(jawX,-.42,.145);
+  armVisual.fl.rotation.set(0,0,0);
+  armVisual.fr.rotation.set(0,0,0);
 }
 
 function ease(t) { return 1 - Math.pow(1 - t, 3); }
@@ -834,9 +840,10 @@ function moveArmPath(targets, duration = 900, options = {}) {
   if(state.reducedMotion){
     const last=keyframes.at(-1); armState.yaw=last.yaw; armState.angles=[...last.angles];
     if(options.modeAfter) state.boardMode=options.modeAfter;
+    if(options.boardBlendTo!=null) state.boardCarryBlend=options.boardBlendTo;
     updateArmVisual(); return Promise.resolve();
   }
-  state.armTween={start:performance.now(),duration,keyframes,switchBoardModeAt:options.switchBoardModeAt,modeAfter:options.modeAfter,modeSwitched:false};
+  state.armTween={start:performance.now(),duration,keyframes,switchBoardModeAt:options.switchBoardModeAt,modeAfter:options.modeAfter,modeSwitched:false,boardBlendFrom:options.boardBlendFrom,boardBlendTo:options.boardBlendTo,boardBlendStartAt:options.boardBlendStartAt ?? 0,boardBlendEndAt:options.boardBlendEndAt ?? 1};
   return wait(duration);
 }
 function setGrip(x, duration = 100) {
@@ -887,94 +894,93 @@ function drawStandardBoard(ctx,section,copy,index){
   const margin=150, contentW=3400;
   const accent='#82b4d8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
 
-  // Category and title deliberately sit higher than v21.
-  ctx.fillStyle=accent; ctx.font='700 57px Inter, Arial';
-  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,margin,60);
-  ctx.fillStyle=primary; ctx.font='800 150px Inter, Arial';
-  const titleEnd=wrapText(ctx,copy.title,margin,166,contentW,152);
-  ctx.fillStyle=muted; ctx.font='500 60px Inter, Arial';
-  const metaEnd=wrapText(ctx,copy.meta,margin,titleEnd+54,contentW,70);
-  drawOutlinePills(ctx,copy.tags.slice(0,5),margin,metaEnd+20,contentW,true,true);
+  ctx.fillStyle=accent; ctx.font='700 44px Inter, Arial';
+  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,margin,50);
+  ctx.fillStyle=primary; ctx.font='800 120px Inter, Arial';
+  const titleEnd=wrapText(ctx,copy.title,margin,142,contentW,124);
+  ctx.fillStyle=muted; ctx.font='500 48px Inter, Arial';
+  const metaEnd=wrapText(ctx,copy.meta,margin,titleEnd+44,contentW,58);
+  drawOutlinePills(ctx,copy.tags.slice(0,5),margin,metaEnd+18,contentW,true,true);
 
-  const profileY=metaEnd+98;
+  const profileY=metaEnd+82;
   ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,profileY); ctx.lineTo(3550,profileY); ctx.stroke();
-  ctx.fillStyle=accent; ctx.font='800 48px Inter, Arial'; ctx.fillText('PROFILE',margin,profileY+50);
-  ctx.fillStyle=body; ctx.font='500 60px Inter, Arial';
-  const summaryEnd=wrapText(ctx,copy.summary,margin,profileY+118,contentW,72);
+  ctx.fillStyle=accent; ctx.font='800 38px Inter, Arial'; ctx.fillText('PROFILE',margin,profileY+44);
+  ctx.fillStyle=body; ctx.font='500 47px Inter, Arial';
+  const summaryEnd=wrapText(ctx,copy.summary,margin,profileY+104,contentW,58);
 
-  const metricY=summaryEnd+48, gap=34, cardW=(contentW-gap*2)/3, cardH=164;
+  const metricY=summaryEnd+38, gap=34, cardW=(contentW-gap*2)/3, cardH=142;
   copy.metrics.slice(0,3).forEach((m,i)=>{
     const x=margin+i*(cardW+gap);
-    roundRect(ctx,x,metricY,cardW,cardH,22,card); strokeRoundRect(ctx,x,metricY,cardW,cardH,22,'#465764',2);
-    ctx.fillStyle=accent; ctx.font='800 72px Inter, Arial'; wrapText(ctx,String(m[0]),x+28,metricY+67,cardW-56,76);
-    ctx.fillStyle=muted; ctx.font='600 38px Inter, Arial'; wrapText(ctx,String(m[1]),x+28,metricY+126,cardW-56,44);
+    roundRect(ctx,x,metricY,cardW,cardH,20,card); strokeRoundRect(ctx,x,metricY,cardW,cardH,20,'#465764',2);
+    ctx.fillStyle=accent; ctx.font='800 56px Inter, Arial'; wrapText(ctx,String(m[0]),x+28,metricY+58,cardW-56,60);
+    ctx.fillStyle=muted; ctx.font='600 30px Inter, Arial'; wrapText(ctx,String(m[1]),x+28,metricY+110,cardW-56,36);
   });
 
-  const lowerTop=metricY+cardH+66, colGap=180, colW=(contentW-colGap)/2;
+  const lowerTop=metricY+cardH+54, colGap=190, colW=(contentW-colGap)/2;
   const leftX=margin, rightX=margin+colW+colGap;
-  ctx.fillStyle=accent; ctx.font='800 57px Inter, Arial';
+  ctx.fillStyle=accent; ctx.font='800 43px Inter, Arial';
   ctx.fillText('SELECTED CONTRIBUTIONS',leftX,lowerTop); ctx.fillText('ROLE · SCOPE · IMPACT',rightX,lowerTop);
 
-  let leftY=lowerTop+78; ctx.font='500 52px Inter, Arial';
+  let leftY=lowerTop+64; ctx.font='500 40px Inter, Arial';
   copy.contributions.slice(0,2).forEach(line=>{
-    ctx.fillStyle=accent; ctx.beginPath(); ctx.arc(leftX+9,leftY-16,6,0,Math.PI*2); ctx.fill(); ctx.fillStyle=body;
-    const lineEnd=wrapText(ctx,line,leftX+34,leftY,colW-34,66); leftY=lineEnd+44;
+    ctx.fillStyle=accent; ctx.beginPath(); ctx.arc(leftX+9,leftY-13,5,0,Math.PI*2); ctx.fill(); ctx.fillStyle=body;
+    const lineEnd=wrapText(ctx,line,leftX+32,leftY,colW-32,54); leftY=lineEnd+38;
   });
 
-  ctx.fillStyle=body; ctx.font='500 52px Inter, Arial';
-  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+78,colW,66);
-  ctx.fillStyle=accent; ctx.font='800 45px Inter, Arial'; ctx.fillText('WHY IT MATTERS',rightX,scopeEnd+52);
-  ctx.fillStyle=body; ctx.font='500 52px Inter, Arial';
-  wrapText(ctx,copy.impact,rightX,scopeEnd+112,colW,66);
+  ctx.fillStyle=body; ctx.font='500 40px Inter, Arial';
+  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+64,colW,54);
+  ctx.fillStyle=accent; ctx.font='800 33px Inter, Arial'; ctx.fillText('WHY IT MATTERS',rightX,scopeEnd+44);
+  ctx.fillStyle=body; ctx.font='500 40px Inter, Arial';
+  wrapText(ctx,copy.impact,rightX,scopeEnd+96,colW,54);
 
-  const footerY=1282;
+  const footerY=1290;
   ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,footerY); ctx.lineTo(3550,footerY); ctx.stroke();
-  // Core stack and contact are roughly 2× the v21 size.
-  ctx.fillStyle=accent; ctx.font='800 54px Inter, Arial'; ctx.fillText('CORE STACK',margin,footerY+58); ctx.fillText('CONTACT',2200,footerY+58);
-  ctx.fillStyle=primary; ctx.font='600 50px Inter, Arial';
-  wrapText(ctx,copy.tags.slice(0,6).join('  ·  '),margin,footerY+118,1880,58);
-  ctx.fillStyle=primary; ctx.font='500 48px Inter, Arial';
-  ctx.fillText('github.com/banana1324',2200,footerY+118); ctx.fillText('linkedin.com/in/fuyuanzhang',2200,footerY+170);
+  // ~30% smaller than v22, with wording that sounds natural on a portfolio.
+  ctx.fillStyle=accent; ctx.font='800 38px Inter, Arial'; ctx.fillText('TOOLS & TECHNOLOGIES',margin,footerY+46); ctx.fillText('CONTACT',2200,footerY+46);
+  ctx.fillStyle=primary; ctx.font='600 35px Inter, Arial';
+  wrapText(ctx,copy.tags.slice(0,6).join('  ·  '),margin,footerY+96,1880,44);
+  ctx.fillStyle=primary; ctx.font='500 34px Inter, Arial';
+  ctx.fillText('github.com/banana1324',2200,footerY+96); ctx.fillText('linkedin.com/in/fuyuanzhang',2200,footerY+139);
 }
 
 function drawAboutBoard(ctx,copy,index){
   const margin=150, contentW=3400;
   const accent='#82b4d8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
-  ctx.fillStyle=accent; ctx.font='700 57px Inter, Arial'; ctx.fillText(`ABOUT  ·  ${String(index+1).padStart(2,'0')}`,margin,60);
-  ctx.fillStyle=primary; ctx.font='800 150px Inter, Arial'; ctx.fillText('About Warren Zhang',margin,166);
-  ctx.fillStyle=muted; ctx.font='500 60px Inter, Arial'; ctx.fillText(copy.meta,margin,238);
+  ctx.fillStyle=accent; ctx.font='700 44px Inter, Arial'; ctx.fillText(`ABOUT  ·  ${String(index+1).padStart(2,'0')}`,margin,50);
+  ctx.fillStyle=primary; ctx.font='800 120px Inter, Arial'; ctx.fillText('About Warren Zhang',margin,142);
+  ctx.fillStyle=muted; ctx.font='500 48px Inter, Arial'; ctx.fillText(copy.meta,margin,205);
 
-  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,292); ctx.lineTo(3550,292); ctx.stroke();
-  ctx.fillStyle=primary; ctx.font='700 74px Inter, Arial'; ctx.fillText('I like understanding the whole system.',margin,382);
-  ctx.fillStyle=body; ctx.font='500 56px Inter, Arial';
-  const introEnd=wrapText(ctx,copy.summary,margin,454,contentW,68);
+  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,252); ctx.lineTo(3550,252); ctx.stroke();
+  ctx.fillStyle=primary; ctx.font='700 60px Inter, Arial'; ctx.fillText('I like understanding the whole system.',margin,330);
+  ctx.fillStyle=body; ctx.font='500 45px Inter, Arial';
+  const introEnd=wrapText(ctx,copy.summary,margin,394,contentW,56);
 
-  const metricY=introEnd+44, gap=34, cardW=(contentW-gap*2)/3, cardH=160;
+  const metricY=introEnd+38, gap=34, cardW=(contentW-gap*2)/3, cardH=140;
   copy.metrics.slice(0,3).forEach((m,i)=>{
-    const x=margin+i*(cardW+gap); roundRect(ctx,x,metricY,cardW,cardH,22,card); strokeRoundRect(ctx,x,metricY,cardW,cardH,22,'#465764',2);
-    ctx.fillStyle=accent; ctx.font='800 72px Inter, Arial'; ctx.fillText(String(m[0]),x+30,metricY+67);
-    ctx.fillStyle=muted; ctx.font='600 38px Inter, Arial'; wrapText(ctx,String(m[1]),x+30,metricY+122,cardW-60,42);
+    const x=margin+i*(cardW+gap); roundRect(ctx,x,metricY,cardW,cardH,20,card); strokeRoundRect(ctx,x,metricY,cardW,cardH,20,'#465764',2);
+    ctx.fillStyle=accent; ctx.font='800 55px Inter, Arial'; ctx.fillText(String(m[0]),x+28,metricY+58);
+    ctx.fillStyle=muted; ctx.font='600 30px Inter, Arial'; wrapText(ctx,String(m[1]),x+28,metricY+108,cardW-56,36);
   });
 
-  const columnsY=metricY+cardH+70, colGap=180, colW=(contentW-colGap)/2, rightX=margin+colW+colGap;
-  ctx.fillStyle=accent; ctx.font='800 52px Inter, Arial'; ctx.fillText('WHAT I BRING',margin,columnsY); ctx.fillText('HOW I WORK',rightX,columnsY);
-  ctx.fillStyle=body; ctx.font='500 50px Inter, Arial';
-  const leftEnd=wrapText(ctx,copy.contributions[0],margin,columnsY+70,colW,64);
-  wrapText(ctx,copy.contributions[1],rightX,columnsY+70,colW,64);
+  const columnsY=metricY+cardH+56, colGap=190, colW=(contentW-colGap)/2, rightX=margin+colW+colGap;
+  ctx.fillStyle=accent; ctx.font='800 42px Inter, Arial'; ctx.fillText('WHAT I BRING',margin,columnsY); ctx.fillText('HOW I WORK',rightX,columnsY);
+  ctx.fillStyle=body; ctx.font='500 39px Inter, Arial';
+  const leftEnd=wrapText(ctx,copy.contributions[0],margin,columnsY+62,colW,52);
+  const rightEnd=wrapText(ctx,copy.contributions[1],rightX,columnsY+62,colW,52);
 
-  const proofY=Math.max(leftEnd+78,1110);
-  ctx.strokeStyle=rule; ctx.beginPath(); ctx.moveTo(margin,proofY-40); ctx.lineTo(3550,proofY-40); ctx.stroke();
-  ctx.fillStyle=accent; ctx.font='800 48px Inter, Arial'; ctx.fillText('EXPERIENCE IN PRACTICE',margin,proofY);
-  ctx.fillStyle=body; ctx.font='500 48px Inter, Arial'; wrapText(ctx,copy.scope,margin,proofY+64,2050,60);
+  const proofY=Math.max(leftEnd,rightEnd)+66;
+  ctx.strokeStyle=rule; ctx.beginPath(); ctx.moveTo(margin,proofY-30); ctx.lineTo(3550,proofY-30); ctx.stroke();
+  ctx.fillStyle=accent; ctx.font='800 38px Inter, Arial'; ctx.fillText('EXPERIENCE IN PRACTICE',margin,proofY);
+  ctx.fillStyle=body; ctx.font='500 37px Inter, Arial'; wrapText(ctx,copy.scope,margin,proofY+52,2050,50);
 
-  ctx.fillStyle=accent; ctx.font='800 52px Inter, Arial'; ctx.fillText('LET’S CONNECT',2360,proofY);
-  ctx.fillStyle=body; ctx.font='500 46px Inter, Arial'; wrapText(ctx,copy.impact,2360,proofY+64,1190,58);
-  ctx.fillStyle=primary; ctx.font='600 44px Inter, Arial'; ctx.fillText('warrenz7980@gmail.com',2360,1404);
+  ctx.fillStyle=accent; ctx.font='800 40px Inter, Arial'; ctx.fillText('LET’S CONNECT',2380,proofY);
+  ctx.fillStyle=body; ctx.font='500 36px Inter, Arial'; wrapText(ctx,copy.impact,2380,proofY+52,1170,48);
+  ctx.fillStyle=primary; ctx.font='600 34px Inter, Arial'; ctx.fillText('warrenz7980@gmail.com',2380,1400);
 }
 
 function drawOutlinePills(ctx,pills,x,y,maxWidth,dark=false,large=false){
-  ctx.font=`600 ${large?42:28}px Inter, Arial`; let cx=x,cy=y;
-  pills.forEach(label=>{ const h=large?56:42,pad=large?58:44,step=large?68:52; const w=ctx.measureText(label).width+pad; if(cx+w>maxWidth+x){cx=x;cy+=step;} strokeRoundRect(ctx,cx,cy,w,h,large?22:18,dark?'#465967':'#aeb7c0',2); ctx.fillStyle=dark?'#9ec4df':'#174878';ctx.fillText(label,cx+(large?29:22),cy+(large?41:30));cx+=w+(large?18:14); });
+  ctx.font=`600 ${large?32:28}px Inter, Arial`; let cx=x,cy=y;
+  pills.forEach(label=>{ const h=large?48:42,pad=large?48:44,step=large?58:52; const w=ctx.measureText(label).width+pad; if(cx+w>maxWidth+x){cx=x;cy+=step;} strokeRoundRect(ctx,cx,cy,w,h,large?22:18,dark?'#465967':'#aeb7c0',2); ctx.fillStyle=dark?'#9ec4df':'#174878';ctx.fillText(label,cx+(large?29:22),cy+(large?41:30));cx+=w+(large?18:14); });
 }
 function strokeRoundRect(ctx,x,y,w,h,r,stroke,width=2){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();
@@ -1374,10 +1380,24 @@ function disposeBoard(board){
   board.userData.texture?.dispose?.();
   disposeObject(board);
 }
+function responsiveBoardScale(){
+  const side=Math.min(getSidebarWidth(),Math.max(0,innerWidth-120));
+  const usableW=Math.max(240,innerWidth-side), usableH=Math.max(280,innerHeight-72);
+  let sx=HELD_BOARD_SCALE, sy=HELD_BOARD_SCALE;
+  // On narrower windows the physical sheet becomes less panoramic instead of clipping off-screen.
+  if(usableW<900){ sx*=.84; sy*=.98; }
+  if(usableW<680){ sx*=.70; sy*=1.03; }
+  // On short windows the board flattens vertically so both edges remain visible.
+  if(usableH<700) sy*=THREE.MathUtils.clamp(usableH/700,.72,1);
+  return new THREE.Vector3(sx,sy,HELD_BOARD_SCALE);
+}
+function applyResponsiveBoardScale(board){ if(board) board.scale.copy(responsiveBoardScale()); }
+
 function beginHold(station,board){
   state.boardMode='carry';
+  state.boardCarryBlend=1;
   scene.add(board);
-  board.scale.setScalar(HELD_BOARD_SCALE);
+  applyResponsiveBoardScale(board);
   board.visible=true;
   state.heldBoard=board;
   state.heldStation=station;
@@ -1386,17 +1406,13 @@ function beginHold(station,board){
   updateHeldBoard(performance.now(),1/60,true);
 }
 function heldBoardTargetPose(socket,swingX=0,swingZ=0){
-  let q;
-  if(state.boardMode==='carry'){
-    // Tangent to the base rotation: the panel rides edge-on beside the arm instead of broadside.
-    q=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-armState.yaw+Math.PI/2,0));
-  }else{
-    // Final reading state is exactly parallel to the viewer's image plane.
-    q=camera.quaternion.clone();
-  }
+  const readQ=camera.quaternion.clone();
+  const carryQ=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-armState.yaw+Math.PI/2,0));
+  const blend=THREE.MathUtils.clamp(state.boardCarryBlend ?? 1,0,1);
+  const q=readQ.clone().slerp(carryQ,blend);
   q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX*.25,0,swingZ*.25)));
-  const scale=state.heldBoard?.scale.x||HELD_BOARD_SCALE;
-  const localHandle=new THREE.Vector3(BOARD.handleX*scale,BOARD.handleY*scale,.145*scale).applyQuaternion(q);
+  const scale=state.heldBoard?.scale||new THREE.Vector3(HELD_BOARD_SCALE,HELD_BOARD_SCALE,HELD_BOARD_SCALE);
+  const localHandle=new THREE.Vector3(BOARD.handleX*scale.x,BOARD.handleY*scale.y,.145*scale.z).applyQuaternion(q);
   return {position:socket.clone().sub(localHandle),quaternion:q};
 }
 function updateHeldBoard(now,dt,snap=false){
@@ -1412,19 +1428,20 @@ function updateHeldBoard(now,dt,snap=false){
 }
 async function carryCurrentCompletelyOffscreen(){
   if(!state.heldBoard)return;
-  state.boardMode='carry';
   dom.status.textContent='Moving current page away';
-  // One continuous motion: retract near the base, then rotate off-screen without stopping.
+  // The visible board begins exactly where it is. As the arm retracts, the sheet folds
+  // continuously around the claw contact point and only then rotates off-screen.
   await moveArmPath([
     {yaw:PRESENT_YAW,angles:ARM_POSES.carry,at:.34},
     {yaw:OFFSCREEN_YAW,angles:ARM_POSES.carry,at:1}
-  ],900);
-  await wait(175);
-  await setGrip(.26,70);
-  await wait(175);
+  ],780,{boardBlendFrom:state.boardCarryBlend ?? 0,boardBlendTo:1,boardBlendStartAt:0,boardBlendEndAt:.38,modeAfter:'carry'});
+  await wait(100);
+  await setGrip(.26,62);
+  await wait(110);
 }
 async function swapBoardWhileOffscreen(station){
   state.boardMode='carry';
+  state.boardCarryBlend=1;
   const old=state.heldBoard;
   state.heldBoard=null;state.heldFollow=null;state.heldStation=null;
   if(old)disposeBoard(old);
@@ -1434,14 +1451,16 @@ async function swapBoardWhileOffscreen(station){
   await setGrip(.095,115);
 }
 async function bringBoardBackOnscreen(){
-  // One continuous return path. The page stays tucked close while rotating, then
-  // becomes parallel to the viewer during the final forward extension.
+  // Continuous return: rotate in with the board tucked beside the arm, then unfold
+  // it around the claw and extend toward the viewer without a separate pose jump.
   state.boardMode='carry';
+  state.boardCarryBlend=1;
   dom.status.textContent='Bringing next page in';
   await moveArmPath([
-    {yaw:PRESENT_YAW,angles:ARM_POSES.carry,at:.68},
+    {yaw:PRESENT_YAW,angles:ARM_POSES.carry,at:.66},
     {yaw:PRESENT_YAW,angles:ARM_POSES.read,at:1}
-  ],980,{switchBoardModeAt:.68,modeAfter:'read'});
+  ],840,{boardBlendFrom:1,boardBlendTo:0,boardBlendStartAt:.64,boardBlendEndAt:1,modeAfter:'read'});
+  state.boardCarryBlend=0;
   dom.status.textContent='Page ready';
 }
 async function deliverBoard(section,index){
@@ -1626,6 +1645,12 @@ function updateArmTween(now) {
   const tw=state.armTween;
   const t=Math.min(1,(now-tw.start)/tw.duration);
   const e=.5-.5*Math.cos(Math.PI*t); // smooth global acceleration/deceleration
+  if(tw.boardBlendTo!=null){
+    const bs=tw.boardBlendStartAt ?? 0, be=Math.max(bs+.0001,tw.boardBlendEndAt ?? 1);
+    const bt=THREE.MathUtils.clamp((e-bs)/(be-bs),0,1);
+    const smooth=bt*bt*(3-2*bt);
+    state.boardCarryBlend=THREE.MathUtils.lerp(tw.boardBlendFrom ?? state.boardCarryBlend,tw.boardBlendTo,smooth);
+  }
   if(tw.keyframes){
     if(tw.switchBoardModeAt!=null && !tw.modeSwitched && e>=tw.switchBoardModeAt){
       state.boardMode=tw.modeAfter||'read'; tw.modeSwitched=true;
@@ -1641,7 +1666,7 @@ function updateArmTween(now) {
     armState.yaw=THREE.MathUtils.lerp(tw.fromYaw,tw.toYaw,e);
     armState.angles=tw.fromAngles.map((a,i)=>THREE.MathUtils.lerp(a,tw.toAngles[i],e));
   }
-  if(t>=1){ if(tw.modeAfter) state.boardMode=tw.modeAfter; state.armTween=null; }
+  if(t>=1){ if(tw.modeAfter) state.boardMode=tw.modeAfter; if(tw.boardBlendTo!=null) state.boardCarryBlend=tw.boardBlendTo; state.armTween=null; }
 }
 function updateGripTween(now) {
   if (!state.gripTween) return;
@@ -1656,6 +1681,7 @@ function resize() {
   renderer.setViewport(side, 0, rw, h);
   renderer.setScissor(side, 0, rw, h);
   camera.aspect = rw / h; camera.updateProjectionMatrix(); camera.lookAt(CAMERA_TARGET);
+  if(state.heldBoard){ applyResponsiveBoardScale(state.heldBoard); updateHeldBoard(performance.now(),1/60,true); }
 }
 window.addEventListener('resize', resize);
 
