@@ -897,9 +897,9 @@ function drawStandardBoard(ctx,section,copy,index){
   ctx.fillStyle=accent; ctx.font='700 44px Inter, Arial';
   ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,margin,50);
   ctx.fillStyle=primary; ctx.font='800 120px Inter, Arial';
-  const titleEnd=wrapText(ctx,copy.title,margin,142,contentW,124);
+  const titleEnd=wrapText(ctx,copy.title,margin,178,contentW,124);
   ctx.fillStyle=muted; ctx.font='500 48px Inter, Arial';
-  const metaEnd=wrapText(ctx,copy.meta,margin,titleEnd+44,contentW,58);
+  const metaEnd=wrapText(ctx,copy.meta,margin,titleEnd+62,contentW,58);
   drawOutlinePills(ctx,copy.tags.slice(0,5),margin,metaEnd+18,contentW,true,true);
 
   const profileY=metaEnd+82;
@@ -947,13 +947,13 @@ function drawAboutBoard(ctx,copy,index){
   const margin=150, contentW=3400;
   const accent='#82b4d8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
   ctx.fillStyle=accent; ctx.font='700 44px Inter, Arial'; ctx.fillText(`ABOUT  ·  ${String(index+1).padStart(2,'0')}`,margin,50);
-  ctx.fillStyle=primary; ctx.font='800 120px Inter, Arial'; ctx.fillText('About Warren Zhang',margin,142);
-  ctx.fillStyle=muted; ctx.font='500 48px Inter, Arial'; ctx.fillText(copy.meta,margin,205);
+  ctx.fillStyle=primary; ctx.font='800 120px Inter, Arial'; ctx.fillText('About Warren Zhang',margin,178);
+  ctx.fillStyle=muted; ctx.font='500 48px Inter, Arial'; ctx.fillText(copy.meta,margin,259);
 
-  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,252); ctx.lineTo(3550,252); ctx.stroke();
-  ctx.fillStyle=primary; ctx.font='700 60px Inter, Arial'; ctx.fillText('I like understanding the whole system.',margin,330);
+  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,306); ctx.lineTo(3550,306); ctx.stroke();
+  ctx.fillStyle=primary; ctx.font='700 60px Inter, Arial'; ctx.fillText('I like understanding the whole system.',margin,384);
   ctx.fillStyle=body; ctx.font='500 45px Inter, Arial';
-  const introEnd=wrapText(ctx,copy.summary,margin,394,contentW,56);
+  const introEnd=wrapText(ctx,copy.summary,margin,448,contentW,56);
 
   const metricY=introEnd+38, gap=34, cardW=(contentW-gap*2)/3, cardH=140;
   copy.metrics.slice(0,3).forEach((m,i)=>{
@@ -973,8 +973,9 @@ function drawAboutBoard(ctx,copy,index){
   ctx.fillStyle=accent; ctx.font='800 38px Inter, Arial'; ctx.fillText('EXPERIENCE IN PRACTICE',margin,proofY);
   ctx.fillStyle=body; ctx.font='500 37px Inter, Arial'; wrapText(ctx,copy.scope,margin,proofY+52,2050,50);
 
-  ctx.fillStyle=accent; ctx.font='800 40px Inter, Arial'; ctx.fillText('LET’S CONNECT',2380,proofY);
-  ctx.fillStyle=body; ctx.font='500 36px Inter, Arial'; wrapText(ctx,copy.impact,2380,proofY+52,1170,48);
+  const contactY=Math.min(proofY,1120);
+  ctx.fillStyle=accent; ctx.font='800 40px Inter, Arial'; ctx.fillText('LET’S CONNECT',2380,contactY);
+  ctx.fillStyle=body; ctx.font='500 36px Inter, Arial'; wrapText(ctx,copy.impact,2380,contactY+52,1170,48);
   ctx.fillStyle=primary; ctx.font='600 34px Inter, Arial'; ctx.fillText('warrenz7980@gmail.com',2380,1400);
 }
 
@@ -1410,7 +1411,7 @@ function heldBoardTargetPose(socket,swingX=0,swingZ=0){
   const carryQ=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-armState.yaw+Math.PI/2,0));
   const blend=THREE.MathUtils.clamp(state.boardCarryBlend ?? 1,0,1);
   const q=readQ.clone().slerp(carryQ,blend);
-  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX*.25,0,swingZ*.25)));
+  q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(swingX*.42,0,swingZ*.42)));
   const scale=state.heldBoard?.scale||new THREE.Vector3(HELD_BOARD_SCALE,HELD_BOARD_SCALE,HELD_BOARD_SCALE);
   const localHandle=new THREE.Vector3(BOARD.handleX*scale.x,BOARD.handleY*scale.y,.145*scale.z).applyQuaternion(q);
   return {position:socket.clone().sub(localHandle),quaternion:q};
@@ -1420,10 +1421,10 @@ function updateHeldBoard(now,dt,snap=false){
   const socket=socketWorld(),f=state.heldFollow,safeDt=Math.max(1/120,Math.min(dt||1/60,1/20));
   const velocity=socket.clone().sub(f.prevSocket).multiplyScalar(1/safeDt);const acceleration=velocity.clone().sub(f.prevVelocity).multiplyScalar(1/safeDt);
   f.prevSocket.copy(socket);f.prevVelocity.lerp(velocity,.38);
-  const stiffness=22.0,damping=9.0,drive=.0030;
+  const stiffness=17.5,damping=6.8,drive=.0042;
   const ax=THREE.MathUtils.clamp(acceleration.z*drive,-.42,.42),az=THREE.MathUtils.clamp(-acceleration.x*drive,-.42,.42);
   f.swingVX+=(-stiffness*f.swingX-damping*f.swingVX+ax)*safeDt;f.swingVZ+=(-stiffness*f.swingZ-damping*f.swingVZ+az)*safeDt;
-  f.swingX=THREE.MathUtils.clamp(f.swingX+f.swingVX*safeDt,-.045,.045);f.swingZ=THREE.MathUtils.clamp(f.swingZ+f.swingVZ*safeDt,-.045,.045);
+  f.swingX=THREE.MathUtils.clamp(f.swingX+f.swingVX*safeDt,-.055,.055);f.swingZ=THREE.MathUtils.clamp(f.swingZ+f.swingVZ*safeDt,-.055,.055);
   const target=heldBoardTargetPose(socket,f.swingX,f.swingZ);state.heldBoard.position.copy(target.position);if(snap||state.reducedMotion)state.heldBoard.quaternion.copy(target.quaternion);else state.heldBoard.quaternion.slerp(target.quaternion,.46);
 }
 async function carryCurrentCompletelyOffscreen(){
