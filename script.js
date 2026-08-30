@@ -18,7 +18,7 @@ const CONTENT = {
     title: 'Software, embedded systems & robotics.',
     meta: 'Computer Science · University of Waterloo · Richmond, BC',
     description: 'I am most interested in the point where software reaches the physical world—robots, sensors, radios, circuits, and the people who rely on them. My work combines embedded development, robotics, technical communication, and hands-on debugging.',
-    tags: ['Python', 'C/C++', 'Embedded', 'Robotics', 'Computer Vision'],
+    tags: ['Python', 'C/C++', 'Java', 'Embedded', 'Robotics', 'Computer Vision'],
     metrics: [['$195K+', 'Kickstarter funding contributed to'], ['446', 'campaign backers'], ['200+', 'badminton coaching hours']],
     details: [
       'Developed software across ESP32, RP2040, Arduino Uno, and Raspberry Pi platforms.',
@@ -255,7 +255,7 @@ const CONTENT = {
 const PORTFOLIO_BOARD_COPY = {
   'home/home': {
     title: 'Software, Embedded Systems & Robotics',
-    meta: 'University of Waterloo CS · Python · C/C++ · Embedded Systems',
+    meta: 'University of Waterloo CS · Python · C/C++ · Java · Embedded Systems',
     summary: 'I build software that has to work under real constraints: hardware timing, sensor data, networks, robotics, and users. The common thread across my projects is end-to-end ownership, disciplined debugging, and making systems understandable enough for other people to rely on.',
     metrics: [['15', 'embedded apps + games'], ['$195K+', 'Kickstarter funding tied to products contributed to'], ['3 years', 'competition robotics']],
     contributions: [
@@ -266,22 +266,20 @@ const PORTFOLIO_BOARD_COPY = {
     ],
     scope: 'Best fit: technical roles where implementation, testing, integration, and ownership matter more than isolated coding exercises.',
     impact: 'Evidence of execution includes 15 shipped learning projects, contribution to three Kickstarter-backed products, and three years of iterative robotics development.',
-    tags: ['Python', 'C/C++', 'Embedded', 'Robotics', 'Systems Debugging']
+    tags: ['Python', 'C/C++', 'Java', 'Embedded', 'Robotics', 'Systems Debugging']
   },
   'about/about': {
-    title: 'How I Work as an Engineer',
-    meta: 'Systems Thinking · Debugging · Communication · Continuous Learning',
-    summary: 'My strongest engineering habit is refusing to stop at “it works.” I want to understand why it works, what can fail, how to reproduce the result, and how to explain the system clearly enough that another person can build on it.',
-    metrics: [['2 years', 'EIM Technology'], ['3 years', 'VEX robotics'], ['Physics 11', 'teaching assistant']],
+    title: 'About Warren Zhang',
+    meta: 'Computer Science · University of Waterloo · Software · Embedded Systems · Robotics',
+    summary: 'I like understanding the whole system—not just the line of code in front of me. My work has grown from taking apart computers into embedded software, robotics, technical verification, teaching, and projects where software has visible consequences in the physical world.',
+    metrics: [['15', 'embedded apps + games'], ['$195K+', 'Kickstarter funding tied to products contributed to'], ['3 years', 'VEX robotics']],
     contributions: [
-      'Trace failures across code, electronics, communication, timing, and mechanics instead of assuming the bug lives in one layer.',
-      'Use logs, measurements, diagrams, and small controlled changes to narrow problems efficiently.',
-      'Turn technical understanding into documentation, tutorials, and explanations for other learners.',
-      'Bring the same collaborative mindset to robotics, teaching, coaching, and technical product work.'
+      'I am strongest when a problem crosses boundaries: software, hardware, timing, sensors, networking, mechanics, or documentation.',
+      'I learn by testing deliberately, tracing failures to their source, and explaining the result clearly enough that another person can build on it.'
     ],
-    scope: 'This translates to strong debugging discipline, clear written and verbal communication, and comfort working across system boundaries.',
-    impact: 'The result is a working style centered on reliability, reproducibility, and making the next engineer’s job easier.',
-    tags: ['Debugging', 'Systems Thinking', 'Documentation', 'Collaboration']
+    scope: 'At EIM Technology, I worked across RP2040 and ESP32 software, hardware debugging, technical verification, and educational content. In robotics, I have worked with PID control, odometry, CAD, autonomous behavior, and repeated competition-driven iteration.',
+    impact: 'Outside technical work, coaching 40+ badminton students and serving as a Physics 11 teaching assistant taught me how to communicate with patience. If you are building thoughtful software, robotics, embedded systems, or tools that make complex technology easier to use, I would be glad to connect.',
+    tags: ['Systems', 'Debugging', 'Embedded', 'Robotics', 'Teaching', 'Technical Communication']
   },
   'projects/wildfire': {
     title: 'Wildfire Detection System',
@@ -491,6 +489,7 @@ const dom = {
 
 const state = {
   section: 'home', index: 0,
+  uiSection: 'home', uiIndex: 0,
   expanded: new Set(['projects', 'experience', 'interests']),
   stations: new Map(),
   selectedKey: null,
@@ -683,8 +682,8 @@ const ARM_POSES = {
   read: [1.026, -.514, -.144, -.138]
 };
 
-const ARM_MOTION_SCALE = 2.18;
-const GRIP_MOTION_SCALE = 1.55;
+const ARM_MOTION_SCALE = 1.22;
+const GRIP_MOTION_SCALE = 1.20;
 const BOARD_MOTION_SCALE = 1.0;
 const PRESENT_YAW = .88;
 const OFFSCREEN_YAW = Math.PI;
@@ -737,15 +736,24 @@ function buildArm() {
   for(let i=0;i<ARM.lengths.length;i++) { const joint=createIndustrialJoint(i); root.add(joint); armVisual.joints.push(joint); }
 
   const wrist=new THREE.Group();
-  const wristDrive=mesh(new THREE.CylinderGeometry(.31,.31,.54,32),0x161a1f,.24,.84); wristDrive.rotation.z=Math.PI/2; wrist.add(wristDrive);
-  const wristBand=mesh(new THREE.TorusGeometry(.315,.034,14,38),0x2d92d4,.18,.68); wristBand.rotation.y=Math.PI/2; wristBand.position.x=.28; wrist.add(wristBand);
-  const palm=box(.58,.30,.46,.055,0x252a2f,.30,.72); palm.position.y=-.26; wrist.add(palm);
-  const jawRail=box(.72,.11,.16,.025,0x9ca4aa,.22,.88); jawRail.position.set(0,-.43,.12); wrist.add(jawRail);
-  const fl=box(.13,.66,.15,.025,0xb7bdc1,.22,.88); fl.position.set(-.20,-.71,.12); wrist.add(fl);
-  const fr=fl.clone(); fr.position.x=.20; wrist.add(fr);
-  const tipL=box(.12,.18,.24,.022,0x121519,.52,.30); tipL.position.set(0,-.39,.06); fl.add(tipL);
-  const tipR=tipL.clone(); fr.add(tipR);
-  addBolt(palm,-.20,0,.24,.038); addBolt(palm,.20,0,.24,.038);
+  const wristDrive=mesh(new THREE.CylinderGeometry(.33,.33,.58,36),0x161a1f,.24,.84); wristDrive.rotation.z=Math.PI/2; wrist.add(wristDrive);
+  const wristBand=mesh(new THREE.TorusGeometry(.335,.038,16,42),0x2d92d4,.18,.68); wristBand.rotation.y=Math.PI/2; wristBand.position.x=.30; wrist.add(wristBand);
+
+  // Rounded claw hub instead of a rectangular end-effector block.
+  const hub=mesh(new THREE.CylinderGeometry(.29,.34,.34,32),0x2c3339,.28,.78); hub.position.y=-.30; wrist.add(hub);
+  const hubRing=mesh(new THREE.TorusGeometry(.30,.035,14,36),0x87939b,.20,.72); hubRing.rotation.x=Math.PI/2; hubRing.position.y=-.46; wrist.add(hubRing);
+
+  const fl=new THREE.Group(); fl.position.set(-.23,-.45,.12); wrist.add(fl);
+  const fr=new THREE.Group(); fr.position.set(.23,-.45,.12); wrist.add(fr);
+
+  function buildClawFinger(group, mirror=1){
+    const upper=box(.14,.46,.17,.035,0xa8b0b6,.24,.82); upper.position.set(.08*mirror,-.19,0); upper.rotation.z=-.22*mirror; group.add(upper);
+    const knuckle=mesh(new THREE.CylinderGeometry(.105,.105,.17,20),0x58636b,.24,.76); knuckle.rotation.x=Math.PI/2; knuckle.position.set(.16*mirror,-.40,0); group.add(knuckle);
+    const lower=box(.13,.38,.16,.030,0xb9c0c5,.22,.86); lower.position.set(.20*mirror,-.57,0); lower.rotation.z=.32*mirror; group.add(lower);
+    const pad=box(.12,.15,.25,.025,0x101419,.50,.28); pad.position.set(.13*mirror,-.77,.04); pad.rotation.z=.12*mirror; group.add(pad);
+  }
+  buildClawFinger(fl,-1); buildClawFinger(fr,1);
+
   const socket=new THREE.Object3D(); socket.position.set(0,-1.10,.145); wrist.add(socket);
   root.add(wrist);
   armVisual.root=root; armVisual.wrist=wrist; armVisual.fl=fl; armVisual.fr=fr; armVisual.socket=socket;
@@ -791,8 +799,9 @@ function updateArmVisual() {
   const end = p[p.length - 1];
   armVisual.wrist.position.copy(end);
   armVisual.wrist.rotation.set(0, -armState.yaw + Math.PI / 2, 0);
-  armVisual.fl.position.x = -armState.grip;
-  armVisual.fr.position.x = armState.grip;
+  const gripT=THREE.MathUtils.clamp((.26-armState.grip)/(.26-.095),0,1);
+  armVisual.fl.rotation.z = THREE.MathUtils.lerp(-.10,-.34,gripT);
+  armVisual.fr.rotation.z = THREE.MathUtils.lerp(.10,.34,gripT);
 }
 
 function ease(t) { return 1 - Math.pow(1 - t, 3); }
@@ -811,6 +820,23 @@ function moveArmPose(yaw, angles, duration = 320) {
     fromYaw: armState.yaw, toYaw: yaw,
     fromAngles: [...armState.angles], toAngles: [...angles]
   };
+  return wait(duration);
+}
+function moveArmPath(targets, duration = 900, options = {}) {
+  duration = Math.round(duration * ARM_MOTION_SCALE);
+  let previousYaw = armState.yaw;
+  const keyframes=[{at:0,yaw:previousYaw,angles:[...armState.angles]}];
+  targets.forEach((target,i)=>{
+    const yaw=nearestAngle(previousYaw,target.yaw);
+    keyframes.push({at:target.at ?? ((i+1)/targets.length),yaw,angles:[...target.angles]});
+    previousYaw=yaw;
+  });
+  if(state.reducedMotion){
+    const last=keyframes.at(-1); armState.yaw=last.yaw; armState.angles=[...last.angles];
+    if(options.modeAfter) state.boardMode=options.modeAfter;
+    updateArmVisual(); return Promise.resolve();
+  }
+  state.armTween={start:performance.now(),duration,keyframes,switchBoardModeAt:options.switchBoardModeAt,modeAfter:options.modeAfter,modeSwitched:false};
   return wait(duration);
 }
 function setGrip(x, duration = 100) {
@@ -836,7 +862,6 @@ function createBoard(section,item,index) {
   const group=new THREE.Group();
   const back=box(BOARD.width,BOARD.height,BOARD.thickness,.075,0x1b232b,.66,.12); group.add(back);
   const rim=box(BOARD.width+.12,BOARD.height+.12,.055,.085,0x384651,.44,.28); rim.position.z=-.055; group.add(rim);
-
   const clampBase=box(.76,.20,.24,.045,0x727d86,.28,.72); clampBase.position.set(BOARD.handleX,BOARD.height/2-.07,.10); group.add(clampBase);
   const gripTab=box(.055,.34,.19,.018,0x242b31,.22,.90); gripTab.position.set(BOARD.handleX,BOARD.handleY,.145); group.add(gripTab);
   const cap=box(.36,.09,.27,.025,0x59636c,.24,.82); cap.position.set(BOARD.handleX,BOARD.height/2+.18,.12); group.add(cap);
@@ -846,67 +871,10 @@ function createBoard(section,item,index) {
   const canvas=document.createElement('canvas'); canvas.width=3700; canvas.height=1500;
   const ctx=canvas.getContext('2d');
   ctx.fillStyle='#1c242c'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  for(let i=0;i<2200;i++){ const a=Math.random()*.018; ctx.fillStyle=`rgba(205,218,228,${a})`; ctx.fillRect(Math.random()*3700,Math.random()*1500,1,1); }
+  for(let i=0;i<1800;i++){ const a=Math.random()*.016; ctx.fillStyle=`rgba(205,218,228,${a})`; ctx.fillRect(Math.random()*3700,Math.random()*1500,1,1); }
 
-  const margin=150, contentW=3400;
-  const accent='#79a9cf', primary='#e2e8ed', body='#c8d0d7', muted='#95a2ad', rule='#3d4a55', card='#232d36';
-
-  ctx.fillStyle=accent; ctx.font='700 38px Inter, Arial';
-  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,margin,104);
-
-  ctx.fillStyle=primary; ctx.font='800 100px Inter, Arial';
-  const titleEnd=wrapText(ctx,copy.title,margin,220,contentW,106);
-  ctx.fillStyle=muted; ctx.font='500 40px Inter, Arial';
-  const metaEnd=wrapText(ctx,copy.meta,margin,titleEnd+46,contentW,50);
-  drawOutlinePills(ctx,copy.tags.slice(0,5),margin,metaEnd+28,contentW,true);
-
-  const profileY=metaEnd+104;
-  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,profileY); ctx.lineTo(3550,profileY); ctx.stroke();
-  ctx.fillStyle=accent; ctx.font='800 32px Inter, Arial'; ctx.fillText('PROFILE',margin,profileY+50);
-  ctx.fillStyle=body; ctx.font='500 40px Inter, Arial';
-  const summaryEnd=wrapText(ctx,copy.summary,margin,profileY+108,contentW,52);
-
-  const metricY=summaryEnd+54, gap=34, cardW=(contentW-gap*2)/3, cardH=152;
-  copy.metrics.slice(0,3).forEach((m,i)=>{
-    const x=margin+i*(cardW+gap);
-    roundRect(ctx,x,metricY,cardW,cardH,22,card);
-    strokeRoundRect(ctx,x,metricY,cardW,cardH,22,'#43515c',2);
-    ctx.fillStyle=accent; ctx.font='800 50px Inter, Arial';
-    wrapText(ctx,String(m[0]),x+28,metricY+58,cardW-56,54);
-    ctx.fillStyle=muted; ctx.font='600 25px Inter, Arial';
-    wrapText(ctx,String(m[1]),x+28,metricY+108,cardW-56,32);
-  });
-
-  const lowerTop=metricY+cardH+72;
-  const colGap=170, colW=(contentW-colGap)/2;
-  const leftX=margin, rightX=margin+colW+colGap;
-
-  ctx.fillStyle=accent; ctx.font='800 38px Inter, Arial';
-  ctx.fillText('SELECTED CONTRIBUTIONS',leftX,lowerTop);
-  ctx.fillText('ROLE · SCOPE · IMPACT',rightX,lowerTop);
-
-  let leftY=lowerTop+70; ctx.font='500 35px Inter, Arial';
-  copy.contributions.slice(0,3).forEach(line=>{
-    ctx.fillStyle=accent; ctx.beginPath(); ctx.arc(leftX+8,leftY-11,5,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle=body;
-    const end=wrapText(ctx,line,leftX+28,leftY,colW-28,46);
-    leftY=end+64;
-  });
-
-  ctx.fillStyle=body; ctx.font='500 35px Inter, Arial';
-  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+70,colW,46);
-  ctx.fillStyle=accent; ctx.font='800 30px Inter, Arial'; ctx.fillText('WHY IT MATTERS',rightX,scopeEnd+58);
-  ctx.fillStyle=body; ctx.font='500 35px Inter, Arial';
-  wrapText(ctx,copy.impact,rightX,scopeEnd+112,colW,46);
-
-  const footerY=1340;
-  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,footerY); ctx.lineTo(3550,footerY); ctx.stroke();
-  ctx.fillStyle=accent; ctx.font='800 27px Inter, Arial'; ctx.fillText('CORE STACK',margin,footerY+42); ctx.fillText('CONTACT',2200,footerY+42);
-  ctx.fillStyle=muted; ctx.font='600 26px Inter, Arial';
-  wrapText(ctx,copy.tags.slice(0,6).join('   ·   '),margin,footerY+82,1850,32);
-  ctx.fillStyle=muted; ctx.font='500 25px Inter, Arial';
-  ctx.fillText('github.com/banana1324',2200,footerY+82);
-  ctx.fillText('linkedin.com/in/fuyuanzhang',2200,footerY+116);
+  if(key==='about/about') drawAboutBoard(ctx,copy,index);
+  else drawStandardBoard(ctx,section,copy,index);
 
   const texture=new THREE.CanvasTexture(canvas); texture.colorSpace=THREE.SRGBColorSpace; texture.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),16);
   const plane=new THREE.Mesh(new THREE.PlaneGeometry(BOARD.width-.18,BOARD.height-.18),new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));
@@ -915,9 +883,98 @@ function createBoard(section,item,index) {
   return group;
 }
 
-function drawOutlinePills(ctx,pills,x,y,maxWidth,dark=false){
-  ctx.font='600 28px Inter, Arial'; let cx=x,cy=y;
-  pills.forEach(label=>{ const w=ctx.measureText(label).width+44; if(cx+w>maxWidth+x){cx=x;cy+=52;} strokeRoundRect(ctx,cx,cy,w,42,18,dark?'#465967':'#aeb7c0',2); ctx.fillStyle=dark?'#9ec4df':'#174878';ctx.fillText(label,cx+22,cy+30);cx+=w+14; });
+function drawStandardBoard(ctx,section,copy,index){
+  const margin=150, contentW=3400;
+  const accent='#82b4d8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
+
+  // Category and title deliberately sit higher than v21.
+  ctx.fillStyle=accent; ctx.font='700 57px Inter, Arial';
+  ctx.fillText(`${section.toUpperCase()}  ·  ${String(index+1).padStart(2,'0')}`,margin,60);
+  ctx.fillStyle=primary; ctx.font='800 150px Inter, Arial';
+  const titleEnd=wrapText(ctx,copy.title,margin,166,contentW,152);
+  ctx.fillStyle=muted; ctx.font='500 60px Inter, Arial';
+  const metaEnd=wrapText(ctx,copy.meta,margin,titleEnd+54,contentW,70);
+  drawOutlinePills(ctx,copy.tags.slice(0,5),margin,metaEnd+20,contentW,true,true);
+
+  const profileY=metaEnd+98;
+  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,profileY); ctx.lineTo(3550,profileY); ctx.stroke();
+  ctx.fillStyle=accent; ctx.font='800 48px Inter, Arial'; ctx.fillText('PROFILE',margin,profileY+50);
+  ctx.fillStyle=body; ctx.font='500 60px Inter, Arial';
+  const summaryEnd=wrapText(ctx,copy.summary,margin,profileY+118,contentW,72);
+
+  const metricY=summaryEnd+48, gap=34, cardW=(contentW-gap*2)/3, cardH=164;
+  copy.metrics.slice(0,3).forEach((m,i)=>{
+    const x=margin+i*(cardW+gap);
+    roundRect(ctx,x,metricY,cardW,cardH,22,card); strokeRoundRect(ctx,x,metricY,cardW,cardH,22,'#465764',2);
+    ctx.fillStyle=accent; ctx.font='800 72px Inter, Arial'; wrapText(ctx,String(m[0]),x+28,metricY+67,cardW-56,76);
+    ctx.fillStyle=muted; ctx.font='600 38px Inter, Arial'; wrapText(ctx,String(m[1]),x+28,metricY+126,cardW-56,44);
+  });
+
+  const lowerTop=metricY+cardH+66, colGap=180, colW=(contentW-colGap)/2;
+  const leftX=margin, rightX=margin+colW+colGap;
+  ctx.fillStyle=accent; ctx.font='800 57px Inter, Arial';
+  ctx.fillText('SELECTED CONTRIBUTIONS',leftX,lowerTop); ctx.fillText('ROLE · SCOPE · IMPACT',rightX,lowerTop);
+
+  let leftY=lowerTop+78; ctx.font='500 52px Inter, Arial';
+  copy.contributions.slice(0,2).forEach(line=>{
+    ctx.fillStyle=accent; ctx.beginPath(); ctx.arc(leftX+9,leftY-16,6,0,Math.PI*2); ctx.fill(); ctx.fillStyle=body;
+    const lineEnd=wrapText(ctx,line,leftX+34,leftY,colW-34,66); leftY=lineEnd+44;
+  });
+
+  ctx.fillStyle=body; ctx.font='500 52px Inter, Arial';
+  const scopeEnd=wrapText(ctx,copy.scope,rightX,lowerTop+78,colW,66);
+  ctx.fillStyle=accent; ctx.font='800 45px Inter, Arial'; ctx.fillText('WHY IT MATTERS',rightX,scopeEnd+52);
+  ctx.fillStyle=body; ctx.font='500 52px Inter, Arial';
+  wrapText(ctx,copy.impact,rightX,scopeEnd+112,colW,66);
+
+  const footerY=1282;
+  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,footerY); ctx.lineTo(3550,footerY); ctx.stroke();
+  // Core stack and contact are roughly 2× the v21 size.
+  ctx.fillStyle=accent; ctx.font='800 54px Inter, Arial'; ctx.fillText('CORE STACK',margin,footerY+58); ctx.fillText('CONTACT',2200,footerY+58);
+  ctx.fillStyle=primary; ctx.font='600 50px Inter, Arial';
+  wrapText(ctx,copy.tags.slice(0,6).join('  ·  '),margin,footerY+118,1880,58);
+  ctx.fillStyle=primary; ctx.font='500 48px Inter, Arial';
+  ctx.fillText('github.com/banana1324',2200,footerY+118); ctx.fillText('linkedin.com/in/fuyuanzhang',2200,footerY+170);
+}
+
+function drawAboutBoard(ctx,copy,index){
+  const margin=150, contentW=3400;
+  const accent='#82b4d8', primary='#edf2f5', body='#d2dae0', muted='#a8b4bd', rule='#43525e', card='#232e37';
+  ctx.fillStyle=accent; ctx.font='700 57px Inter, Arial'; ctx.fillText(`ABOUT  ·  ${String(index+1).padStart(2,'0')}`,margin,60);
+  ctx.fillStyle=primary; ctx.font='800 150px Inter, Arial'; ctx.fillText('About Warren Zhang',margin,166);
+  ctx.fillStyle=muted; ctx.font='500 60px Inter, Arial'; ctx.fillText(copy.meta,margin,238);
+
+  ctx.strokeStyle=rule; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(margin,292); ctx.lineTo(3550,292); ctx.stroke();
+  ctx.fillStyle=primary; ctx.font='700 74px Inter, Arial'; ctx.fillText('I like understanding the whole system.',margin,382);
+  ctx.fillStyle=body; ctx.font='500 56px Inter, Arial';
+  const introEnd=wrapText(ctx,copy.summary,margin,454,contentW,68);
+
+  const metricY=introEnd+44, gap=34, cardW=(contentW-gap*2)/3, cardH=160;
+  copy.metrics.slice(0,3).forEach((m,i)=>{
+    const x=margin+i*(cardW+gap); roundRect(ctx,x,metricY,cardW,cardH,22,card); strokeRoundRect(ctx,x,metricY,cardW,cardH,22,'#465764',2);
+    ctx.fillStyle=accent; ctx.font='800 72px Inter, Arial'; ctx.fillText(String(m[0]),x+30,metricY+67);
+    ctx.fillStyle=muted; ctx.font='600 38px Inter, Arial'; wrapText(ctx,String(m[1]),x+30,metricY+122,cardW-60,42);
+  });
+
+  const columnsY=metricY+cardH+70, colGap=180, colW=(contentW-colGap)/2, rightX=margin+colW+colGap;
+  ctx.fillStyle=accent; ctx.font='800 52px Inter, Arial'; ctx.fillText('WHAT I BRING',margin,columnsY); ctx.fillText('HOW I WORK',rightX,columnsY);
+  ctx.fillStyle=body; ctx.font='500 50px Inter, Arial';
+  const leftEnd=wrapText(ctx,copy.contributions[0],margin,columnsY+70,colW,64);
+  wrapText(ctx,copy.contributions[1],rightX,columnsY+70,colW,64);
+
+  const proofY=Math.max(leftEnd+78,1110);
+  ctx.strokeStyle=rule; ctx.beginPath(); ctx.moveTo(margin,proofY-40); ctx.lineTo(3550,proofY-40); ctx.stroke();
+  ctx.fillStyle=accent; ctx.font='800 48px Inter, Arial'; ctx.fillText('EXPERIENCE IN PRACTICE',margin,proofY);
+  ctx.fillStyle=body; ctx.font='500 48px Inter, Arial'; wrapText(ctx,copy.scope,margin,proofY+64,2050,60);
+
+  ctx.fillStyle=accent; ctx.font='800 52px Inter, Arial'; ctx.fillText('LET’S CONNECT',2360,proofY);
+  ctx.fillStyle=body; ctx.font='500 46px Inter, Arial'; wrapText(ctx,copy.impact,2360,proofY+64,1190,58);
+  ctx.fillStyle=primary; ctx.font='600 44px Inter, Arial'; ctx.fillText('warrenz7980@gmail.com',2360,1404);
+}
+
+function drawOutlinePills(ctx,pills,x,y,maxWidth,dark=false,large=false){
+  ctx.font=`600 ${large?42:28}px Inter, Arial`; let cx=x,cy=y;
+  pills.forEach(label=>{ const h=large?56:42,pad=large?58:44,step=large?68:52; const w=ctx.measureText(label).width+pad; if(cx+w>maxWidth+x){cx=x;cy+=step;} strokeRoundRect(ctx,cx,cy,w,h,large?22:18,dark?'#465967':'#aeb7c0',2); ctx.fillStyle=dark?'#9ec4df':'#174878';ctx.fillText(label,cx+(large?29:22),cy+(large?41:30));cx+=w+(large?18:14); });
 }
 function strokeRoundRect(ctx,x,y,w,h,r,stroke,width=2){
   ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();
@@ -1259,7 +1316,7 @@ function createTrombone() {
 }
 
 // ---------- nav ----------
-function currentItem() { return CONTENT[state.section][state.index]; }
+function currentItem() { return CONTENT[state.uiSection][state.uiIndex]; }
 function renderNav() {
   dom.nav.innerHTML = '';
   NAV.forEach(([section, icon, label]) => {
@@ -1287,8 +1344,8 @@ function renderNav() {
   updateNav();
 }
 function updateNav() {
-  document.querySelectorAll('.nav-header').forEach(b => b.classList.toggle('is-active', b.dataset.section === state.section));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('is-active', b.dataset.section === state.section && b.dataset.itemId === currentItem().id));
+  document.querySelectorAll('.nav-header').forEach(b => b.classList.toggle('is-active', b.dataset.section === state.uiSection));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('is-active', b.dataset.section === state.uiSection && b.dataset.itemId === currentItem().id));
 }
 
 // ---------- board transition helpers ----------
@@ -1356,15 +1413,15 @@ function updateHeldBoard(now,dt,snap=false){
 async function carryCurrentCompletelyOffscreen(){
   if(!state.heldBoard)return;
   state.boardMode='carry';
-  // First retract and fold the panel beside the arm so the package stays compact.
-  dom.status.textContent='Retracting current page';
-  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,330);
-  // Then rotate the compact, elevated package completely out of frame.
-  dom.status.textContent='Rotating page away';
-  await moveArmPose(OFFSCREEN_YAW,ARM_POSES.carry,540);
-  await wait(250);
-  await setGrip(.26,80);
-  await wait(250);
+  dom.status.textContent='Moving current page away';
+  // One continuous motion: retract near the base, then rotate off-screen without stopping.
+  await moveArmPath([
+    {yaw:PRESENT_YAW,angles:ARM_POSES.carry,at:.34},
+    {yaw:OFFSCREEN_YAW,angles:ARM_POSES.carry,at:1}
+  ],900);
+  await wait(175);
+  await setGrip(.26,70);
+  await wait(175);
 }
 async function swapBoardWhileOffscreen(station){
   state.boardMode='carry';
@@ -1377,23 +1434,21 @@ async function swapBoardWhileOffscreen(station){
   await setGrip(.095,115);
 }
 async function bringBoardBackOnscreen(){
-  // The new page is already clamped while the arm is off-camera.
-  // Rotate into frame while the panel stays edge-on and tucked against the arm.
+  // One continuous return path. The page stays tucked close while rotating, then
+  // becomes parallel to the viewer during the final forward extension.
   state.boardMode='carry';
-  dom.status.textContent='Rotating next page into frame';
-  await moveArmPose(PRESENT_YAW,ARM_POSES.carry,560);
-  await wait(110);
-  // Once rotation is finished, turn the panel parallel to the viewer and push it forward.
-  state.boardMode='read';
-  dom.status.textContent='Sliding page forward';
-  await moveArmPose(PRESENT_YAW,ARM_POSES.read,390);
+  dom.status.textContent='Bringing next page in';
+  await moveArmPath([
+    {yaw:PRESENT_YAW,angles:ARM_POSES.carry,at:.68},
+    {yaw:PRESENT_YAW,angles:ARM_POSES.read,at:1}
+  ],980,{switchBoardModeAt:.68,modeAfter:'read'});
   dom.status.textContent='Page ready';
 }
 async function deliverBoard(section,index){
   state.busy=true;
   const item=CONTENT[section][index],key=`${section}/${item.id}`,station=state.stations.get(key);
   if(state.heldBoard)await carryCurrentCompletelyOffscreen();
-  state.section=section;state.index=index;setSelectedStation(key);updateNav();dom.topbarTitle.textContent=item.title;dom.live.textContent=`${item.title}. ${item.description}`;
+  state.section=section; state.index=index;
   await swapBoardWhileOffscreen(station);
   // For the initial page, the arm begins off-camera already holding it. For every later page,
   // the swap happens only after the old panel has stayed fully off-camera for 0.5 seconds.
@@ -1402,9 +1457,17 @@ async function deliverBoard(section,index){
   if(state.queued){const q=state.queued;state.queued=null;requestSelection(q.section,q.index,q.updateHash);}
 }
 function requestSelection(section,index=0,updateHash=true){
-  if(!CONTENT[section])section='home';index=Math.max(0,Math.min(index,CONTENT[section].length-1));
-  if(state.busy){state.queued={section,index,updateHash};dom.status.textContent='Queued next page';return;}
-  if(updateHash)history.replaceState(null,'',`#${section}/${CONTENT[section][index].id}`);
+  if(!CONTENT[section])section='home'; index=Math.max(0,Math.min(index,CONTENT[section].length-1));
+  const item=CONTENT[section][index],key=`${section}/${item.id}`;
+
+  // UI reacts immediately. Only the physical arm + board take time to catch up.
+  state.uiSection=section; state.uiIndex=index;
+  setSelectedStation(key); updateNav();
+  dom.topbarTitle.textContent=item.title;
+  dom.live.textContent=`${item.title}. ${item.description}`;
+  if(updateHash)history.replaceState(null,'',`#${section}/${item.id}`);
+
+  if(state.busy){state.queued={section,index,updateHash:false};dom.status.textContent='Queued next page';return;}
   deliverBoard(section,index);
 }
 
@@ -1560,10 +1623,25 @@ window.addEventListener('keydown', e => {
 // ---------- animation / layout ----------
 function updateArmTween(now) {
   if (!state.armTween) return;
-  const t = Math.min(1, (now - state.armTween.start) / state.armTween.duration), e = ease(t), tw = state.armTween;
-  armState.yaw = THREE.MathUtils.lerp(tw.fromYaw, tw.toYaw, e);
-  armState.angles = tw.fromAngles.map((a, i) => THREE.MathUtils.lerp(a, tw.toAngles[i], e));
-  if (t >= 1) state.armTween = null;
+  const tw=state.armTween;
+  const t=Math.min(1,(now-tw.start)/tw.duration);
+  const e=.5-.5*Math.cos(Math.PI*t); // smooth global acceleration/deceleration
+  if(tw.keyframes){
+    if(tw.switchBoardModeAt!=null && !tw.modeSwitched && e>=tw.switchBoardModeAt){
+      state.boardMode=tw.modeAfter||'read'; tw.modeSwitched=true;
+    }
+    let a=tw.keyframes[0],b=tw.keyframes.at(-1);
+    for(let i=0;i<tw.keyframes.length-1;i++){
+      if(e>=tw.keyframes[i].at && e<=tw.keyframes[i+1].at){ a=tw.keyframes[i]; b=tw.keyframes[i+1]; break; }
+    }
+    const span=Math.max(.0001,b.at-a.at),local=THREE.MathUtils.clamp((e-a.at)/span,0,1);
+    armState.yaw=THREE.MathUtils.lerp(a.yaw,b.yaw,local);
+    armState.angles=a.angles.map((v,i)=>THREE.MathUtils.lerp(v,b.angles[i],local));
+  }else{
+    armState.yaw=THREE.MathUtils.lerp(tw.fromYaw,tw.toYaw,e);
+    armState.angles=tw.fromAngles.map((a,i)=>THREE.MathUtils.lerp(a,tw.toAngles[i],e));
+  }
+  if(t>=1){ if(tw.modeAfter) state.boardMode=tw.modeAfter; state.armTween=null; }
 }
 function updateGripTween(now) {
   if (!state.gripTween) return;
